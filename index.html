@@ -3,16 +3,8 @@
 <head>
    <script src="index.js"></script>
    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta charset="UTF-8">
     <title>Document</title>
-    <?php
-    if(isset($_GET["zoom"])){
-        $zoom = $_GET['zoom'];
-    }else{
-        $zoom = 50;
-    }
-    ?>
 </head>
 <body>
    <style>
@@ -138,9 +130,23 @@
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
         
+        var zoom = 50;
+
+        if(window.location.hash != ""){
+            zoom = parseInt(window.location.hash.replace('#', ""));
+        }
+
         var mid_height = canvas.scrollHeight / 2;
         var mid_width = canvas.scrollWidth / 2;
-        var interval = <?php echo $zoom;?>;
+
+        var interval = zoom;
+
+        window.onhashchange = function () {
+            if(window.location.hash != ""){
+                interval = parseInt(window.location.hash.replace('#', ""));
+                document.querySelector('.clear').click();
+            }
+        }
         
         var Ypos = mid_height;
         var Ypos2 = mid_height;
