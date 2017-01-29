@@ -169,6 +169,9 @@
         document.querySelectorAll('button')[1].onclick = function () {
             var val = document.querySelector('.function').value;
             
+            val = val.replace("^2", "²");
+            val = val.replace("³", "^3");
+
             if(val == "x²"){
                 power2(1,0,0);
                 return;
