@@ -38,6 +38,7 @@ function make_graph() {
        		     ctx.lineWidth = 1;
        		     ctx.stroke();
        		 }
+
        		  while (Ypos + interval < mid_height * 2)  {
        		     ctx.beginPath();
        		     Ypos += interval;
@@ -51,7 +52,7 @@ function make_graph() {
        		     ctx.beginPath();
        		     Xpos -= interval;
        		     ctx.moveTo(Xpos, 0);
-       		     ctx.lineTo(Xpos, canvas.scrollWidth);
+       		     ctx.lineTo(Xpos, canvas.scrollHeight);
        		     ctx.lineWidth = 1;
        		     ctx.stroke();
        		 }
@@ -60,7 +61,7 @@ function make_graph() {
        		      ctx.beginPath();
        		     Xpos += interval;
        		     ctx.moveTo(Xpos, 0);
-       		     ctx.lineTo(Xpos, canvas.scrollWidth);
+       		     ctx.lineTo(Xpos, canvas.scrollHeight);
        		     ctx.lineWidth = 1;
        		     ctx.stroke();
        		 }
