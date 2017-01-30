@@ -1,6 +1,54 @@
 document.addEventListener('DOMContentLoaded', fn, false);
+var zoom_level = 1;
+function $(e){
+    return document.querySelector(e);
+}
+
 function fn(){
+    
 canvas = document.querySelector('canvas');
+        addListeners();
+
+function addListeners(){
+    canvas.addEventListener('mousedown', mouseDown, false);
+    window.addEventListener('mouseup', mouseUp, false);
+
+}
+
+function mouseUp()
+{
+    window.removeEventListener('mousemove', divMove, true);
+}
+var offset = {x:0, y:0};
+
+function mouseDown(e){
+    offset.x = e.clientX - canvas.offsetLeft;
+    offset.y = e.clientY - canvas.offsetTop;
+  window.addEventListener('mousemove', divMove, true);
+
+}
+
+function divMove(e){
+    var div = canvas;
+  div.style.position = 'absolute';
+    var top = e.clientY - offset.y;
+    var left = e.clientX - offset.x;
+    canvas.style.top = top + 'px';
+    canvas.style.left = left + 'px';
+}
+        $('.zoom-more').onclick = function () {
+            
+                zoom_level += 0.2;
+                canvas.style.transform = "scale(" + zoom_level + ")";
+                return false;
+        }
+        $('.zoom-less').onclick = function () {
+            if (zoom_level > 0.2) {
+                zoom_level -= 0.2;
+                canvas.style.transform = "scale(" + zoom_level + ")";
+                return false;
+            }
+        }
         ctx = canvas.getContext('2d');
         
        canvas.onclick = function () {
@@ -41,6 +89,7 @@ canvas = document.querySelector('canvas');
             if(window.location.hash != ""){
                 interval = parseInt(window.location.hash.replace('#', ""));
                 document.querySelector('.clear').click();
+
             }
         }
         
@@ -60,6 +109,10 @@ canvas = document.querySelector('canvas');
         
         document.querySelectorAll('button')[0].onclick = function () {
             make_graph();
+            canvas.style.top = 0;
+                canvas.style.left = 0;
+                canvas.style.transform = "scale(1)";
+                zoom_level = 1;
         }
         
         document.querySelectorAll('button')[1].onclick = function () {
