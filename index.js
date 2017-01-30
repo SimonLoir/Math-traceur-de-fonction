@@ -89,7 +89,6 @@ function make_graph() {
             ctx.beginPath();
             ctx.lineWidth = 1;
             ctx.fillStyle = document.querySelectorAll('input')[1].value;
-            //alert(document.querySelectorAll('input')[1].value)
             ctx.arc(X, Y, 1, 0, Math.PI * 2)
             ctx.fill();
         }
@@ -109,7 +108,7 @@ function make_graph() {
             }
             var start = -(mid_width / 2);
             while(start <= (mid_width / 2)){
-                new_point(start, a * Math.pow(start - m, 2) + p);
+                new_point(start, parseFloat(a * Math.pow(start - m, 2) + p));
                 start += 0.005;
             }
         }

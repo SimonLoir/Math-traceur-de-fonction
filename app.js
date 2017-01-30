@@ -67,32 +67,39 @@ canvas = document.querySelector('canvas');
             
             val = val.replace("^2", "²");
             val = val.replace("³", "^3");
+            val = val.replace("-x", "-1x");
 
             if(val == "x²"){
                 power2(1,0,0);
                 return;
             }
             
-            if(val == "-x²"){
-                power2(-1,0,0);
-                return;
-            }
-            
-            if(val == "x^3"){
-                power3(1,0,0);
-                return;
-            }
-            
-            matchs = val.match(/(.+)x²/i);
+            matchs = val.match(/^(.+)x²$/i);
             
             if(matchs != null){
                 power2(matchs[1], 0, 0);
+                return;
             }
             
-            matchs = val.match(/(.+)x\^3/i);
+            matchs = val.match(/^(.+)x²\+(.+)$/i);
+            
+            if(matchs != null){
+                val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
+                macths = null;
+            }
+
+            matchs = val.match(/^x²\+(.+)$/i);
+            
+            if(matchs != null){
+                val =  "1(x-" + 0 + ")²+" + matchs[1];
+                macths = null;
+            }
+
+            matchs = val.match(/^(.+)x\^3$/i);
             
             if(matchs != null){
                 power3(matchs[1], 0, 0);
+                return;
             }
             
             matchs = val.match(/(.+)\(x\-(.+)\)²\+(.+)/i);
@@ -174,6 +181,39 @@ canvas = document.querySelector('canvas');
                 
                 from_dev(a, b,c, val);
             }
+
+            console.error('No match found !');
             
         }
 }
+
+function from_dev(a, b, c, val){
+            var dev = document.querySelector('.dev');
+                dev.innerHTML = "<b>Développement : </b><br />"
+                dev.innerHTML += "Forme développée : " + val;
+                dev.innerHTML += "<br />Passage à la forme canonique :";
+                dev.innerHTML += "<br />a = " + a;
+                dev.innerHTML += "<br />b = " + b;
+                dev.innerHTML += "<br />c = " + c;
+                dev.innerHTML += "<br /><br /> ax²+bx+c<br />= ";
+                dev.innerHTML += "a.(x²+b/a+c/a)<br />= ";
+                dev.innerHTML += "a.(x²+ b/a + c/a + ((b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
+                dev.innerHTML += "a.((x + (b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
+
+                
+                
+                var first_exp = (b/a) * (1/2);
+                
+                dev.innerHTML += a + "(x + " + first_exp +")² - " + a +"(" + first_exp +")² + " + c + "<br />= ";
+
+                var exp_2 = -a * Math.pow(first_exp,2);
+
+                exp_2 = (exp_2 + c);
+                
+                dev.innerHTML += a + "(x + " + first_exp +")² + " +exp_2;
+
+                
+                document.querySelector('.function').value = a + "(x+" + first_exp + ")²+" + exp_2;
+
+                document.querySelectorAll('button')[1].click();
+        }

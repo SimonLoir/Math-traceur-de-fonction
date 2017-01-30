@@ -117,37 +117,7 @@
         var Xpos2;
         var x_zero;
         var y_zero;
-        var val;        
-        function from_dev(a, b, c, val){
-            var dev = document.querySelector('.dev');
-                dev.innerHTML = "<b>Développement : </b><br />"
-                dev.innerHTML += "Forme développée : " + val;
-                dev.innerHTML += "<br />Passage à la forme canonique :";
-                dev.innerHTML += "<br />a = " + a;
-                dev.innerHTML += "<br />b = " + b;
-                dev.innerHTML += "<br />c = " + c;
-                dev.innerHTML += "<br /><br /> ax²+bx+c<br />= ";
-                dev.innerHTML += "a.(x²+b/a+c/a)<br />= ";
-                dev.innerHTML += "a.(x²+ b/a + c/a + ((b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
-                dev.innerHTML += "a.((x + (b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
-
-                
-                
-                var first_exp = (b/a) * (1/2);
-                
-                dev.innerHTML += a + "(x + " + first_exp +")² - " + a +"(" + first_exp +")² + " + c + "<br />= ";
-
-                var exp_2 = -a * Math.pow(first_exp,2);
-
-                exp_2 = (exp_2 + c);
-                
-                dev.innerHTML += a + "(x + " + first_exp +")² + " +exp_2;
-
-                
-                document.querySelector('.function').value = a + "(x+" + first_exp + ")²+" + exp_2;
-
-                document.querySelectorAll('button')[1].click();
-        }
+        var val;
     </script>
     <script src="app.js"></script>
 </body>
