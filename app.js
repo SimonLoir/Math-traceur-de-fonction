@@ -77,7 +77,7 @@ function divMove(e){
         zoom = 50;
 
         if(window.location.hash != ""){
-            zoom = parseInt(window.location.hash.replace('#', ""));
+            zoom = parseInt(window.location.hash.replace('#', "").split(';')[0]);
         }
 
         mid_height = canvas.scrollHeight / 2;
@@ -87,9 +87,12 @@ function divMove(e){
 
         window.onhashchange = function () {
             if(window.location.hash != ""){
+                var last_interval = interval;
                 interval = parseInt(window.location.hash.replace('#', ""));
+                if (last_interval == interval) {
+                    return;
+                }
                 document.querySelector('.clear').click();
-
             }
         }
         
