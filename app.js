@@ -254,9 +254,7 @@ function from_dev(a, b, c, val){
                 dev.innerHTML += "<br /><br /> ax²+bx+c<br />= ";
                 dev.innerHTML += "a.(x²+b/a+c/a)<br />= ";
                 dev.innerHTML += "a.(x²+ b/a + c/a + ((b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
-                dev.innerHTML += "a.((x + (b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";
-
-                
+                dev.innerHTML += "a.((x + (b/a) . (1/2))² - ((b/a) . (1/2))² + c/a)<br />= ";                
                 
                 var first_exp = (b/a) * (1/2);
                 
@@ -267,6 +265,8 @@ function from_dev(a, b, c, val){
                 exp_2 = (exp_2 + c);
                 
                 dev.innerHTML += a + "(x + " + first_exp +")² + " +exp_2;
+
+                dev.innerHTML += "Concavité : " + function () {if(a < 0){return "vers le bas"}else{return "vers le haut"}}();
 
                 
                 document.querySelector('.function').value = a + "(x+" + first_exp + ")²+" + exp_2;
