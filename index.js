@@ -99,13 +99,20 @@ function make_graph() {
         function power2(a, m, p){
             if(a == undefined){
                 a = 0;
+            }else{
+                a = parseFloat(a);
             }
             if(m == undefined){
                 m = 0;
+            }else{
+                m = parseFloat(m);
             }
             if(p == undefined){
                 p = 0;
+            }else{
+                p = parseFloat(p);
             }
+
             var start = -(mid_width / 2);
             while(start <= (mid_width / 2)){
                 new_point(start, parseFloat(a * Math.pow(start - m, 2) + p));
@@ -121,9 +128,25 @@ function make_graph() {
 
                     return m + ";" + p;
 
-                }()+ ")" + "<br />Axe de symétrie : x = " + m + "<br />Ordonnée à l'origine : (0;" + function () {
+                }()+ ")" + "<br />Axe de symétrie : AS &#8801; x = " + m + "<br />Ordonnée à l'origine : (0;" + function () {
                     return parseFloat(a * Math.pow(0 - m, 2) + p);
-                }() + ')';
+                }() + ')<br />' + function () {
+                    var x_result = "Racines : ";
+                    try {
+                        var racine1 = parseFloat(Math.pow((-p)/a, 1/2) + m);
+                        var racine2 = parseFloat(-Math.pow((-p)/a, 1/2) + m);
+
+                        if (isNaN(racine1)) {
+                            throw "error";
+                        }
+                    } catch (error) {
+                        return "Racines : impossible ou erreur";                  
+                    }
+                    x_result += "(" + racine1 + ";0) et ("+ racine2 + ";0)" + "<br />";
+                    x_result += "Forme canonique : " + a + '(x-' +racine1+ ')' + '(x-' +racine2+ ')';
+                    x_result = x_result.replace('--', "+");
+                    return x_result;
+                }();
 
                 sym_axis(m);
             }

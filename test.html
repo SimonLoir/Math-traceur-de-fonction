@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zone de test : OP</title>
+</head>
+<body>
+    <h1>Test area</h1>
+    <script>
+        var operation = "(3-4)+(6*7)";
+        var $op = [];
+        var opened_brackets = 0;
+        var working_directory = "";
+
+        function get(){
+            if(working_directory == ""){
+                return $op;
+            }else{
+                var dirs = working_directory.split('>');
+                if(dirs.length == 1){
+                    return $op[dirs[0]];
+                }else if(dirs.length == 2){
+                    return $op[dirs[0]][dirs[1]];
+                }else if(dirs.length == 3){
+                    return $op[dirs[0]][dirs[1]][dirs[2]];
+                }else if(dirs.length == 4){
+                    return $op[dirs[0]][dirs[1]][dirs[2]][dirs[3]];
+                }else if(dirs.length == 5){
+                    return $op[dirs[0]][dirs[1]][dirs[2]][dirs[3]][dirs[4]];
+                }else if(dirs.length == 6){
+                    return $op[dirs[0]][dirs[1]][dirs[2]][dirs[3]][dirs[4]][dirs[5]];
+                }else if(dirs.length == 8){
+                    return $op[dirs[0]][dirs[1]][dirs[2]][dirs[3]][dirs[4]][dirs[5]][dirs[6]][dirs[7]];
+                }else if(dirs.length == 10){
+                    return $op[dirs[0]][dirs[1]][dirs[2]][dirs[3]][dirs[4]][dirs[5]][dirs[6]][dirs[7]][dirs[8]][dirs[9]];
+                }
+            }
+        }
+
+        var last = "nothing";
+        base = 0;
+        for (var i = 0; i < operation.length; i++) {
+            var char = operation[i];
+            if (char == "(") {
+                opened_brackets+=1;
+                last = "(";
+                get().push(["(", i, [], undefined]);
+                if(working_directory == ""){
+                    working_directory = base + ">2";
+                }else{
+                    working_directory += ">0>2";
+                }
+            }
+
+            if (char == ")") {
+                    console.log(working_directory);
+                    working_directory = working_directory.replace(/>([0-9]+)$/i, "");
+                    console.log(working_directory);
+                    get()[3] = i;
+                    working_directory = working_directory.replace(/>([0-9]+)$/i, "");
+                    if(working_directory == "0"){
+                        base = 1;
+                        working_directory = "";
+                    }
+            }
+            
+             document.body.innerHTML += "<p>" + working_directory + " ==> "+char + "   ::   " + JSON.stringify($op)  +"</p>"
+        }
+    </script>
+</body>
+</html>
