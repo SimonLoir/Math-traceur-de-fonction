@@ -111,6 +111,14 @@ function make_graph() {
                 new_point(start, parseFloat(a * Math.pow(start - m, 2) + p));
                 start += 0.005;
             }
+
+            if (finfos != undefined) {
+                finfos.innerHTML = "Concavité : " + function () {if (a > 0){
+                    return "vers le haut";
+                }else{
+                    return "vers le bas";
+                }}();
+            }
         }
 
         function power3(a, m, p){

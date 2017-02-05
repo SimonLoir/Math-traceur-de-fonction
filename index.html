@@ -54,7 +54,7 @@
            position: fixed;
            bottom: 0;left: 0;right: 0;
        }
-       .tool-bar .dev, .tool-bar .license{
+       .tool-bar .dev, .tool-bar .license, .tool-bar .finfos{
            width: calc(100% - 28px);
            border:1px solid #eee;
            padding: 8px;
@@ -108,6 +108,7 @@
         <p><button class="clear">clear</button><input type="text" class="function" value="1(x-0)²-0"><button class="draw">draw</button><input type="color" class="color"></p>
         
         <div class="dev"></div>
+        <div class="finfos"></div>
         <div class="license">
            <br />
             Copyright (C) 2017  Simon Loir
@@ -143,6 +144,7 @@
         var x_zero;
         var y_zero;
         var val;
+        var finfos;
     </script>
     <script src="app.js"></script>
 </body>

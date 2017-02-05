@@ -5,6 +5,8 @@ function $(e){
 }
 
 function fn(){
+
+    finfos = document.querySelector('.finfos');
     
 canvas = document.querySelector('canvas');
         addListeners();
@@ -268,9 +270,9 @@ function from_dev(a, b, c, val){
 
                 dev.innerHTML += "<br />Concavité : " + function () {if(a < 0){return "vers le bas"}else{return "vers le haut"}}();
 
-                dev.innerHTML += "<br />Axe de symétrie de la fonction :" + ((-b)  / (2* a));
+                dev.innerHTML += "<br />Axe de symétrie de la fonction : x = " + ((-b)  / (2* a));
 
                 document.querySelector('.function').value = a + "(x+" + first_exp + ")²+" + exp_2;
 
                 document.querySelectorAll('button')[1].click();
-        }
+}
