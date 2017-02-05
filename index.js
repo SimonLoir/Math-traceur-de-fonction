@@ -109,7 +109,7 @@ function make_graph() {
             var start = -(mid_width / 2);
             while(start <= (mid_width / 2)){
                 new_point(start, parseFloat(a * Math.pow(start - m, 2) + p));
-                start += 0.005;
+                start += 0.5 / (interval * 2);
             }
 
             if (finfos != undefined) {
@@ -117,7 +117,28 @@ function make_graph() {
                     return "vers le haut";
                 }else{
                     return "vers le bas";
-                }}();
+                }}() + "<br />Sommet : (" + function (){
+
+                    return m + ";" + p;
+
+                }()+ ")" + "<br />Axe de symétrie : x = " + m + "<br />Ordonnée à l'origine : (0;" + function () {
+                    return parseFloat(a * Math.pow(0 - m, 2) + p);
+                }() + ')';
+
+                sym_axis(m);
+            }
+        }
+
+        function sym_axis (x) {
+            x = x_zero + x * interval;
+            var start = 0;
+            for (var i = 1; i <= 50; i++) {
+                ctx.beginPath();
+       		    ctx.moveTo(x,start);
+       		    ctx.lineTo(x, start += canvas.scrollHeight / 50);
+                start += canvas.scrollHeight / 50;
+       		    ctx.strokeStyle="#a73838";
+       		    ctx.stroke();
             }
         }
 
@@ -134,6 +155,6 @@ function make_graph() {
             var start = -(mid_width / 2);
             while(start <= (mid_width / 2)){
                 new_point(start, a * Math.pow(start - m, 3) + p);
-                start += 0.005;
+                start += 0.5 / (interval * 2);
             }
         }
