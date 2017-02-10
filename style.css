@@ -1,0 +1,148 @@
+/* line 1, C:/wamp64/www/4gt6/style.scss */
+body {
+  background: #222222;
+  color: white; }
+
+/* line 5, C:/wamp64/www/4gt6/style.scss */
+.header {
+  background-image: linear-gradient(#3a3a3a, #363636);
+  height: 30px;
+  padding: 6px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  line-height: 30px;
+  padding-left: 10px; }
+
+/* line 16, C:/wamp64/www/4gt6/style.scss */
+.left-tool-bar {
+  background: #333333;
+  position: absolute;
+  top: 43px;
+  left: 0;
+  bottom: 0;
+  width: 28px;
+  padding: 5px; }
+  /* line 24, C:/wamp64/www/4gt6/style.scss */
+  .left-tool-bar button {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: 18px;
+    transition: 0.25s;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: 10px; }
+    /* line 35, C:/wamp64/www/4gt6/style.scss */
+    .left-tool-bar button:hover {
+      background: #4d4d4d; }
+    /* line 38, C:/wamp64/www/4gt6/style.scss */
+    .left-tool-bar button.active {
+      background: #1d1d1d; }
+
+/* line 45, C:/wamp64/www/4gt6/style.scss */
+.right-tool-bar {
+  background: #333333;
+  position: absolute;
+  top: 43px;
+  right: 0;
+  bottom: 0;
+  width: 235px;
+  padding: 15px; }
+
+/* line 53, C:/wamp64/www/4gt6/style.scss */
+.color-view {
+  border-radius: 3px;
+  overflow: hidden;
+  background: gray;
+  height: 125px;
+  width: 100%; }
+
+/* line 62, C:/wamp64/www/4gt6/style.scss */
+.color-picker {
+  width: 25px;
+  border: none;
+  height: 25px;
+  background: rgba(0, 0, 0, 0.25);
+  cursor: pointer; }
+
+/* line 70, C:/wamp64/www/4gt6/style.scss */
+.container {
+  background: #3b3b3b;
+  margin-top: 10px;
+  border-radius: 3px;
+  overflow: hidden; }
+  /* line 77, C:/wamp64/www/4gt6/style.scss */
+  .container .options {
+    margin: 0;
+    padding: 0;
+    background: #2b2b2b; }
+    /* line 80, C:/wamp64/www/4gt6/style.scss */
+    .container .options span {
+      display: inline-block;
+      margin: 5px;
+      margin-right: 10px;
+      padding: 5px;
+      padding-left: 8px;
+      padding-right: 8px;
+      cursor: pointer;
+      transition: 0.25s;
+      border-radius: 3px; }
+      /* line 89, C:/wamp64/www/4gt6/style.scss */
+      .container .options span:hover {
+        background: #333333; }
+      /* line 93, C:/wamp64/www/4gt6/style.scss */
+      .container .options span.active {
+        background: dimgray; }
+  /* line 101, C:/wamp64/www/4gt6/style.scss */
+  .container .layer-function-view {
+    padding: 8px;
+    padding-bottom: 30px;
+    position: relative; }
+    /* line 105, C:/wamp64/www/4gt6/style.scss */
+    .container .layer-function-view .layer {
+      background: transparent;
+      border: 1px solid #464646;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: 0.25s; }
+      /* line 110, C:/wamp64/www/4gt6/style.scss */
+      .container .layer-function-view .layer .preview {
+        display: inline-block;
+        height: 25px;
+        width: 25px;
+        background: crimson;
+        vertical-align: middle; }
+      /* line 117, C:/wamp64/www/4gt6/style.scss */
+      .container .layer-function-view .layer button {
+        display: inline-block;
+        height: 25px;
+        width: 25px;
+        background: transparent;
+        border: none;
+        vertical-align: middle;
+        color: gray;
+        float: right;
+        cursor: pointer;
+        transition: 0.25s; }
+        /* line 128, C:/wamp64/www/4gt6/style.scss */
+        .container .layer-function-view .layer button:hover {
+          color: white; }
+      /* line 132, C:/wamp64/www/4gt6/style.scss */
+      .container .layer-function-view .layer span {
+        display: inline-block;
+        vertical-align: middle;
+        padding-left: 8px;
+        max-width: 120px;
+        max-height: 18px;
+        overflow: hidden; }
+      /* line 143, C:/wamp64/www/4gt6/style.scss */
+      .container .layer-function-view .layer:hover {
+        background: rgba(255, 255, 255, 0.15); }
+
+/*# sourceMappingURL=style.css.map */

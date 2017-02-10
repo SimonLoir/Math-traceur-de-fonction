@@ -7,7 +7,10 @@
 <body>
     <h1>Test area</h1>
     <script>
-        var operation = "(3-4)+(6*7)";
+        window.onhashchange = function () {
+            window.location.reload(true);
+        }
+        var operation = window.location.hash.replace('#', "");
         var $op = [];
         var opened_brackets = 0;
         var working_directory = "";
@@ -58,14 +61,22 @@
                     console.log(working_directory);
                     get()[3] = i;
                     working_directory = working_directory.replace(/>([0-9]+)$/i, "");
-                    if(working_directory == "0"){
-                        base = 1;
+                    if(!isNaN(working_directory)){
+                        base += 1;
                         working_directory = "";
                     }
             }
             
              document.body.innerHTML += "<p>" + working_directory + " ==> "+char + "   ::   " + JSON.stringify($op)  +"</p>"
         }
+
+        if(JSON.stringify($op).indexOf("null") >= 0){
+            alert('Une erreur est survenue');
+        }else{
+            document.body.innerHTML += "<p style='color:green;background:#eee;'>Le processus a été exécuté sans problème</p>"
+        }
+
+
     </script>
 </body>
 </html>
