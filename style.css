@@ -145,4 +145,13 @@ body {
       .container .layer-function-view .layer:hover {
         background: rgba(255, 255, 255, 0.15); }
 
+/* line 152, C:/wamp64/www/4gt6/style.scss */
+.draw-area {
+  position: absolute;
+  top: 43px;
+  right: 270px;
+  left: 43px;
+  bottom: 2px;
+  background: #f2f2f2; }
+
 /*# sourceMappingURL=style.css.map */

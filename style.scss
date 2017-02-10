@@ -148,3 +148,11 @@ body{
     }
 
 }
+
+.draw-area{
+    position: absolute;
+    top: 43px;right: 270px;
+    left: 43px;bottom: 2px;
+    background: darken(white, 5%);
+
+}
