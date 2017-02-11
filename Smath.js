@@ -57,8 +57,8 @@ var SMath = function () {
 
     this.makeGrid = function (){
         this.label(0, 0, 0);
-       var max_x = this.x_zero / 50;
-       var max_y = this.y_zero / 50;
+       var max_x = this.x_zero / this.interval;
+       var max_y = this.y_zero / this.interval;
 
        var x_right = 1;
        while (x_right < max_x + 5) {
@@ -87,4 +87,168 @@ var SMath = function () {
        }
 
     }
+
+    this.draw = function(val){
+            val = val.replace("^2", "²");
+            val = val.replace("³", "^3");
+            val = val.replace("-x", "-1x");
+
+            if(val == "x²"){
+                this.power2(1,0,0);
+                return;
+            }
+            if(val == "x^3"){
+                this.power3(1,0,0);
+                return;
+            }
+            
+            matchs = val.match(/^(.+)x²$/i);
+            
+            if(matchs != null){
+                this.power2(matchs[1], 0, 0);
+                return;
+            }
+            
+            matchs = val.match(/^(.+)x²\+(.+)$/i);
+            
+            if(matchs != null){
+                val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
+                macths = null;
+            }
+
+            matchs = val.match(/^x²\+(.+)$/i);
+            
+            if(matchs != null){
+                val =  "1(x-" + 0 + ")²+" + matchs[1];
+                macths = null;
+            }
+
+            matchs = val.match(/^(.+)x\^3$/i);
+            
+            if(matchs != null){
+                this.power3(matchs[1], 0, 0);
+                return;
+            }
+            
+            matchs = val.match(/(.+)\(x\-(.+)\)²\+(.+)/i);
+            
+            if(matchs != null){
+                this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
+                return;
+            }
+            
+            matchs = val.match(/(.+)\(x\+(.+)\)²\+(.+)/i);
+            
+            if(matchs != null){
+                this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
+                return;
+            }
+            
+            matchs = val.match(/(.+)\(x\-(.+)\)²\-(.+)/i);
+            
+            if(matchs != null){
+                this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
+                return;
+            }
+            
+            matchs = val.match(/(.+)\(x\+(.+)\)²\-(.+)/i);
+            
+            if(matchs != null){
+                this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
+                return;
+            }
+            
+            matchs = val.match(/(.+)x²\+(.+)x\+(.+)/i)
+            
+            if(matchs != null){
+                
+                var a, b, c;
+
+                a = parseFloat(matchs[1]);
+                b = parseFloat(matchs[2]);
+                c = parseFloat(matchs[3]);
+                
+                this.toCan(a, b,c, val);
+            }
+            
+            matchs = val.match(/(.+)x²\-(.+)x\+(.+)/i)
+            
+            if(matchs != null){
+                
+                var a, b, c;
+
+                a = parseFloat(matchs[1]);
+                b = -parseFloat(matchs[2]);
+                c = parseFloat(matchs[3]);
+                
+                this.toCan(a, b,c, val);
+            }
+            
+            matchs = val.match(/(.+)x²\+(.+)x\-(.+)/i)
+            
+            if(matchs != null){
+                
+                var a, b, c;
+
+                a = parseFloat(matchs[1]);
+                b = parseFloat(matchs[2]);
+                c = - parseFloat(matchs[3]);
+                
+                this.toCan(a, b,c, val);
+            }
+            
+            matchs = val.match(/(.+)x²\-(.+)x\-(.+)/i)
+            
+            if(matchs != null){
+                
+                var a, b, c;
+
+                a = parseFloat(matchs[1]);
+                b = -parseFloat(matchs[2]);
+                c = - parseFloat(matchs[3]);
+                
+                this.toCan(a, b,c, val);
+            }
+
+    }
+
+    this.power2 = function (a, m, p){
+            if(a == undefined){
+                a = 0;
+            }else{
+                a = parseFloat(a);
+            }
+            if(m == undefined){
+                m = 0;
+            }else{
+                m = parseFloat(m);
+            }
+            if(p == undefined){
+                p = 0;
+            }else{
+                p = parseFloat(p);
+            }
+
+            var start = -40;
+            while(start <= 40){
+                this.newPoint(start, parseFloat(a * Math.pow(start - m, 2) + p), this.color);
+                start += 0.002;
+            }
+        }
+    this.power3 = function(a, m, p){
+            if(a == undefined){
+                a = 0;
+            }
+            if(m == undefined){
+                m = 0;
+            }
+            if(p == undefined){
+                p = 0;
+            }
+            var start = -40;
+            while(start <= 40){
+                this.newPoint(start, a * Math.pow(start - m, 3) + p, this.color);
+                start += 0.002;
+            }
+        }
 }

@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="header">
-        Smath version 2.0.1#100
+        Smath version 2.0.1#200 - alpha
     </div>
     <div class="left-tool-bar">
         <button class="" id="new_layer">+</button>
@@ -28,7 +28,7 @@
             <div class="layer-function-view">
                 <div class="layer">
                     <div class="preview"></div>
-                    <span class="layer-name">Grid</span><button>@</button>
+                    <span class="layer-name">Grid</span><button>&#128274;</button>
                 </div>
             </div>
         </div>
@@ -40,15 +40,15 @@
             </div>
             <div class="view">
                 <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
-                <button class="apply">Appliquer</button>
+                <button class="apply" id="apply_zoom">Appliquer</button>
             </div>
         </div>
         Copyright &copy; 2017 Simon Loir
-        
+
     </div>
     <div class="draw-area">
         <div class="canvas">
-            <canvas style="" id="layer-grid"></canvas>
+            <canvas id="layer-grid"></canvas>
         </div>
     </div>
     <script src="app-v2.js"></script>
