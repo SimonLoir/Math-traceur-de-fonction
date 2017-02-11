@@ -1,9 +1,10 @@
 /* line 1, C:/wamp64/www/4gt6/style.scss */
 body {
   background: #222222;
-  color: white; }
+  color: white;
+  font-family: sans-serif; }
 
-/* line 5, C:/wamp64/www/4gt6/style.scss */
+/* line 6, C:/wamp64/www/4gt6/style.scss */
 .header {
   background-image: linear-gradient(#3a3a3a, #363636);
   height: 30px;
@@ -15,7 +16,7 @@ body {
   line-height: 30px;
   padding-left: 10px; }
 
-/* line 16, C:/wamp64/www/4gt6/style.scss */
+/* line 17, C:/wamp64/www/4gt6/style.scss */
 .left-tool-bar {
   background: #333333;
   position: absolute;
@@ -24,7 +25,7 @@ body {
   bottom: 0;
   width: 28px;
   padding: 5px; }
-  /* line 24, C:/wamp64/www/4gt6/style.scss */
+  /* line 26, C:/wamp64/www/4gt6/style.scss */
   .left-tool-bar button {
     width: 28px;
     height: 28px;
@@ -36,14 +37,14 @@ body {
     cursor: pointer;
     border-radius: 3px;
     margin-top: 10px; }
-    /* line 35, C:/wamp64/www/4gt6/style.scss */
+    /* line 37, C:/wamp64/www/4gt6/style.scss */
     .left-tool-bar button:hover {
       background: #4d4d4d; }
-    /* line 38, C:/wamp64/www/4gt6/style.scss */
+    /* line 40, C:/wamp64/www/4gt6/style.scss */
     .left-tool-bar button.active {
       background: #1d1d1d; }
 
-/* line 45, C:/wamp64/www/4gt6/style.scss */
+/* line 47, C:/wamp64/www/4gt6/style.scss */
 .right-tool-bar {
   background: #333333;
   position: absolute;
@@ -53,7 +54,7 @@ body {
   width: 235px;
   padding: 15px; }
 
-/* line 53, C:/wamp64/www/4gt6/style.scss */
+/* line 55, C:/wamp64/www/4gt6/style.scss */
 .color-view {
   border-radius: 3px;
   overflow: hidden;
@@ -61,7 +62,7 @@ body {
   height: 125px;
   width: 100%; }
 
-/* line 62, C:/wamp64/www/4gt6/style.scss */
+/* line 64, C:/wamp64/www/4gt6/style.scss */
 .color-picker {
   width: 25px;
   border: none;
@@ -69,18 +70,18 @@ body {
   background: rgba(0, 0, 0, 0.25);
   cursor: pointer; }
 
-/* line 70, C:/wamp64/www/4gt6/style.scss */
+/* line 72, C:/wamp64/www/4gt6/style.scss */
 .container {
   background: #3b3b3b;
   margin-top: 10px;
   border-radius: 3px;
   overflow: hidden; }
-  /* line 77, C:/wamp64/www/4gt6/style.scss */
+  /* line 79, C:/wamp64/www/4gt6/style.scss */
   .container .options {
     margin: 0;
     padding: 0;
     background: #2b2b2b; }
-    /* line 80, C:/wamp64/www/4gt6/style.scss */
+    /* line 82, C:/wamp64/www/4gt6/style.scss */
     .container .options span {
       display: inline-block;
       margin: 5px;
@@ -91,18 +92,20 @@ body {
       cursor: pointer;
       transition: 0.25s;
       border-radius: 3px; }
-      /* line 89, C:/wamp64/www/4gt6/style.scss */
+      /* line 91, C:/wamp64/www/4gt6/style.scss */
       .container .options span:hover {
         background: #333333; }
-      /* line 93, C:/wamp64/www/4gt6/style.scss */
+      /* line 95, C:/wamp64/www/4gt6/style.scss */
       .container .options span.active {
         background: dimgray; }
-  /* line 101, C:/wamp64/www/4gt6/style.scss */
+  /* line 103, C:/wamp64/www/4gt6/style.scss */
   .container .layer-function-view {
+    max-height: 300px;
+    overflow: auto;
     padding: 8px;
     padding-bottom: 30px;
     position: relative; }
-    /* line 105, C:/wamp64/www/4gt6/style.scss */
+    /* line 109, C:/wamp64/www/4gt6/style.scss */
     .container .layer-function-view .layer {
       background: transparent;
       border: 1px solid #464646;
@@ -111,14 +114,14 @@ body {
       margin-bottom: 6px;
       cursor: pointer;
       transition: 0.25s; }
-      /* line 110, C:/wamp64/www/4gt6/style.scss */
+      /* line 114, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer .preview {
         display: inline-block;
         height: 25px;
         width: 25px;
         background: crimson;
         vertical-align: middle; }
-      /* line 117, C:/wamp64/www/4gt6/style.scss */
+      /* line 121, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer button {
         display: inline-block;
         height: 25px;
@@ -130,10 +133,10 @@ body {
         float: right;
         cursor: pointer;
         transition: 0.25s; }
-        /* line 128, C:/wamp64/www/4gt6/style.scss */
+        /* line 132, C:/wamp64/www/4gt6/style.scss */
         .container .layer-function-view .layer button:hover {
           color: white; }
-      /* line 132, C:/wamp64/www/4gt6/style.scss */
+      /* line 136, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer span {
         display: inline-block;
         vertical-align: middle;
@@ -141,17 +144,65 @@ body {
         max-width: 120px;
         max-height: 18px;
         overflow: hidden; }
-      /* line 143, C:/wamp64/www/4gt6/style.scss */
+      /* line 147, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer:hover {
         background: rgba(255, 255, 255, 0.15); }
+  /* line 153, C:/wamp64/www/4gt6/style.scss */
+  .container .view {
+    padding: 8px;
+    padding-bottom: 30px;
+    position: relative; }
+    /* line 157, C:/wamp64/www/4gt6/style.scss */
+    .container .view input {
+      max-width: 40px;
+      border: 1px solid #272727;
+      background: #404040;
+      color: white; }
+  /* line 165, C:/wamp64/www/4gt6/style.scss */
+  .container .apply {
+    background: #464646;
+    color: white;
+    border: none;
+    padding: 6px;
+    padding-left: 9px;
+    padding-right: 9px;
+    border-radius: 4px;
+    float: right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    transition: 0.25s;
+    cursor: pointer; }
+    /* line 178, C:/wamp64/www/4gt6/style.scss */
+    .container .apply:hover {
+      background: rgba(255, 255, 255, 0.15); }
 
-/* line 152, C:/wamp64/www/4gt6/style.scss */
+/* line 185, C:/wamp64/www/4gt6/style.scss */
 .draw-area {
   position: absolute;
   top: 43px;
   right: 270px;
   left: 43px;
   bottom: 2px;
-  background: #f2f2f2; }
+  background: #fafafa;
+  overflow: auto; }
+  /* line 191, C:/wamp64/www/4gt6/style.scss */
+  .draw-area .canvas {
+    position: absolute;
+    background: transparent;
+    top: 0;
+    width: 400%;
+    height: 400%;
+    left: 0; }
+    /* line 196, C:/wamp64/www/4gt6/style.scss */
+    .draw-area .canvas canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 100%; }
 
 /*# sourceMappingURL=style.css.map */

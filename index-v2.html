@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <title>Smath</title>
     <link rel="stylesheet" href="style.css">
+    <script src="extjs.js"></script>
+    <script src="SMath.js"></script>
 </head>
 <body>
     <div class="header">
-        Smath version 2.0.1#006
+        Smath version 2.0.1#100
     </div>
     <div class="left-tool-bar">
-        <button class="">+</button>
-        <button class="">-</button>
+        <button class="" id="new_layer">+</button>
         <button class="">...</button>
+        <button class="">&#128269;</button>
     </div>
     <div class="right-tool-bar">
         <div class="color-view">
@@ -24,14 +26,31 @@
                 <span class="functions">Fonctions</span>
             </div>
             <div class="layer-function-view">
-                <!--<div class="layer">
+                <div class="layer">
                     <div class="preview"></div>
                     <span class="layer-name">Grid</span><button>@</button>
-                </div>-->
+                </div>
             </div>
         </div>
+
+        <div class="container">
+            <div class="options">
+                <span class="layer active">Affichage</span>
+                <span class="functions">Paramètres</span>
+            </div>
+            <div class="view">
+                <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
+                <button class="apply">Appliquer</button>
+            </div>
+        </div>
+        Copyright &copy; 2017 Simon Loir
+        
     </div>
-    <div class="draw-area"></div>
+    <div class="draw-area">
+        <div class="canvas">
+            <canvas style="" id="layer-grid"></canvas>
+        </div>
+    </div>
     <script src="app-v2.js"></script>
 </body>
 </html>
