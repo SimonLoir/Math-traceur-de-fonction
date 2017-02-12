@@ -15,7 +15,6 @@ body{
 }
 
 .left-tool-bar{
-    
     background: rgb(51,51,51);
     position: absolute;
     top: 43px;
@@ -50,6 +49,8 @@ body{
     top: 43px;right: 0;bottom: 0;
     width: 235px;
     padding: 15px;
+    overflow: auto;
+    
 }
 
 .color-view{
@@ -75,7 +76,6 @@ body{
     margin-top: 10px;
     border-radius: 3px;
     overflow: hidden;
-
     & .options{
         margin: 0;padding: 0;
         background: darken(rgb(51,51,51), 3%);

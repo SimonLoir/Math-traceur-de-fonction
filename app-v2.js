@@ -1,3 +1,17 @@
+/*
+Copyright (C) 2017  Simon Loir
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/.
+*/
 var id = 0;
 var function_list = [];
 var zoom = 1;
@@ -25,6 +39,7 @@ var trace = function (math_func) {
             f.y_zero = y_zero;
             f.interval = interval;
             f.color = $(".color-picker").node.value;
+            color.css('background', f.color);
             function_list.push([math_func, f.color]);
             c.id = "x-layer" + id;
             id++;
@@ -67,6 +82,18 @@ $(document).ready(function () {
         $('#zoom-level').html(zoom);
         $('.canvas').css("transform", "scale(" +zoom+ ")");
     });
+
+    $('#need-help').click(function () {
+        var action = $(document.body).child('div').addClass('action');
+        var title = action.child('div').addClass('action-header').html('Aide rapide');
+        var content = action.child('div').addClass('action-content').html('Utilisez la barre à votre gauche pour utiliser les outils rapides. Le panneau de gauche est le panneau des calques et de personnalisation. C\'est sur ce panneau que vous pouvez modifier la couleur du tracé. <br /><br />Vous  pouvez cliquer sur le bouton à droite du nom de chaque fonction (dans calques) pour afficher/masquer la fonction.<br /><br />Dans affichage, au plus l\'intervalle est grand, au plus plus le graphique sera précis et au plus le zoom sera important.');
+        var buttons = action.child('div').addClass('btn-group');
+        buttons.child('button').html('Ok, merci').click(function () {
+            action.remove();
+        });    
+    });
+
+    
 
     var canvas = document.querySelector('#layer-grid');
     canvas.height = canvas.scrollHeight;

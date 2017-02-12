@@ -25,7 +25,7 @@ body {
   bottom: 0;
   width: 28px;
   padding: 5px; }
-  /* line 26, C:/wamp64/www/4gt6/style.scss */
+  /* line 25, C:/wamp64/www/4gt6/style.scss */
   .left-tool-bar button {
     width: 28px;
     height: 28px;
@@ -37,14 +37,14 @@ body {
     cursor: pointer;
     border-radius: 3px;
     margin-top: 10px; }
-    /* line 37, C:/wamp64/www/4gt6/style.scss */
+    /* line 36, C:/wamp64/www/4gt6/style.scss */
     .left-tool-bar button:hover {
       background: #4d4d4d; }
-    /* line 40, C:/wamp64/www/4gt6/style.scss */
+    /* line 39, C:/wamp64/www/4gt6/style.scss */
     .left-tool-bar button.active {
       background: #1d1d1d; }
 
-/* line 47, C:/wamp64/www/4gt6/style.scss */
+/* line 46, C:/wamp64/www/4gt6/style.scss */
 .right-tool-bar {
   background: #333333;
   position: absolute;
@@ -52,9 +52,10 @@ body {
   right: 0;
   bottom: 0;
   width: 235px;
-  padding: 15px; }
+  padding: 15px;
+  overflow: auto; }
 
-/* line 55, C:/wamp64/www/4gt6/style.scss */
+/* line 56, C:/wamp64/www/4gt6/style.scss */
 .color-view {
   border-radius: 3px;
   overflow: hidden;
@@ -62,7 +63,7 @@ body {
   height: 125px;
   width: 100%; }
 
-/* line 64, C:/wamp64/www/4gt6/style.scss */
+/* line 65, C:/wamp64/www/4gt6/style.scss */
 .color-picker {
   width: 25px;
   border: none;
@@ -70,7 +71,7 @@ body {
   background: rgba(0, 0, 0, 0.25);
   cursor: pointer; }
 
-/* line 72, C:/wamp64/www/4gt6/style.scss */
+/* line 73, C:/wamp64/www/4gt6/style.scss */
 .container {
   background: #3b3b3b;
   margin-top: 10px;
