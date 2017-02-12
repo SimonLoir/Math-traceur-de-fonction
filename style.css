@@ -209,4 +209,58 @@ body {
       width: 100%;
       height: 100%; }
 
+/* line 209, C:/wamp64/www/4gt6/style.scss */
+.action {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: #3b3b3b;
+  width: 500px;
+  border-radius: 4px;
+  overflow: hidden;
+  padding-bottom: 20px;
+  height: 300px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.55); }
+  /* line 221, C:/wamp64/www/4gt6/style.scss */
+  .action .action-header {
+    width: 100%;
+    margin: 0;
+    padding: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    border-bottom: 5px solid #333333; }
+  /* line 230, C:/wamp64/www/4gt6/style.scss */
+  .action .action-content {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    overflow: auto;
+    padding: 25px; }
+  /* line 238, C:/wamp64/www/4gt6/style.scss */
+  .action .btn-group {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 5px; }
+    /* line 242, C:/wamp64/www/4gt6/style.scss */
+    .action .btn-group button {
+      margin: 3px;
+      background: linear-gradient(#515151, #363636);
+      color: white;
+      padding: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 2px;
+      transition: 0.45s; }
+      /* line 252, C:/wamp64/www/4gt6/style.scss */
+      .action .btn-group button:hover {
+        background: linear-gradient(#919191, #767676); }
+
 /*# sourceMappingURL=style.css.map */
