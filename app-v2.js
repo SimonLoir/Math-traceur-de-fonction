@@ -1,5 +1,6 @@
 var id = 0;
 var function_list = [];
+var zoom = 1;
 var trace = function (math_func) {
          var layer = $('.layer-function-view').child('div');
             layer.addClass('layer');
@@ -54,6 +55,17 @@ $(document).ready(function () {
 
     $('#apply_zoom').click(function () {
         window.location.hash = "zoom=" + $('#Interval').node.value + ";functions=" + encodeURIComponent(JSON.stringify(function_list));
+    });
+
+    $('#zoom-more').click(function () {
+        zoom += parseFloat(0.2);
+        $('#zoom-level').html(zoom);
+        $('.canvas').css("transform", "scale(" +zoom+ ")");
+    });
+    $('#zoom-less').click(function () {
+        zoom -= parseFloat(0.2);
+        $('#zoom-level').html(zoom);
+        $('.canvas').css("transform", "scale(" +zoom+ ")");
     });
 
     var canvas = document.querySelector('#layer-grid');

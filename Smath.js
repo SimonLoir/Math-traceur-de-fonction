@@ -250,5 +250,11 @@ var SMath = function () {
                 this.newPoint(start, a * Math.pow(start - m, 3) + p, this.color);
                 start += 0.002;
             }
-        }
+    }
+    this.toCan = function (a, b,c, val){
+        var first_exp = (b/a) * (1/2);
+        var exp_2 = -a * Math.pow(first_exp,2);
+        exp_2 = (exp_2 + c);
+        this.draw(a + "(x+" + first_exp + ")²+" + exp_2);
+    } 
 }
