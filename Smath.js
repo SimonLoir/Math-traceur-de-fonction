@@ -124,7 +124,7 @@ var SMath = function () {
                 return;
             }
             
-            matchs = val.match(/^(.+)x²\+([0-9]+)$/i);
+            matchs = val.match(/^(.+)x²\+([0-9||\-||\.]+)$/i);
             
             if(matchs != null){
                 val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
