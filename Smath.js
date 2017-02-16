@@ -108,6 +108,10 @@ var SMath = function () {
             val = val.replace("³", "^3");
             val = val.replace("-x", "-1x");
 
+            val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
+                return p1/p2;
+            });
+
             if(val == "x²"){
                 this.power2(1,0,0);
                 return;
@@ -184,6 +188,7 @@ var SMath = function () {
                 c = parseFloat(matchs[3]);
                 
                 this.toCan(a, b,c, val);
+                 return;
             }
             
             matchs = val.match(/(.+)x²\-(.+)x\+(.+)/i)
@@ -197,6 +202,7 @@ var SMath = function () {
                 c = parseFloat(matchs[3]);
                 
                 this.toCan(a, b,c, val);
+                 return;
             }
             
             matchs = val.match(/(.+)x²\+(.+)x\-(.+)/i)
@@ -210,6 +216,7 @@ var SMath = function () {
                 c = - parseFloat(matchs[3]);
                 
                 this.toCan(a, b,c, val);
+                 return;
             }
             
             matchs = val.match(/(.+)x²\-(.+)x\-(.+)/i)
@@ -223,7 +230,10 @@ var SMath = function () {
                 c = - parseFloat(matchs[3]);
                 
                 this.toCan(a, b,c, val);
+                 return;
             }
+
+             return this.execPlugin(val);
 
     }
 
@@ -244,11 +254,19 @@ var SMath = function () {
                 p = parseFloat(p);
             }
 
-            var start = -40;
+            /*var start = -40;
             while(start <= 40){
                 this.newPoint(start, parseFloat(a * Math.pow(start - m, 2) + p), this.color);
                 start += 0.002;
-            }
+            }*/
+            var start = -40;
+            var last = parseFloat(a * Math.pow(start - m, 2) + p);
+            while(start <= 40){
+                var from = [start,last];
+                start += 0.002;
+                last = parseFloat(a * Math.pow(start - m, 2) + p);
+                this.newLine(from[0], from[1],start, last, this.color);
+            }  
         }
     this.power3 = function(a, m, p){
             if(a == undefined){
@@ -272,4 +290,64 @@ var SMath = function () {
         exp_2 = (exp_2 + c);
         this.draw(a + "(x+" + first_exp + ")²+" + exp_2);
     } 
+
+    this.plugin = [
+        [/cos\(x\)/i, function (m) {
+            this.cos();
+        }],
+        [/sin\(x\)/i, function (m) {
+            this.sin();
+        }],
+        [/tan\(x\)/i, function (m) {
+            this.tan();
+        }]
+    ];
+    this.execPlugin = function (val) {
+        for (var i = 0; i < this.plugin.length; i++) {
+            var element = this.plugin[i];
+            
+            var matchs = val.match(element[0]);
+            
+            if(matchs != null){
+
+                this.plugin_exec_function = element[1];
+                this.plugin_exec_function(matchs);
+                this.plugin_exec_function = function () {};
+
+                 return;
+            }
+        }
+        return "error";
+    }
+    this.plugin_exec_function = function () {};
+    
+    this.cos = function () {
+        var start = -40;
+        var last = Math.cos(start);
+            while(start <= 40){
+                var from = [start,last];
+                start += 0.002;
+                last = Math.cos(start);
+                this.newLine(from[0], from[1],start, last, this.color);
+            }   
+    }
+
+    this.sin = function () {
+        var start = -40;
+        var last = Math.sin(start);
+            while(start <= 40){
+                var from = [start,last];
+                start += 0.002;
+                last = Math.sin(start);
+                this.newLine(from[0], from[1],start, last, this.color);
+            }   
+    }
+    
+    this.tan = function () {
+             var start = -40;
+            while(start <= 40){
+                this.newPoint(start, Math.tan(start), this.color);
+                start += 0.001;
+            }     
+    }
 }

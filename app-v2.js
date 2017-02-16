@@ -57,7 +57,9 @@ var trace = function (math_func) {
                 }
             });
 
-            f.draw(math_func);
+            if(f.draw(math_func) == "error"){
+                alert('Cette fonction n\'est pas encore reconnue');
+            }
  }
 $(document).ready(function () {
     /*
@@ -110,7 +112,7 @@ $(document).ready(function () {
     $('.color-view').css('background', $(".color-picker").node.value);
 
     $('#new_layer').click(function () {
-        var math_func = window.prompt('Fonction à tracer', "x²");
+        var math_func = window.prompt('Fonction à tracer \nUtilisez des parenthèse pour effectuer les fractions exemple 1/2 => (1/2)', "x²");
         if (math_func != null) {
            trace(math_func);
         }
