@@ -1,152 +1,80 @@
 <!DOCTYPE html>
+<!--
+/*
+Copyright (C) 2017  Simon Loir
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/.
+*/    
+-->
 <html lang="en">
 <head>
-   <script src="index.js"></script>
-   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>SMath</title>
+    <title>Smath</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="extjs.js"></script>
+    <script src="Smath.js"></script>
 </head>
 <body>
-   <style>
-       body{
-           background:grey;
-           margin: 0;padding: 0;
-           overflow: hidden;
-       }
-       .tool-bar{
-           background: white;
-           position: fixed;
-           bottom: 0;left: 0;
-           height: 100%;
-           border-right:1px solid #c3c3c3;
-           padding: 0;margin: 0;
-           box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
-           text-align: left;
-            overflow: auto;
-           width: 400px;
-           max-width: 100%;
-           transition: 0.5s ease-in-out;
-           transform: translateX(0);
+    <div class="header">
+        Smath version alpha 2.0.2 #1500- Last update : THU 2017-02-16, 18:27
+    </div>
+    <div class="left-tool-bar">
+        <button class="" id="new_layer">+</button>
+        <button class="">...</button>
+        <button class="" id="zoom-more">&#128269;</button>
+        <button class="" id="zoom-less">&#128269;</button>
+        <button id="need-help">?</button>
+    </div>
+    <div class="right-tool-bar">
+        <div class="color-view">
+            <input type="color" class="color-picker">
+        </div>
+        <div class="container">
+            <div class="options">
+                <span class="layer active">Calques</span>
+                <span class="functions">Fonctions</span>
+            </div>
+            <div class="layer-function-view">
+                <div class="layer">
+                    <div class="preview"></div>
+                    <span class="layer-name">Grid</span><button>&#128274;</button>
+                </div>
+            </div>
+        </div>
 
-       }
-       .tool-bar.hidden{
-           transform: translateX(calc(-100% + 20px));
-       }
-       .tool-bar input{
-           width: calc(100% - 28px);
-           border:1px solid #eee;
-           padding: 8px;
-           margin:5px;
-       }
-       
-       .tool-bar button{
-           width: 100px;
-           border:1px solid gray;
-           padding: 8px;
-           margin:8px;
-           background: #a73838;
-           color:white;
-           float:right;
-           cursor: pointer;
-       }
-       .tool-bar button.clear{
-           width: calc(100% - 18px);
-           position: fixed;
-           bottom: 0;left: 0;right: 0;
-       }
-       .tool-bar .dev, .tool-bar .license, .tool-bar .finfos{
-           width: calc(100% - 28px);
-           border:1px solid #eee;
-           padding: 8px;
-           margin:5px;
-           text-align: left;
-       }
-       
-       .color{
-           max-width: 30px;
-           height: 30px;
-           padding: 0;margin: 0;
-       }
-       
-       .hide{
-           position: fixed;
-           top: 0;right: 0;
-           border:1px solid gray;
-           padding: 8px;
-           margin:8px;
-           background: #a73838;
-           color:white;
-           float:right;
-           cursor: pointer;
-       }
-       
-       .zoom-menu{
-           z-index:100;
-           position: fixed;
-           right: 5px;
-           top: 50%;
-           transform: translateY(-50%);
-           padding: 0;margin: 0;
-           width: 30px;
-       }
-       .zoom-menu button{
-           padding: 5px;margin: 5px;
-           width: 30px;
-           height:30px;
-           background: rgba(0,0,0,0.75);
-           border-radius:50%;
-           border:2px solid white;
-           color:white;
-
-       }
-       canvas{
-        cursor: move;
-       }
-    </style>
-    <canvas style="position:absolute;top:0;left:0;right:0;bottom:0;background:white;display:block;width:100%;height:100%;"></canvas>
-    <div class="tool-bar">
-        <p><button class="clear">clear</button><input type="text" class="function" value="1(x-0)²-0"><button class="draw">draw</button><input type="color" class="color"></p>
-        
-        <div class="dev"></div>
-        <div class="finfos"></div>
-        <div class="license">
-           <br />
-            Copyright (C) 2017  Simon Loir
-            <p>This program is free software: you can redistribute it and/or modify
-            it under the terms of the GNU General Public License as published by
-            the Free Software Foundation, either version 3 of the License, or
-                (at your option) any later version.</p>
-            <p>This program is distributed in the hope that it will be useful,
-            but WITHOUT ANY WARRANTY; without even the implied warranty of
-            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-                GNU General Public License for more details.</p>
-            <p>You should have received a copy of the GNU General Public License
-                along with this program.  If not, see http://www.gnu.org/licenses/.</p>
-                <br />Contact : simon-loir(_at_)hotmail(_dot_)com
+        <div class="container">
+            <div class="options">
+                <span class="layer active">Affichage</span>
+                <span class="functions">Paramètres</span>
+            </div>
+            <div class="view">
+                <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
+                <span><br />Zoom : <span id="zoom-level">1</span></span>
+                <button class="apply" id="apply_zoom">Appliquer</button>
+            </div>
+        </div><br /><br />
+        Copyright &copy; 2017 Simon Loir
+        <p>Ce programme est un programme libre, vous pouvez retrouver ses sources sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
+    </div>
+    <div class="draw-area">
+        <div class="canvas">
+            <canvas id="layer-grid"></canvas>
         </div>
     </div>
-    <button class="hide">Afficher / masquer les outils</button>
-    <div class="zoom-menu">
-        <button class="zoom-more">+</button>
-        <button class="zoom-less">-</button>
+    <div class="action" style="display: none;">
+        <div class="action-header"></div>
+        <div class="action-content"></div>
+        <div class="btn-group"><button>Valider</button><button>Annuler</button></div>
     </div>
-    <script>
-        var canvas;
-        var ctx;
-        var zoom;
-        var mid_height;
-        var mid_width;
-        var interval;
-        var Ypos;
-        var Ypos2;
-        var Xpos;
-        var Xpos2;
-        var x_zero;
-        var y_zero;
-        var val;
-        var finfos;
-    </script>
-
-    <script src="app.js"></script>
+    <script src="app-v2.js"></script>
 </body>
 </html>
