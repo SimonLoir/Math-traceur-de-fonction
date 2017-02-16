@@ -300,7 +300,17 @@ var SMath = function () {
         }],
         [/tan\(x\)/i, function (m) {
             this.tan();
-        }]
+        }], 
+        [
+            /hl\[(.+);(.+)\](.+)/i, function(m){
+                this.ctx.beginPath();
+       	        this.ctx.moveTo(m[1],m[3]);
+       	        this.ctx.lineTo(m[2],m[3]);
+       	        this.ctx.lineWidth = 3;
+                this.ctx.strokeStyle = this.color;
+       	        this.ctx.stroke();
+            }
+        ]
     ];
     this.execPlugin = function (val) {
         for (var i = 0; i < this.plugin.length; i++) {

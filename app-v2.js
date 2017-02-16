@@ -88,7 +88,7 @@ $(document).ready(function () {
     $('#need-help').click(function () {
         var action = $(document.body).child('div').addClass('action');
         var title = action.child('div').addClass('action-header').html('Aide rapide');
-        var content = action.child('div').addClass('action-content').html('Utilisez la barre à votre gauche pour utiliser les outils rapides. Le panneau de gauche est le panneau des calques et de personnalisation. C\'est sur ce panneau que vous pouvez modifier la couleur du tracé. <br /><br />Vous  pouvez cliquer sur le bouton à droite du nom de chaque fonction (dans calques) pour afficher/masquer la fonction.<br /><br />Dans affichage, au plus l\'intervalle est grand, au plus plus le graphique sera précis et au plus le zoom sera important.');
+        var content = action.child('div').addClass('action-content').html('Utilisez la barre à votre gauche pour utiliser les outils rapides. Le panneau de droite est le panneau des calques et de personnalisation. C\'est sur ce panneau que vous pouvez modifier la couleur du tracé. <br /><br />Vous  pouvez cliquer sur le bouton à droite du nom de chaque fonction (dans calques) pour afficher/masquer la fonction.<br /><br />Dans affichage, au plus l\'intervalle est grand, au plus plus le graphique sera précis et au plus le zoom sera important.');
         var buttons = action.child('div').addClass('btn-group');
         buttons.child('button').html('Ok, merci').click(function () {
             action.remove();
@@ -112,7 +112,7 @@ $(document).ready(function () {
     $('.color-view').css('background', $(".color-picker").node.value);
 
     $('#new_layer').click(function () {
-        var math_func = window.prompt('Fonction à tracer \nUtilisez des parenthèse pour effectuer les fractions exemple 1/2 => (1/2)', "x²");
+        var math_func = window.prompt('Fonction à tracer \nUtilisez des parenthèse pour effectuer les fractions exemple 1/2 => (1/2)', "(1/2)x²");
         if (math_func != null) {
            trace(math_func);
         }
@@ -132,6 +132,43 @@ $(document).ready(function () {
              trace(element[0]);
          }
     }
+
+    /* 
+    Drawing-Tool
+    */
+    var click = 0;
+    var last_point = 0;
+    var last_point_y = 0;
+    $('.draw-area').click(function (e){
+        if($('#pen-tool').node.classList.contains("active")){
+           var draw_area = {
+               x: e.clientX - this.offsetLeft,
+               y: e.clientY - this.offsetTop,
+               relativex : 0,
+               relativey: 0
+           }
+          draw_area.relativex = draw_area.x + this.scrollLeft;
+          draw_area.relativey = draw_area.y + this.scrollTop;
+          if (click == 0) {
+              last_point = draw_area.relativex;
+              last_point_y = draw_area.relativey;
+              click ++;
+          }else if(click == 1){
+              trace('hl[' + last_point +";"+ draw_area.relativex+ ']' + last_point_y);
+              click = 0;
+          }
+        }else{
+            console.log("pen-tool is not enabled");
+        }
+    });
+
+    $('#pen-tool').click(function () {
+        if(this.classList.contains("active")){
+            $(this).removeClass('active');
+        }else{
+            $(this).addClass('active');            
+        }
+    });
 
     var interval = $('#Interval').node.value;
     
