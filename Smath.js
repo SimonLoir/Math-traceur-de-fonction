@@ -322,9 +322,9 @@ var SMath = function () {
     this.plugin_exec_function = function () {};
     
     this.cos = function () {
-        var start = -40;
+        var start = -200;
         var last = Math.cos(start);
-            while(start <= 40){
+            while(start <= 200){
                 var from = [start,last];
                 start += 0.002;
                 last = Math.cos(start);
@@ -333,9 +333,9 @@ var SMath = function () {
     }
 
     this.sin = function () {
-        var start = -40;
+        var start = -200;
         var last = Math.sin(start);
-            while(start <= 40){
+            while(start <= 200){
                 var from = [start,last];
                 start += 0.002;
                 last = Math.sin(start);
@@ -344,8 +344,8 @@ var SMath = function () {
     }
     
     this.tan = function () {
-             var start = -40;
-            while(start <= 40){
+             var start = -200;
+            while(start <= 200){
                 this.newPoint(start, Math.tan(start), this.color);
                 start += 0.001;
             }     
