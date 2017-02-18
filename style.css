@@ -55,7 +55,7 @@ body {
   padding: 15px;
   overflow: auto; }
 
-/* line 56, C:/wamp64/www/4gt6/style.scss */
+/* line 55, C:/wamp64/www/4gt6/style.scss */
 .color-view {
   border-radius: 3px;
   overflow: hidden;
@@ -63,7 +63,7 @@ body {
   height: 125px;
   width: 100%; }
 
-/* line 65, C:/wamp64/www/4gt6/style.scss */
+/* line 64, C:/wamp64/www/4gt6/style.scss */
 .color-picker {
   width: 25px;
   border: none;
@@ -71,18 +71,18 @@ body {
   background: rgba(0, 0, 0, 0.25);
   cursor: pointer; }
 
-/* line 73, C:/wamp64/www/4gt6/style.scss */
+/* line 72, C:/wamp64/www/4gt6/style.scss */
 .container {
   background: #3b3b3b;
   margin-top: 10px;
   border-radius: 3px;
   overflow: hidden; }
-  /* line 79, C:/wamp64/www/4gt6/style.scss */
+  /* line 78, C:/wamp64/www/4gt6/style.scss */
   .container .options {
     margin: 0;
     padding: 0;
     background: #2b2b2b; }
-    /* line 82, C:/wamp64/www/4gt6/style.scss */
+    /* line 81, C:/wamp64/www/4gt6/style.scss */
     .container .options span {
       display: inline-block;
       margin: 5px;
@@ -93,36 +93,41 @@ body {
       cursor: pointer;
       transition: 0.25s;
       border-radius: 3px; }
-      /* line 91, C:/wamp64/www/4gt6/style.scss */
+      /* line 90, C:/wamp64/www/4gt6/style.scss */
       .container .options span:hover {
         background: #333333; }
-      /* line 95, C:/wamp64/www/4gt6/style.scss */
+      /* line 94, C:/wamp64/www/4gt6/style.scss */
       .container .options span.active {
         background: dimgray; }
-  /* line 103, C:/wamp64/www/4gt6/style.scss */
+  /* line 101, C:/wamp64/www/4gt6/style.scss */
+  .container a {
+    color: crimson;
+    text-decoration: none; }
+  /* line 105, C:/wamp64/www/4gt6/style.scss */
   .container .layer-function-view {
     max-height: 300px;
     overflow: auto;
     padding: 8px;
     padding-bottom: 30px;
     position: relative; }
-    /* line 109, C:/wamp64/www/4gt6/style.scss */
+    /* line 111, C:/wamp64/www/4gt6/style.scss */
     .container .layer-function-view .layer {
       background: transparent;
       border: 1px solid #464646;
       padding: 8px;
       border-radius: 4px;
+      max-height: 41px;
       margin-bottom: 6px;
       cursor: pointer;
       transition: 0.25s; }
-      /* line 114, C:/wamp64/www/4gt6/style.scss */
+      /* line 117, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer .preview {
         display: inline-block;
         height: 25px;
         width: 25px;
         background: crimson;
         vertical-align: middle; }
-      /* line 121, C:/wamp64/www/4gt6/style.scss */
+      /* line 124, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer button {
         display: inline-block;
         height: 25px;
@@ -134,32 +139,33 @@ body {
         float: right;
         cursor: pointer;
         transition: 0.25s; }
-        /* line 132, C:/wamp64/www/4gt6/style.scss */
+        /* line 135, C:/wamp64/www/4gt6/style.scss */
         .container .layer-function-view .layer button:hover {
           color: white; }
-      /* line 136, C:/wamp64/www/4gt6/style.scss */
+      /* line 139, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer span {
         display: inline-block;
         vertical-align: middle;
         padding-left: 8px;
-        max-width: 120px;
+        max-width: 100px;
         max-height: 18px;
-        overflow: hidden; }
-      /* line 147, C:/wamp64/www/4gt6/style.scss */
+        overflow: hidden;
+        word-break: break-all; }
+      /* line 151, C:/wamp64/www/4gt6/style.scss */
       .container .layer-function-view .layer:hover {
         background: rgba(255, 255, 255, 0.15); }
-  /* line 153, C:/wamp64/www/4gt6/style.scss */
+  /* line 157, C:/wamp64/www/4gt6/style.scss */
   .container .view {
     padding: 8px;
     padding-bottom: 30px;
     position: relative; }
-    /* line 157, C:/wamp64/www/4gt6/style.scss */
+    /* line 161, C:/wamp64/www/4gt6/style.scss */
     .container .view input {
       max-width: 40px;
       border: 1px solid #272727;
       background: #404040;
       color: white; }
-  /* line 165, C:/wamp64/www/4gt6/style.scss */
+  /* line 170, C:/wamp64/www/4gt6/style.scss */
   .container .apply {
     background: #464646;
     color: white;
@@ -174,11 +180,11 @@ body {
     margin-right: 10px;
     transition: 0.25s;
     cursor: pointer; }
-    /* line 178, C:/wamp64/www/4gt6/style.scss */
+    /* line 183, C:/wamp64/www/4gt6/style.scss */
     .container .apply:hover {
       background: rgba(255, 255, 255, 0.15); }
 
-/* line 185, C:/wamp64/www/4gt6/style.scss */
+/* line 190, C:/wamp64/www/4gt6/style.scss */
 .draw-area {
   position: absolute;
   top: 43px;
@@ -187,17 +193,17 @@ body {
   bottom: 2px;
   background: #fafafa;
   overflow: auto; }
-  /* line 191, C:/wamp64/www/4gt6/style.scss */
+  /* line 196, C:/wamp64/www/4gt6/style.scss */
   .draw-area .canvas {
     position: absolute;
     background: transparent;
     top: 0;
-    width: 400%;
-    height: 400%;
+    width: 1000%;
+    height: 1000%;
     left: 0;
     margin: 0;
     padding: 0; }
-    /* line 198, C:/wamp64/www/4gt6/style.scss */
+    /* line 203, C:/wamp64/www/4gt6/style.scss */
     .draw-area .canvas canvas {
       margin: 0;
       padding: 0;
@@ -210,7 +216,7 @@ body {
       width: 100%;
       height: 100%; }
 
-/* line 209, C:/wamp64/www/4gt6/style.scss */
+/* line 214, C:/wamp64/www/4gt6/style.scss */
 .action {
   position: fixed;
   top: 50%;
@@ -223,7 +229,7 @@ body {
   padding-bottom: 20px;
   height: 300px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.55); }
-  /* line 221, C:/wamp64/www/4gt6/style.scss */
+  /* line 226, C:/wamp64/www/4gt6/style.scss */
   .action .action-header {
     width: 100%;
     margin: 0;
@@ -234,7 +240,7 @@ body {
     right: 0;
     text-align: center;
     border-bottom: 5px solid #333333; }
-  /* line 230, C:/wamp64/www/4gt6/style.scss */
+  /* line 235, C:/wamp64/www/4gt6/style.scss */
   .action .action-content {
     position: absolute;
     top: 45px;
@@ -243,13 +249,13 @@ body {
     bottom: 5px;
     overflow: auto;
     padding: 25px; }
-  /* line 238, C:/wamp64/www/4gt6/style.scss */
+  /* line 243, C:/wamp64/www/4gt6/style.scss */
   .action .btn-group {
     position: absolute;
     bottom: 5px;
     right: 5px;
     padding: 5px; }
-    /* line 242, C:/wamp64/www/4gt6/style.scss */
+    /* line 247, C:/wamp64/www/4gt6/style.scss */
     .action .btn-group button {
       margin: 3px;
       background: linear-gradient(#515151, #363636);
@@ -260,7 +266,7 @@ body {
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
       border-radius: 2px;
       transition: 0.45s; }
-      /* line 252, C:/wamp64/www/4gt6/style.scss */
+      /* line 257, C:/wamp64/www/4gt6/style.scss */
       .action .btn-group button:hover {
         background: linear-gradient(#919191, #767676); }
 

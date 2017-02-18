@@ -302,13 +302,32 @@ var SMath = function () {
             this.tan();
         }], 
         [
-            /hl\[(.+);(.+)\](.+)/i, function(m){
-                this.ctx.beginPath();
-       	        this.ctx.moveTo(m[1],m[3]);
-       	        this.ctx.lineTo(m[2],m[3]);
-       	        this.ctx.lineWidth = 3;
-                this.ctx.strokeStyle = this.color;
-       	        this.ctx.stroke();
+            /\[\((.+);(.+)\) \((.+);(.+)\)\]/i, function(m){
+                this.newLine(m[1], m[2], m[3], m[4], this.color);
+            }
+        ], 
+        [
+            /y=x/i, function () {
+                var start = -40;
+                var last = parseFloat(start);
+                while(start <= 40){
+                    var from = [start,last];
+                    start += 0.002;
+                    last = parseFloat(start);
+                    this.newLine(from[0], from[1],start, last, this.color);
+                }
+            }
+        ], 
+        [
+            /y=\-1x/i, function () {
+                var start = -40;
+                var last = -parseFloat(start);
+                while(start <= 40){
+                    var from = [start,last];
+                    start += 0.002;
+                    last = -parseFloat(start);
+                    this.newLine(from[0], from[1],start, last, this.color);
+                }
             }
         ]
     ];

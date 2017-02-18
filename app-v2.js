@@ -133,40 +133,20 @@ $(document).ready(function () {
          }
     }
 
-    /* 
-    Drawing-Tool
-    */
-    var click = 0;
-    var last_point = 0;
-    var last_point_y = 0;
-    $('.draw-area').click(function (e){
-        if($('#pen-tool').node.classList.contains("active")){
-           var draw_area = {
-               x: e.clientX - this.offsetLeft,
-               y: e.clientY - this.offsetTop,
-               relativex : 0,
-               relativey: 0
-           }
-          draw_area.relativex = draw_area.x + this.scrollLeft;
-          draw_area.relativey = draw_area.y + this.scrollTop;
-          if (click == 0) {
-              last_point = draw_area.relativex;
-              last_point_y = draw_area.relativey;
-              click ++;
-          }else if(click == 1){
-              trace('hl[' + last_point +";"+ draw_area.relativex+ ']' + last_point_y);
-              click = 0;
-          }
-        }else{
-            console.log("pen-tool is not enabled");
-        }
-    });
-
     $('#pen-tool').click(function () {
         if(this.classList.contains("active")){
             $(this).removeClass('active');
+            $('.pencil-tool-board').css('display', "none");
+            $('#zoom-more').css('display', "block");
+            $('#zoom-less').css('display', "block");
         }else{
-            $(this).addClass('active');            
+            $(this).addClass('active');
+           $('.pencil-tool-board').css('display', "block");
+           zoom = 1;
+             $('#zoom-level').html(zoom);
+            $('.canvas').css("transform", "");
+            $('#zoom-more').css('display', "none");
+            $('#zoom-less').css('display', "none");
         }
     });
 
@@ -184,6 +164,61 @@ $(document).ready(function () {
     grid.makeGrid();
     grid.newLine(0, -1000 ,0,1000, "crimson");
     grid.newLine(-1000 ,0,1000, 0, "crimson"); 
+
+    
+    /* 
+    Drawing-Tool
+    */
+    var click = 0;
+    var last_point = [];
+    $('.draw-area').click(function (e){
+        if($('#pen-tool').node.classList.contains("active")){
+           var draw_area = {
+               x: e.clientX - this.offsetLeft,
+               y: e.clientY - this.offsetTop,
+               relativex : 0,
+               relativey: 0
+           }
+          draw_area.relativex = draw_area.x + this.scrollLeft;
+          draw_area.relativey = draw_area.y + this.scrollTop;
+          if (click == 0) {
+              last_point[0] = draw_area.relativex;
+              last_point[1] = draw_area.relativey;
+              click ++;
+          }else if(click == 1){
+              click = 0;
+              if ($('#line-type').node.options[$('#line-type').node.selectedIndex].value == "h") {
+                 var x1 = last_point[0];
+                 var x2 = draw_area.relativex;
+                 var y1 = last_point[1];
+                 var y2 = last_point[1];                 
+              }else if ($('#line-type').node.options[$('#line-type').node.selectedIndex].value == "o") {
+                 var x1 = last_point[0];
+                 var x2 = draw_area.relativex;
+                 var y1 = last_point[1];
+                 var y2 = draw_area.relativey;                 
+              }else if ($('#line-type').node.options[$('#line-type').node.selectedIndex].value == "v") {
+                 var x1 = last_point[0];
+                 var x2 = last_point[0];
+                 var y1 = last_point[1];
+                 var y2 = draw_area.relativey;                 
+              }else{
+                  alert('erreur');
+              }
+
+              x1 = (x1 - x_zero) / interval;
+              x2 = (x2 - x_zero) / interval;              
+              y1 = -(y1 - y_zero) / interval;              
+              y2 = -(y2 - y_zero) / interval;              
+              
+
+              trace("[(" + x1 + ";" + y1 + ") (" + x2 + ";" + y2 + ")]");
+              
+          }
+        }else{
+            console.log("pen-tool is not enabled");
+        }
+    });
 }); 
 
 
