@@ -95,7 +95,11 @@ $(document).ready(function () {
         });    
     });
 
-    
+    if(page.get('browser') == "moz"){
+         $('.canvas').css('height', '400%');
+         $('.canvas').css('width', '400%');
+         
+    }
 
     var canvas = document.querySelector('#layer-grid');
     canvas.height = canvas.scrollHeight;

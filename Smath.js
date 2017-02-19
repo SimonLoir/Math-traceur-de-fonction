@@ -37,7 +37,7 @@ var SMath = function () {
         this.ctx.fill();
     }
 
-    this.newLine = function (X, Y, X2, Y2, color){
+    this.newLine = function (X, Y, X2, Y2, color, arrow){
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
         var X2 = this.x_zero + X2 * parseFloat(this.interval);
@@ -52,6 +52,69 @@ var SMath = function () {
        	this.ctx.lineTo(X2,Y2);
        	this.ctx.lineWidth = 1;
        	this.ctx.stroke();
+
+        if(arrow == true){
+            console.log(X + "/" + Y + " ++ " + X2 + "/" +  Y2);
+
+            if (X < X2) {
+                if (Y > Y2) {
+                    this.ctx.beginPath();
+                    if (color == undefined) {
+                        this.ctx.strokeStyle = "#eee";
+                    }else{
+                        this.ctx.strokeStyle = color;
+                    }
+       	            this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2 - 0.12 * this.interval,Y2);
+                    this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2,Y2 + 0.12 * this.interval);
+       	            this.ctx.lineWidth = 1;
+       	            this.ctx.stroke();
+                 }else{
+                    this.ctx.beginPath();
+                    if (color == undefined) {
+                        this.ctx.strokeStyle = "#eee";
+                    }else{
+                        this.ctx.strokeStyle = color;
+                    }
+       	            this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2 - 0.12 * this.interval,Y2);
+                    this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2,Y2 - 0.12 * this.interval);
+       	            this.ctx.lineWidth = 1;
+       	            this.ctx.stroke();
+                }
+            }else{
+                if (Y > Y2) {
+                    this.ctx.beginPath();
+                    if (color == undefined) {
+                        this.ctx.strokeStyle = "#eee";
+                    }else{
+                        this.ctx.strokeStyle = color;
+                    }
+       	            this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2 + 0.12 * this.interval,Y2);
+                    this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2,Y2 + 0.12 * this.interval);
+       	            this.ctx.lineWidth = 1;
+       	            this.ctx.stroke();
+                 }else{
+                    this.ctx.beginPath();
+                    if (color == undefined) {
+                        this.ctx.strokeStyle = "#eee";
+                    }else{
+                        this.ctx.strokeStyle = color;
+                    }
+       	            this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2 + 0.12 * this.interval,Y2);
+                    this.ctx.moveTo(X2,Y2);
+       	            this.ctx.lineTo(X2,Y2 - 0.12 * this.interval);
+       	            this.ctx.lineWidth = 1;
+       	            this.ctx.stroke();
+                }
+            }
+        }
+        
     }
     
     this.label = function (text, X, Y, color){
@@ -108,6 +171,10 @@ var SMath = function () {
             val = val.replace("³", "^3");
             val = val.replace("-x", "-1x");
 
+            if(val[0] == "x"){
+                val = "1" + val;
+            }
+
             val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
                 return p1/p2;
             });
@@ -135,10 +202,10 @@ var SMath = function () {
                 macths = null;
             }
 
-            matchs = val.match(/^x²\+(.+)$/i);
+            matchs = val.match(/^(.+)x²\-([0-9||\-||\.]+)$/i);
             
             if(matchs != null){
-                val =  "1(x-" + 0 + ")²+" + matchs[1];
+                val = matchs[1] + "(x-" + 0 + ")²+" + -matchs[2];
                 macths = null;
             }
 
@@ -253,12 +320,6 @@ var SMath = function () {
             }else{
                 p = parseFloat(p);
             }
-
-            /*var start = -40;
-            while(start <= 40){
-                this.newPoint(start, parseFloat(a * Math.pow(start - m, 2) + p), this.color);
-                start += 0.002;
-            }*/
             var start = -40;
             var last = parseFloat(a * Math.pow(start - m, 2) + p);
             while(start <= 40){
@@ -328,6 +389,63 @@ var SMath = function () {
                     last = -parseFloat(start);
                     this.newLine(from[0], from[1],start, last, this.color);
                 }
+            }
+        ], 
+        [
+            /vect\[(.+)\]/i, function (m) {
+                var x = 0;
+                var y = 0;
+                var vectors  = m[1].split('+');
+                for (var i = 0; i < vectors.length; i++) {
+                    var element = vectors[i];
+
+                    /*var split_less = element.split("-");
+                    var slx = 0;
+                    var sly = 0;
+
+                    for (var i2 = 0; i2 < split_less.length; i2++) {
+                        var elless = split_less[i2];
+                        var less_exp = /^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i;
+                        var matchs = elless.match(less_exp)
+                        if(matchs != null){
+                            if (i2 == 0) {
+                                slx = parseFloat(matchs[1]);
+                                sly = parseFloat(matchs[2]);
+                            }else{
+                                slx -= parseFloat(matchs[1]);
+                                sly -= parseFloat(matchs[2]);
+                            }
+                           
+                        }else{
+                            //console.log('error'+ "- ==> " + elless)
+
+                            var test1 = elless +"-"+ split_less[i2+1];
+                            matchs = elless.match(less_exp)
+                            if(matchs != null){split_less[i2+1] = test1;
+                                console.log(test1);
+                            }
+                            test1 =  split_less[i2-1]+"-"+elless;
+                            matchs = elless.match(less_exp)
+                            if(matchs != null){split_less[i2] = test1; i2 = i2--;
+                                
+                            }
+                        }
+                        
+                    }
+
+                    element = '(' + slx + ";" + sly + ')';
+                    console.log(element);*/
+
+                    var matchs = element.match(/^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
+                    if(matchs != null){
+                       x += parseFloat(matchs[1]);
+                       y += parseFloat(matchs[2]);
+                    }else{
+                        console.log('error' + "+")
+                    }
+                }
+                //alert('vercteur (' + x + " ; " + y + ')')
+                this.newLine(0, 0 , x, y,this.color, true);
             }
         ]
     ];
