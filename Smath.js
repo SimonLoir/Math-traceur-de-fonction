@@ -395,56 +395,21 @@ var SMath = function () {
             /vect\[(.+)\]/i, function (m) {
                 var x = 0;
                 var y = 0;
-                var vectors  = m[1].split('+');
+                var e = m[1].replace(/\-\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, x1,y1) {
+                        x1 = -parseFloat(x1);
+                        y1 = -parseFloat(y1);
+                        return '+(' + x1 + ';'+ y1 + ')'
+                    })
+                var vectors  = e.split('+');
+                
                 for (var i = 0; i < vectors.length; i++) {
                     var element = vectors[i];
-
-                    /*var split_less = element.split("-");
-                    var slx = 0;
-                    var sly = 0;
-
-                    for (var i2 = 0; i2 < split_less.length; i2++) {
-                        var elless = split_less[i2];
-                        var less_exp = /^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i;
-                        var matchs = elless.match(less_exp)
-                        if(matchs != null){
-                            if (i2 == 0) {
-                                slx = parseFloat(matchs[1]);
-                                sly = parseFloat(matchs[2]);
-                            }else{
-                                slx -= parseFloat(matchs[1]);
-                                sly -= parseFloat(matchs[2]);
-                            }
-                           
-                        }else{
-                            //console.log('error'+ "- ==> " + elless)
-
-                            var test1 = elless +"-"+ split_less[i2+1];
-                            matchs = elless.match(less_exp)
-                            if(matchs != null){split_less[i2+1] = test1;
-                                console.log(test1);
-                            }
-                            test1 =  split_less[i2-1]+"-"+elless;
-                            matchs = elless.match(less_exp)
-                            if(matchs != null){split_less[i2] = test1; i2 = i2--;
-                                
-                            }
-                        }
-                        
-                    }
-
-                    element = '(' + slx + ";" + sly + ')';
-                    console.log(element);*/
-
                     var matchs = element.match(/^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
                     if(matchs != null){
                        x += parseFloat(matchs[1]);
                        y += parseFloat(matchs[2]);
-                    }else{
-                        console.log('error' + "+")
                     }
                 }
-                //alert('vercteur (' + x + " ; " + y + ')')
                 this.newLine(0, 0 , x, y,this.color, true);
             }
         ]
