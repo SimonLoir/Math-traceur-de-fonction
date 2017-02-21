@@ -70,6 +70,10 @@ $(document).ready(function () {
         window.location.reload();
     }
 
+    $('.left-tool-bar').click(function () {
+        $('.popup-start').css('display', "none");
+    });
+
     $('#apply_zoom').click(function () {
         window.location.hash = "zoom=" + $('#Interval').node.value + ";functions=" + encodeURIComponent(JSON.stringify(function_list));
     });

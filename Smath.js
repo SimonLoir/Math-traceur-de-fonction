@@ -400,6 +400,11 @@ var SMath = function () {
                         y1 = -parseFloat(y1);
                         return '+(' + x1 + ';'+ y1 + ')'
                     })
+                     e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi,x1,y1) {
+                        x1 = -parseFloat(x1);
+                        y1 = -parseFloat(y1);
+                        return '+' + multi + '(' + x1 + ';'+ y1 + ')'
+                    })
                 var vectors  = e.split('+');
                 
                 for (var i = 0; i < vectors.length; i++) {
@@ -408,6 +413,12 @@ var SMath = function () {
                     if(matchs != null){
                        x += parseFloat(matchs[1]);
                        y += parseFloat(matchs[2]);
+                    }
+
+                    matchs = element.match(/^([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
+                    if(matchs != null){
+                       x += parseFloat(matchs[2]) * parseFloat(matchs[1]);
+                       y += parseFloat(matchs[3]) * parseFloat(matchs[1]);
                     }
                 }
                 this.newLine(0, 0 , x, y,this.color, true);
