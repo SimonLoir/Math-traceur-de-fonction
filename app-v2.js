@@ -13,6 +13,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 var id = 0;
+var global_canvas;
 var function_list = [];
 var zoom = 1;
 var trace = function (math_func) {
@@ -24,8 +25,8 @@ var trace = function (math_func) {
             var show_hide = layer.child("button").html("&#128064;");
 
             var c = $('.canvas').child('canvas').node;
-            c.height = c.scrollHeight;
-            c.width = c.scrollWidth;
+            c.height = global_canvas.height;
+            c.width = global_canvas.width;
             var context = c.getContext('2d');
 
             var interval = $('#Interval').node.value;
@@ -40,7 +41,7 @@ var trace = function (math_func) {
             f.interval = interval;
             f.color = $(".color-picker").node.value;
             color.css('background', f.color);
-            function_list.push([math_func, f.color]);
+            
             c.id = "x-layer" + id;
             id++;
 
@@ -59,6 +60,9 @@ var trace = function (math_func) {
 
             if(f.draw(math_func) == "error"){
                 alert('Cette fonction n\'est pas encore reconnue');
+                layer.remove();
+            }else{
+                function_list.push([math_func, f.color]);                
             }
  }
 $(document).ready(function () {
@@ -106,8 +110,15 @@ $(document).ready(function () {
     }
 
     var canvas = document.querySelector('#layer-grid');
+
     canvas.height = canvas.scrollHeight;
     canvas.width = canvas.scrollWidth;
+
+    global_canvas = canvas;
+
+    $('.canvas').css('width', canvas.width + 'px');
+    $('.canvas').css('height', canvas.height + 'px');
+    
 
     $('.draw-area').node.scrollLeft = $('.draw-area').node.scrollWidth / 2 - $('.draw-area').node.offsetWidth / 2;
     $('.draw-area').node.scrollTop = $('.draw-area').node.scrollHeight / 2 - $('.draw-area').node.offsetHeight / 2; 
@@ -120,11 +131,20 @@ $(document).ready(function () {
     $('.color-view').css('background', $(".color-picker").node.value);
 
     $('#new_layer').click(function () {
-        var math_func = window.prompt('Fonction à tracer \nUtilisez des parenthèse pour effectuer les fractions exemple 1/2 => (1/2)', "(1/2)x²");
-        if (math_func != null) {
-           trace(math_func);
-        }
+        $('#ftrace_dialog').css('display', "block");
     });
+    $('#ftrace').click(function () {
+        if ($('#ftrace_dialog input').node.value == "") {
+            alert('Incorrect');
+        }else{
+            trace($('#ftrace_dialog input').node.value);
+             $('#ftrace_dialog').css('display', "none");
+        }
+        
+    })
+    $('#fcancel').click(function () {
+        $('#ftrace_dialog').css("display", "none");
+    })
 
     var ctx = canvas.getContext('2d');
     

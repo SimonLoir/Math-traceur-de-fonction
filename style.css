@@ -265,13 +265,22 @@ body {
     bottom: 5px;
     overflow: auto;
     padding: 25px; }
-  /* line 256, C:/wamp64/www/4gt6/style.scss */
+    /* line 255, C:/wamp64/www/4gt6/style.scss */
+    .action .action-content input {
+      width: 100%;
+      margin-top: 15px;
+      font-size: 20px;
+      border-radius: 4px;
+      border: 1px solid #363636;
+      background: #5f5f5f;
+      color: white; }
+  /* line 265, C:/wamp64/www/4gt6/style.scss */
   .action .btn-group {
     position: absolute;
     bottom: 5px;
     right: 5px;
     padding: 5px; }
-    /* line 260, C:/wamp64/www/4gt6/style.scss */
+    /* line 269, C:/wamp64/www/4gt6/style.scss */
     .action .btn-group button {
       margin: 3px;
       background: linear-gradient(#515151, #363636);
@@ -282,8 +291,22 @@ body {
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
       border-radius: 2px;
       transition: 0.45s; }
-      /* line 270, C:/wamp64/www/4gt6/style.scss */
+      /* line 279, C:/wamp64/www/4gt6/style.scss */
       .action .btn-group button:hover {
         background: linear-gradient(#919191, #767676); }
+  /* line 285, C:/wamp64/www/4gt6/style.scss */
+  .action .btn {
+    margin: 3px;
+    background: linear-gradient(#515151, #464646);
+    color: white;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    transition: 0.45s; }
+    /* line 295, C:/wamp64/www/4gt6/style.scss */
+    .action .btn:hover {
+      box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.35); }
 
 /*# sourceMappingURL=style.css.map */

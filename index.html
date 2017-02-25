@@ -92,10 +92,20 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
             <canvas id="layer-grid"></canvas>
         </div>
     </div>
-    <div class="action" style="display: none;">
-        <div class="action-header"></div>
-        <div class="action-content"></div>
-        <div class="btn-group"><button>Valider</button><button>Annuler</button></div>
+    <div class="action" style="display: none;" id="ftrace_dialog">
+        <div class="action-header">Tracer quelque chose</div>
+        <div class="action-content">
+            <p>  
+               Entrez une expression : 
+                <br />
+                <input type="text"><br /><br />
+                Exemple : <br />
+                vect[(x;y)-(x;y)+3(x;y)] ou vect[(x;y)] ou ou vect[3(x;y)]<br />
+                x² ou (x-0)²+0 ou ax²-bx+c
+                <br /><br /><button class="btn">Liste des fonctions</button>
+            </p>
+        </div>
+        <div class="btn-group"><button id="ftrace">Valider</button><button id="fcancel">Annuler</button></div>
     </div>
     <div class="popup-start">
         &#8592; Cliquez ici pour tracer quelque chose
