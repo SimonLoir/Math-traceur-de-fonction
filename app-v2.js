@@ -12,6 +12,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+
 var id = 0;
 var global_canvas;
 var function_list = [];
@@ -207,8 +208,12 @@ $(document).ready(function () {
                relativex : 0,
                relativey: 0
            }
-          draw_area.relativex = draw_area.x + this.scrollLeft;
-          draw_area.relativey = draw_area.y + this.scrollTop;
+
+                draw_area.relativey = draw_area.y + this.scrollTop;
+                draw_area.relativex = draw_area.x + this.scrollLeft;
+           
+               
+
           if (click == 0) {
               last_point[0] = draw_area.relativex;
               last_point[1] = draw_area.relativey;
@@ -239,6 +244,13 @@ $(document).ready(function () {
               y1 = -(y1 - y_zero) / interval;              
               y2 = -(y2 - y_zero) / interval;              
               
+           if($('#round').node.checked == true){
+                 x1 = Math.round(x1); 
+              x2 = Math.round(x2);               
+              y1 = Math.round(y1);               
+              y2 = Math.round(y2);               
+            
+            }
 
               trace("[(" + x1 + ";" + y1 + ") (" + x2 + ";" + y2 + ")]");
               
