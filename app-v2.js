@@ -245,10 +245,10 @@ $(document).ready(function () {
               y2 = -(y2 - y_zero) / interval;              
               
            if($('#round').node.checked == true){
-                 x1 = Math.round(x1); 
-              x2 = Math.round(x2);               
-              y1 = Math.round(y1);               
-              y2 = Math.round(y2);               
+                x1 = Math.round(x1); 
+                x2 = Math.round(x2);               
+                y1 = Math.round(y1);               
+                y2 = Math.round(y2);               
             
             }
 
