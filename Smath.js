@@ -19,25 +19,25 @@ var SMath = function () {
 
     this.ctx = "";
 
-    this.setContext = function (ctx){
+    this.setContext = function (ctx) {
         this.ctx = ctx;
     }
 
-    this.newPoint = function (X, Y, color){
+    this.newPoint = function (X, Y, color) {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
         this.ctx.beginPath();
         this.ctx.lineWidth = 1;
         if (color != undefined) {
             this.ctx.fillStyle = color;
-        }else{
+        } else {
             this.ctx.fillStyle = "black";
         }
         this.ctx.arc(X, Y, 1, 0, Math.PI * 2)
         this.ctx.fill();
     }
 
-    this.newLine = function (X, Y, X2, Y2, color, arrow){
+    this.newLine = function (X, Y, X2, Y2, color, arrow) {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
         var X2 = this.x_zero + X2 * parseFloat(this.interval);
@@ -45,79 +45,79 @@ var SMath = function () {
         this.ctx.beginPath();
         if (color == undefined) {
             this.ctx.strokeStyle = "#eee";
-        }else{
+        } else {
             this.ctx.strokeStyle = color;
         }
-       	this.ctx.moveTo(X,Y);
-       	this.ctx.lineTo(X2,Y2);
-       	this.ctx.lineWidth = 1;
-       	this.ctx.stroke();
+        this.ctx.moveTo(X, Y);
+        this.ctx.lineTo(X2, Y2);
+        this.ctx.lineWidth = 1;
+        this.ctx.stroke();
 
-        if(arrow == true){
-            console.log(X + "/" + Y + " ++ " + X2 + "/" +  Y2);
+        if (arrow == true) {
+            console.log(X + "/" + Y + " ++ " + X2 + "/" + Y2);
 
             if (X < X2) {
                 if (Y > Y2) {
                     this.ctx.beginPath();
                     if (color == undefined) {
                         this.ctx.strokeStyle = "#eee";
-                    }else{
+                    } else {
                         this.ctx.strokeStyle = color;
                     }
-       	            this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2 - 0.12 * this.interval,Y2);
-                    this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2,Y2 + 0.12 * this.interval);
-       	            this.ctx.lineWidth = 1;
-       	            this.ctx.stroke();
-                 }else{
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2 - 0.12 * this.interval, Y2);
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2, Y2 + 0.12 * this.interval);
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                } else {
                     this.ctx.beginPath();
                     if (color == undefined) {
                         this.ctx.strokeStyle = "#eee";
-                    }else{
+                    } else {
                         this.ctx.strokeStyle = color;
                     }
-       	            this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2 - 0.12 * this.interval,Y2);
-                    this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2,Y2 - 0.12 * this.interval);
-       	            this.ctx.lineWidth = 1;
-       	            this.ctx.stroke();
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2 - 0.12 * this.interval, Y2);
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2, Y2 - 0.12 * this.interval);
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
                 }
-            }else{
+            } else {
                 if (Y > Y2) {
                     this.ctx.beginPath();
                     if (color == undefined) {
                         this.ctx.strokeStyle = "#eee";
-                    }else{
+                    } else {
                         this.ctx.strokeStyle = color;
                     }
-       	            this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2 + 0.12 * this.interval,Y2);
-                    this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2,Y2 + 0.12 * this.interval);
-       	            this.ctx.lineWidth = 1;
-       	            this.ctx.stroke();
-                 }else{
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2 + 0.12 * this.interval, Y2);
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2, Y2 + 0.12 * this.interval);
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                } else {
                     this.ctx.beginPath();
                     if (color == undefined) {
                         this.ctx.strokeStyle = "#eee";
-                    }else{
+                    } else {
                         this.ctx.strokeStyle = color;
                     }
-       	            this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2 + 0.12 * this.interval,Y2);
-                    this.ctx.moveTo(X2,Y2);
-       	            this.ctx.lineTo(X2,Y2 - 0.12 * this.interval);
-       	            this.ctx.lineWidth = 1;
-       	            this.ctx.stroke();
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2 + 0.12 * this.interval, Y2);
+                    this.ctx.moveTo(X2, Y2);
+                    this.ctx.lineTo(X2, Y2 - 0.12 * this.interval);
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
                 }
             }
         }
-        
+
     }
-    
-    this.label = function (text, X, Y, color){
+
+    this.label = function (text, X, Y, color) {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
 
@@ -125,232 +125,232 @@ var SMath = function () {
         this.ctx.lineWidth = 1;
         if (color != undefined) {
             this.ctx.fillStyle = color;
-        }else{
+        } else {
             this.ctx.fillStyle = "black";
         }
         this.ctx.fillText(text, X, Y);
         this.ctx.fill();
     }
 
-    this.makeGrid = function (){
+    this.makeGrid = function () {
         this.label(0, 0, 0);
-       var max_x = this.x_zero / this.interval;
-       var max_y = this.y_zero / this.interval;
+        var max_x = this.x_zero / this.interval;
+        var max_y = this.y_zero / this.interval;
 
-       var x_right = 1;
-       while (x_right < max_x + 5) {
-           this.newLine(x_right, -500 ,x_right,500);
-           this.label(x_right, x_right, 0);
-           x_right++;
-       }
-       x_right = -1;
-       while (x_right > -max_x - 5 ) {
-           this.newLine(x_right, -500 ,x_right,500);
-           this.label(x_right, x_right, 0);
-           x_right--;
-       }
-
-       var y_bottom = 1;
-       while (y_bottom < max_y + 5) {
-           this.newLine(-500, y_bottom, 500 ,y_bottom);
-           this.label(y_bottom,0, y_bottom);
-           y_bottom++;
-       }
-       y_bottom = -1;
-       while (y_bottom > -max_y - 5 ) {
-           this.newLine(-500, y_bottom, 500 ,y_bottom);
-           this.label(y_bottom,0, y_bottom);
-           y_bottom--;
-       }
-
-    }
-
-    this.draw = function(val){
-            console.log(val);
-            val = val.replace("^2", "²");
-            val = val.replace("³", "^3");
-            val = val.replace("-x", "-1x");
-
-            if(val[0] == "x"){
-                val = "1" + val;
-            }
-
-            val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
-                return p1/p2;
-            });
-
-            if(val == "x²"){
-                this.power2(1,0,0);
-                return;
-            }
-            if(val == "x^3"){
-                this.power3(1,0,0);
-                return;
-            }
-            
-            matchs = val.match(/^(.+)x²$/i);
-            
-            if(matchs != null){
-                this.power2(matchs[1], 0, 0);
-                return;
-            }
-            
-            matchs = val.match(/^(.+)x²\+([0-9||\-||\.]+)$/i);
-            
-            if(matchs != null){
-                val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
-                macths = null;
-            }
-
-            matchs = val.match(/^(.+)x²\-([0-9||\-||\.]+)$/i);
-            
-            if(matchs != null){
-                val = matchs[1] + "(x-" + 0 + ")²+" + -matchs[2];
-                macths = null;
-            }
-
-            matchs = val.match(/^(.+)x\^3$/i);
-            
-            if(matchs != null){
-                this.power3(matchs[1], 0, 0);
-                return;
-            }
-            
-            matchs = val.match(/(.+)\(x\-(.+)\)²\+(.+)/i);
-            
-            if(matchs != null){
-                this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
-                return;
-            }
-            
-            matchs = val.match(/(.+)\(x\+(.+)\)²\+(.+)/i);
-            
-            if(matchs != null){
-                this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
-                return;
-            }
-            
-            matchs = val.match(/(.+)\(x\-(.+)\)²\-(.+)/i);
-            
-            if(matchs != null){
-                this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
-                return;
-            }
-            
-            matchs = val.match(/(.+)\(x\+(.+)\)²\-(.+)/i);
-            
-            if(matchs != null){
-                this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
-                return;
-            }
-            
-            matchs = val.match(/(.+)x²\+(.+)x\+(.+)/i)
-            
-            if(matchs != null){
-                
-                var a, b, c;
-
-                a = parseFloat(matchs[1]);
-                b = parseFloat(matchs[2]);
-                c = parseFloat(matchs[3]);
-                
-                this.toCan(a, b,c, val);
-                 return;
-            }
-            
-            matchs = val.match(/(.+)x²\-(.+)x\+(.+)/i)
-            
-            if(matchs != null){
-                
-                var a, b, c;
-
-                a = parseFloat(matchs[1]);
-                b = -parseFloat(matchs[2]);
-                c = parseFloat(matchs[3]);
-                
-                this.toCan(a, b,c, val);
-                 return;
-            }
-            
-            matchs = val.match(/(.+)x²\+(.+)x\-(.+)/i)
-            
-            if(matchs != null){
-                
-                var a, b, c;
-
-                a = parseFloat(matchs[1]);
-                b = parseFloat(matchs[2]);
-                c = - parseFloat(matchs[3]);
-                
-                this.toCan(a, b,c, val);
-                 return;
-            }
-            
-            matchs = val.match(/(.+)x²\-(.+)x\-(.+)/i)
-            
-            if(matchs != null){
-                
-                var a, b, c;
-
-                a = parseFloat(matchs[1]);
-                b = -parseFloat(matchs[2]);
-                c = - parseFloat(matchs[3]);
-                
-                this.toCan(a, b,c, val);
-                 return;
-            }
-
-             return this.execPlugin(val);
-
-    }
-
-    this.power2 = function (a, m, p){
-            if(a == undefined){
-                a = 0;
-            }else{
-                a = parseFloat(a);
-            }
-            if(m == undefined){
-                m = 0;
-            }else{
-                m = parseFloat(m);
-            }
-            if(p == undefined){
-                p = 0;
-            }else{
-                p = parseFloat(p);
-            }
-            var start = -40;
-            var last = parseFloat(a * Math.pow(start - m, 2) + p);
-            while(start <= 40){
-                var from = [start,last];
-                start += 0.002;
-                last = parseFloat(a * Math.pow(start - m, 2) + p);
-                this.newLine(from[0], from[1],start, last, this.color);
-            }  
+        var x_right = 1;
+        while (x_right < max_x + 5) {
+            this.newLine(x_right, -500, x_right, 500);
+            this.label(x_right, x_right, 0);
+            x_right++;
         }
-    this.power3 = function(a, m, p){
-            if(a == undefined){
-                a = 0;
-            }
-            if(m == undefined){
-                m = 0;
-            }
-            if(p == undefined){
-                p = 0;
-            }
-            var start = -40;
-            while(start <= 40){
-                this.newPoint(start, a * Math.pow(start - m, 3) + p, this.color);
-                start += 0.002;
-            }
+        x_right = -1;
+        while (x_right > -max_x - 5) {
+            this.newLine(x_right, -500, x_right, 500);
+            this.label(x_right, x_right, 0);
+            x_right--;
+        }
+
+        var y_bottom = 1;
+        while (y_bottom < max_y + 5) {
+            this.newLine(-500, y_bottom, 500, y_bottom);
+            this.label(y_bottom, 0, y_bottom);
+            y_bottom++;
+        }
+        y_bottom = -1;
+        while (y_bottom > -max_y - 5) {
+            this.newLine(-500, y_bottom, 500, y_bottom);
+            this.label(y_bottom, 0, y_bottom);
+            y_bottom--;
+        }
+
     }
-    this.toCan = function (a, b,c, val){
-        var first_exp = (b/a) * (1/2);
-        var exp_2 = -a * Math.pow(first_exp,2);
+
+    this.draw = function (val) {
+        console.log(val);
+        val = val.replace("^2", "²");
+        val = val.replace("³", "^3");
+        val = val.replace("-x", "-1x");
+
+        if (val[0] == "x") {
+            val = "1" + val;
+        }
+
+        val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
+            return p1 / p2;
+        });
+
+        if (val == "x²") {
+            this.power2(1, 0, 0);
+            return;
+        }
+        if (val == "x^3") {
+            this.power3(1, 0, 0);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], 0, 0);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\+([0-9||\-||\.]+)$/i);
+
+        if (matchs != null) {
+            val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
+            macths = null;
+        }
+
+        matchs = val.match(/^(.+)x²\-([0-9||\-||\.]+)$/i);
+
+        if (matchs != null) {
+            val = matchs[1] + "(x-" + 0 + ")²+" + -matchs[2];
+            macths = null;
+        }
+
+        matchs = val.match(/^(.+)x\^3$/i);
+
+        if (matchs != null) {
+            this.power3(matchs[1], 0, 0);
+            return;
+        }
+
+        matchs = val.match(/(.+)\(x\-(.+)\)²\+(.+)/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/(.+)\(x\+(.+)\)²\+(.+)/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/(.+)\(x\-(.+)\)²\-(.+)/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/(.+)\(x\+(.+)\)²\-(.+)/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/(.+)x²\+(.+)x\+(.+)/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = parseFloat(matchs[2]);
+            c = parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/(.+)x²\-(.+)x\+(.+)/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = -parseFloat(matchs[2]);
+            c = parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/(.+)x²\+(.+)x\-(.+)/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = parseFloat(matchs[2]);
+            c = - parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/(.+)x²\-(.+)x\-(.+)/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = -parseFloat(matchs[2]);
+            c = - parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        return this.execPlugin(val);
+
+    }
+
+    this.power2 = function (a, m, p) {
+        if (a == undefined) {
+            a = 0;
+        } else {
+            a = parseFloat(a);
+        }
+        if (m == undefined) {
+            m = 0;
+        } else {
+            m = parseFloat(m);
+        }
+        if (p == undefined) {
+            p = 0;
+        } else {
+            p = parseFloat(p);
+        }
+        var start = -40;
+        var last = parseFloat(a * Math.pow(start - m, 2) + p);
+        while (start <= 40) {
+            var from = [start, last];
+            start += 0.002;
+            last = parseFloat(a * Math.pow(start - m, 2) + p);
+            this.newLine(from[0], from[1], start, last, this.color);
+        }
+    }
+    this.power3 = function (a, m, p) {
+        if (a == undefined) {
+            a = 0;
+        }
+        if (m == undefined) {
+            m = 0;
+        }
+        if (p == undefined) {
+            p = 0;
+        }
+        var start = -40;
+        while (start <= 40) {
+            this.newPoint(start, a * Math.pow(start - m, 3) + p, this.color);
+            start += 0.002;
+        }
+    }
+    this.toCan = function (a, b, c, val) {
+        var first_exp = (b / a) * (1 / 2);
+        var exp_2 = -a * Math.pow(first_exp, 2);
         exp_2 = (exp_2 + c);
         this.draw(a + "(x+" + first_exp + ")²+" + exp_2);
-    } 
+    }
 
     this.plugin = [
         [/cos\(x\)/i, function (m) {
@@ -361,116 +361,116 @@ var SMath = function () {
         }],
         [/tan\(x\)/i, function (m) {
             this.tan();
-        }], 
+        }],
         [
-            /\[\((.+);(.+)\) \((.+);(.+)\)\]/i, function(m){
+            /\[\((.+);(.+)\) \((.+);(.+)\)\]/i, function (m) {
                 this.newLine(m[1], m[2], m[3], m[4], this.color);
             }
-        ], 
+        ],
         [
             /y=x/i, function () {
                 var start = -40;
                 var last = parseFloat(start);
-                while(start <= 40){
-                    var from = [start,last];
+                while (start <= 40) {
+                    var from = [start, last];
                     start += 0.002;
                     last = parseFloat(start);
-                    this.newLine(from[0], from[1],start, last, this.color);
+                    this.newLine(from[0], from[1], start, last, this.color);
                 }
             }
-        ], 
+        ],
         [
             /y=\-1x/i, function () {
                 var start = -40;
                 var last = -parseFloat(start);
-                while(start <= 40){
-                    var from = [start,last];
+                while (start <= 40) {
+                    var from = [start, last];
                     start += 0.002;
                     last = -parseFloat(start);
-                    this.newLine(from[0], from[1],start, last, this.color);
+                    this.newLine(from[0], from[1], start, last, this.color);
                 }
             }
-        ], 
+        ],
         [
             /vect\[(.+)\]/i, function (m) {
                 var x = 0;
                 var y = 0;
-                var e = m[1].replace(/\-\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, x1,y1) {
-                        x1 = -parseFloat(x1);
-                        y1 = -parseFloat(y1);
-                        return '+(' + x1 + ';'+ y1 + ')'
-                    })
-                     e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi,x1,y1) {
-                        x1 = -parseFloat(x1);
-                        y1 = -parseFloat(y1);
-                        return '+' + multi + '(' + x1 + ';'+ y1 + ')'
-                    })
-                var vectors  = e.split('+');
-                
+                var e = m[1].replace(/\-\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, x1, y1) {
+                    x1 = -parseFloat(x1);
+                    y1 = -parseFloat(y1);
+                    return '+(' + x1 + ';' + y1 + ')'
+                })
+                e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi, x1, y1) {
+                    x1 = -parseFloat(x1);
+                    y1 = -parseFloat(y1);
+                    return '+' + multi + '(' + x1 + ';' + y1 + ')'
+                })
+                var vectors = e.split('+');
+
                 for (var i = 0; i < vectors.length; i++) {
                     var element = vectors[i];
                     var matchs = element.match(/^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
-                    if(matchs != null){
-                       x += parseFloat(matchs[1]);
-                       y += parseFloat(matchs[2]);
+                    if (matchs != null) {
+                        x += parseFloat(matchs[1]);
+                        y += parseFloat(matchs[2]);
                     }
 
                     matchs = element.match(/^([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
-                    if(matchs != null){
-                       x += parseFloat(matchs[2]) * parseFloat(matchs[1]);
-                       y += parseFloat(matchs[3]) * parseFloat(matchs[1]);
+                    if (matchs != null) {
+                        x += parseFloat(matchs[2]) * parseFloat(matchs[1]);
+                        y += parseFloat(matchs[3]) * parseFloat(matchs[1]);
                     }
                 }
-                this.newLine(0, 0 , x, y,this.color, true);
+                this.newLine(0, 0, x, y, this.color, true);
             }
         ]
     ];
     this.execPlugin = function (val) {
         for (var i = 0; i < this.plugin.length; i++) {
             var element = this.plugin[i];
-            
+
             var matchs = val.match(element[0]);
-            
-            if(matchs != null){
+
+            if (matchs != null) {
 
                 this.plugin_exec_function = element[1];
                 this.plugin_exec_function(matchs);
-                this.plugin_exec_function = function () {};
+                this.plugin_exec_function = function () { };
 
-                 return;
+                return;
             }
         }
         return "error";
     }
-    this.plugin_exec_function = function () {};
-    
+    this.plugin_exec_function = function () { };
+
     this.cos = function () {
         var start = -200;
         var last = Math.cos(start);
-            while(start <= 200){
-                var from = [start,last];
-                start += 0.002;
-                last = Math.cos(start);
-                this.newLine(from[0], from[1],start, last, this.color);
-            }   
+        while (start <= 200) {
+            var from = [start, last];
+            start += 0.002;
+            last = Math.cos(start);
+            this.newLine(from[0], from[1], start, last, this.color);
+        }
     }
 
     this.sin = function () {
         var start = -200;
         var last = Math.sin(start);
-            while(start <= 200){
-                var from = [start,last];
-                start += 0.002;
-                last = Math.sin(start);
-                this.newLine(from[0], from[1],start, last, this.color);
-            }   
+        while (start <= 200) {
+            var from = [start, last];
+            start += 0.002;
+            last = Math.sin(start);
+            this.newLine(from[0], from[1], start, last, this.color);
+        }
     }
-    
+
     this.tan = function () {
-             var start = -200;
-            while(start <= 200){
-                this.newPoint(start, Math.tan(start), this.color);
-                start += 0.001;
-            }     
+        var start = -200;
+        while (start <= 200) {
+            this.newPoint(start, Math.tan(start), this.color);
+            start += 0.001;
+        }
     }
 }

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!--
 /*
 Copyright (C) 2017  Simon Loir
@@ -15,7 +14,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 */    
 -->
+<!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Smath</title>
@@ -23,12 +24,13 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
     <script src="extjs.js"></script>
     <script src="Smath.js"></script>
     <meta property="og:title" content="Smath - designed by Simon Loir">
-	<meta property="og:type" content="website"/>
-	<meta property="og:image" content=""/>
-	<meta property="og:description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.'">
-	<meta name="description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.">
-	<meta name="keywords" content="Simon Loir, Simon Math, SMath, SLMath, fonctions, math, fonction second degré, géométrie, mathématiques, INDSé, 4ème année, secondaire fonctions, simonloir.esy.es, simonloir, loir simon">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.'">
+    <meta name="description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.">
+    <meta name="keywords" content="Simon Loir, Simon Math, SMath, SLMath, fonctions, math, fonction second degré, géométrie, mathématiques, INDSé, 4ème année, secondaire fonctions, simonloir.esy.es, simonloir, loir simon">
 </head>
+
 <body>
     <div class="header">
         <img src="logo.svg" alt="">Smath version alpha 2.0.3 #2000- Last update : TUE 2017-02-21, 20:55
@@ -41,7 +43,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
         <button class="" id="pen-tool">&#128393;</button>
         <button id="need-help">?</button>
     </div>
-    
+
     <div class="right-tool-bar">
         <div class="color-view">
             <input type="color" class="color-picker">
@@ -80,15 +82,14 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
                     <option value="o">Oblique</option>                    
                 </select>
                 <label for="check">
-                    <input type="checkbox" name="" checked="true" id="round">
+                    <input type="checkbox" name="" checked="true" id="round"> "coller" aux intersections
                 </label>
                 <br />
             </div>
         </div>
-        
-        <br /><br />
-        Copyright &copy; 2017 Simon Loir
-        <p>Ce programme est un programme libre, vous pouvez retrouver ses sources sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
+
+        <br /><br /> Copyright &copy; 2017 Simon Loir
+        <p>Retrouvez le projet sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
     </div>
     <div class="draw-area">
         <div class="canvas">
@@ -98,13 +99,11 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
     <div class="action" style="display: none;" id="ftrace_dialog">
         <div class="action-header">Tracer quelque chose</div>
         <div class="action-content">
-            <p>  
-               Entrez une expression : 
+            <p>
+                Entrez une expression :
                 <br />
-                <input type="text"><br /><br />
-                Exemple : <br />
-                vect[(x;y)-(x;y)+3(x;y)] ou vect[(x;y)] ou ou vect[3(x;y)]<br />
-                x² ou (x-0)²+0 ou ax²-bx+c
+                <input type="text"><br /><br /> Exemple : <br /> vect[(x;y)-(x;y)+3(x;y)] ou vect[(x;y)] ou ou vect[3(x;y)]<br
+                /> x² ou (x-0)²+0 ou ax²-bx+c
                 <br /><br /><button class="btn">Liste des fonctions</button>
             </p>
         </div>
@@ -115,4 +114,5 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
     </div>
     <script src="app-v2.js"></script>
 </body>
+
 </html>
