@@ -392,37 +392,10 @@ var SMath = function () {
             }
         ],
         [
-            /vect\[(.+)\]/i, function (m) {
-                var x = 0;
-                var y = 0;
-                var e = m[1].replace(/\-\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, x1, y1) {
-                    x1 = -parseFloat(x1);
-                    y1 = -parseFloat(y1);
-                    return '+(' + x1 + ';' + y1 + ')'
-                })
-                e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi, x1, y1) {
-                    x1 = -parseFloat(x1);
-                    y1 = -parseFloat(y1);
-                    return '+' + multi + '(' + x1 + ';' + y1 + ')'
-                })
-                var vectors = e.split('+');
-
-                for (var i = 0; i < vectors.length; i++) {
-                    var element = vectors[i];
-                    var matchs = element.match(/^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
-                    if (matchs != null) {
-                        x += parseFloat(matchs[1]);
-                        y += parseFloat(matchs[2]);
-                    }
-
-                    matchs = element.match(/^([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
-                    if (matchs != null) {
-                        x += parseFloat(matchs[2]) * parseFloat(matchs[1]);
-                        y += parseFloat(matchs[3]) * parseFloat(matchs[1]);
-                    }
-                }
-                this.newLine(0, 0, x, y, this.color, true);
-            }
+            /^vect\[(.+)\]\[\((.+);(.+)\)\]$/i, vect
+        ],
+        [
+            /^vect\[(.+)\]$/i, vect
         ]
     ];
     this.execPlugin = function (val) {
@@ -474,3 +447,48 @@ var SMath = function () {
         }
     }
 }
+
+function vect(m) {
+                var x = 0;
+                var y = 0;
+                var e = m[1].replace(/\-\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, x1, y1) {
+                    x1 = -parseFloat(x1);
+                    y1 = -parseFloat(y1);
+                    return '+(' + x1 + ';' + y1 + ')'
+                })
+                e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi, x1, y1) {
+                    x1 = -parseFloat(x1);
+                    y1 = -parseFloat(y1);
+                    return '+' + multi + '(' + x1 + ';' + y1 + ')'
+                })
+                var vectors = e.split('+');
+
+                for (var i = 0; i < vectors.length; i++) {
+                    var element = vectors[i];
+                    var matchs = element.match(/^\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
+                    if (matchs != null) {
+                        x += parseFloat(matchs[1]);
+                        y += parseFloat(matchs[2]);
+                    }
+
+                    matchs = element.match(/^([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)$/i)
+                    if (matchs != null) {
+                        x += parseFloat(matchs[2]) * parseFloat(matchs[1]);
+                        y += parseFloat(matchs[3]) * parseFloat(matchs[1]);
+                    }
+                }
+
+                if(m[2] != undefined){
+                    var x_start_vector = m[2];
+                }else{
+                    var x_start_vector = 0;
+                }
+
+                if(m[3] != undefined){
+                    var y_start_vector = m[3];
+                }else{
+                    var y_start_vector = 0;
+                }
+                alert(x + "=> " + y)
+                this.newLine(x_start_vector, y_start_vector, parseFloat(x_start_vector) + x, parseFloat(y_start_vector) +  y, this.color, true);
+            }
