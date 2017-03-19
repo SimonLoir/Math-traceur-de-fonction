@@ -37,7 +37,7 @@ var SMath = function () {
         this.ctx.fill();
     }
 
-    this.newLine = function (X, Y, X2, Y2, color, arrow) {
+    this.newLine = function (X, Y, X2, Y2, color, arrow, width) {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
         var X2 = this.x_zero + X2 * parseFloat(this.interval);
@@ -50,7 +50,11 @@ var SMath = function () {
         }
         this.ctx.moveTo(X, Y);
         this.ctx.lineTo(X2, Y2);
-        this.ctx.lineWidth = 1;
+        if(width == undefined){
+            this.ctx.lineWidth = 1;
+        }else{
+            this.ctx.lineWidth = width;
+        }
         this.ctx.stroke();
 
         if (arrow == true) {
@@ -166,7 +170,6 @@ var SMath = function () {
     }
 
     this.draw = function (val) {
-        console.log(val);
         val = val.replace("^2", "²");
         val = val.replace("³", "^3");
         val = val.replace("-x", "-1x");
@@ -175,8 +178,11 @@ var SMath = function () {
             val = "1" + val;
         }
 
+        var x_result = {};
+
         val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
-            return p1 / p2;
+            x_result[p1 / p2] = [p1, p2];
+            return p1/p2;
         });
 
         if (val == "x²") {
@@ -184,7 +190,7 @@ var SMath = function () {
             return;
         }
         if (val == "x^3") {
-            this.power3(1, 0, 0);
+            this.power(1, 0, 0, 3);
             return;
         }
 
@@ -212,39 +218,53 @@ var SMath = function () {
         matchs = val.match(/^(.+)x\^3$/i);
 
         if (matchs != null) {
-            this.power3(matchs[1], 0, 0);
+            this.power(matchs[1], 0, 0, 3);
             return;
         }
 
-        matchs = val.match(/(.+)\(x\-(.+)\)²\+(.+)/i);
+        matchs = val.match(/^(.+)x\^([0-9||\-||\.]+)$/i);
+
+        if (matchs != null) {
+            this.power(matchs[1], 0, 0, parseFloat(matchs[2]), x_result);
+            return;
+        }
+
+        matchs = val.match(/^(.+)\(x\-(.+)\)²\+(.+)$/i);
 
         if (matchs != null) {
             this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
             return;
         }
 
-        matchs = val.match(/(.+)\(x\+(.+)\)²\+(.+)/i);
+        matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
 
         if (matchs != null) {
             this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
             return;
         }
 
-        matchs = val.match(/(.+)\(x\-(.+)\)²\-(.+)/i);
+        matchs = val.match(/^(.+)\(x\+(.+)\)\^([0-9]+)\+(.+)$/i);
+
+        if (matchs != null) {
+            this.power(matchs[1], -matchs[2], parseFloat(matchs[4]), matchs[3]);
+            return;
+        }
+
+        matchs = val.match(/^(.+)\(x\-(.+)\)²\-(.+)$/i);
 
         if (matchs != null) {
             this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
             return;
         }
 
-        matchs = val.match(/(.+)\(x\+(.+)\)²\-(.+)/i);
+        matchs = val.match(/^(.+)\(x\+(.+)\)²\-(.+)$/i);
 
         if (matchs != null) {
             this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
             return;
         }
 
-        matchs = val.match(/(.+)x²\+(.+)x\+(.+)/i)
+        matchs = val.match(/^(.+)x²\+(.+)x\+(.+)$/i)
 
         if (matchs != null) {
 
@@ -258,7 +278,7 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/(.+)x²\-(.+)x\+(.+)/i)
+        matchs = val.match(/^(.+)x²\-(.+)x\+(.+)$/i)
 
         if (matchs != null) {
 
@@ -272,7 +292,7 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/(.+)x²\+(.+)x\-(.+)/i)
+        matchs = val.match(/^(.+)x²\+(.+)x\-(.+)$/i)
 
         if (matchs != null) {
 
@@ -286,7 +306,7 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/(.+)x²\-(.+)x\-(.+)/i)
+        matchs = val.match(/^(.+)x²\-(.+)x\-(.+)$/i)
 
         if (matchs != null) {
 
@@ -329,20 +349,50 @@ var SMath = function () {
             this.newLine(from[0], from[1], start, last, this.color);
         }
     }
-    this.power3 = function (a, m, p) {
+    this.power = function (a, m, p, power, x_result) {
         if (a == undefined) {
             a = 0;
+        } else {
+            a = parseFloat(a);
         }
         if (m == undefined) {
             m = 0;
+        } else {
+            m = parseFloat(m);
         }
         if (p == undefined) {
             p = 0;
+        } else {
+            p = parseFloat(p);
         }
-        var start = -40;
-        while (start <= 40) {
-            this.newPoint(start, a * Math.pow(start - m, 3) + p, this.color);
+        if(x_result == undefined){
+            x_result = {};
+        }
+        var start =  -(this.x_zero / this.interval);
+        var last = parseFloat(a * Math.pow(start - m, power) + p);
+        while (start <= this.x_zero / this.interval) {
+            var from = [start, last];
+            
             start += 0.002;
+            
+            var actual = start - m;
+
+            var xxx = false;
+
+            if(x_result[power] != undefined){
+                if(x_result[power][1]%2 != 0 && actual < 0){
+                    xxx = true;
+                    actual = -(start - m);
+                }
+            }
+            
+            last = parseFloat(a * Math.pow(actual, power) + p);
+
+            if(xxx == true){
+               last = -last;
+            }
+
+            this.newLine(from[0], from[1], start, last, this.color);
         }
     }
     this.toCan = function (a, b, c, val) {
@@ -360,7 +410,7 @@ var SMath = function () {
             y1 = -parseFloat(y1);
             return '+(' + x1 + ';' + y1 + ')';
         })
-        
+
         e = e.replace(/\-([0-9||\-||\.]+)\(([0-9||\-||\.]+);([0-9||\-||\.]+)\)/i, function (all, multi, x1, y1) {
             x1 = -parseFloat(x1);
             y1 = -parseFloat(y1);
@@ -399,13 +449,13 @@ var SMath = function () {
     }
 
     this.plugin = [
-        [/cos\(x\)/i, function (m) {
+        [/^cos\(x\)$/i, function (m) {
             this.cos();
         }],
-        [/sin\(x\)/i, function (m) {
+        [/^sin\(x\)$/i, function (m) {
             this.sin();
         }],
-        [/tan\(x\)/i, function (m) {
+        [/^tan\(x\)$/i, function (m) {
             this.tan();
         }],
         [

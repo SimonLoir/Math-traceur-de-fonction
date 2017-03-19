@@ -33,11 +33,11 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
 <body>
     <div class="header">
-        <img src="logo.svg" alt="">Smath version alpha 2.0.3 #2000- Last update : SUN 2017-03-05, 21:21
+        <img src="logo.svg" alt="">Smath version alpha 2.0.4 #001- Last update : SUN 2017-03-19, 20:33
     </div>
+
     <div class="left-tool-bar">
         <button class="" id="new_layer">+</button>
-        <!--<button class="">...</button>-->
         <button class="" id="zoom-more">&#128269;</button>
         <button class="" id="zoom-less">&#128269;</button>
         <button class="" id="pen-tool">&#128393;</button>
@@ -71,6 +71,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
                 <button class="apply" id="apply_zoom">Appliquer</button>
             </div>
         </div>
+
         <div class="container pencil-tool-board" style="display: none;">
             <div class="options">
                 <span class="layer active">Outil ligne</span>
@@ -90,6 +91,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
         <br /><br /> Copyright &copy; 2017 Simon Loir
         <p>Retrouvez le projet sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
+        
     </div>
     <div class="draw-area">
         <div class="canvas">
@@ -102,13 +104,21 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
             <p>
                 Entrez une expression :
                 <br />
-                <input type="text"><br /><br /> Exemple : <br /> vect[(x;y)-(x;y)+3(x;y)] ou vect[(x;y)] ou ou vect[3(x;y)]<br
-                /> x² ou (x-0)²+0 ou ax²-bx+c
-                <br /><br /><button class="btn">Liste des fonctions</button>
+                <input type="text"><br />
+                <br /><br />
+                <button class="btn" id="no-formule-mode" style="display: none;">Mode sans formule / découverte</button>
             </p>
         </div>
         <div class="btn-group"><button id="ftrace">Valider</button><button id="fcancel">Annuler</button></div>
     </div>
+
+    <div class="action full-screen" style="display: none;" id="ftrace_no_formule_dialog">
+        <div class="action-header">Mode sans formule // mode découverte</div>
+        <div class="action-content">
+         </div>
+        <div class="btn-group"><button id="nf-trace">Valider</button><button id="nf-cancel">Annuler</button></div>
+    </div>
+
     <div class="popup-start">
         &#8592; Cliquez ici pour tracer quelque chose
     </div>

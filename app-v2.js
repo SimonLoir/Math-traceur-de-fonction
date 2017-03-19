@@ -55,7 +55,21 @@ var trace = function (math_func) {
                 }else{
                     $(c).css('display', "block");
                     $(this).html('&#128064;');
-                    
+                }
+            });
+
+            layer.click(function (e){
+                if(e.target != show_hide.node){
+                    layer.css('display', "none");
+                    var action = $('body').child('div').addClass('action');
+                    var action_title = action.child('div').addClass('action-header').html('Éditer la formule');
+                    var action_content = action.child('div').addClass('action-content').html('Éditer la formule');
+                    var action_btns = action.child('div').addClass('btn-group');
+                    var cancel_button = action_btns.child('button').html('annuler').addClass('btn');
+                    cancel_button.click(function () {
+                        layer.css('display', "block");
+                        action.remove();
+                    });
                 }
             });
 
@@ -129,11 +143,42 @@ $(document).ready(function () {
     });
 
     $(".color-picker").node.value = "#295CBF";
+
     $('.color-view').css('background', $(".color-picker").node.value);
 
     $('#new_layer').click(function () {
         $('#ftrace_dialog').css('display', "block");
     });
+
+    $('#no-formule-mode').click(function() {
+        $('#ftrace_no_formule_dialog').css('display', "block");
+        $('#ftrace_no_formule_dialog .action-content').html('Bienvenue sur le mode sans formule (ou découverte). Ce mode vous aide à découvrir les différentes formules qui sont disponibles sur SMath.');
+        var w = $('#ftrace_no_formule_dialog .action-content');
+        w.child('span').html(' Sélectionnez une des catégories ci-dessous.');
+        w.child('br');
+        w.child('br');
+        var functions_sd = w.child('button').html('Fonctions du second degré').addClass('btn');
+        var vectors = w.child('button').html('Vecteurs').addClass('btn');
+        var lines = w.child('button').html('Tracé de segments').addClass('btn');
+        w.child('br');
+        w.child('br');
+        
+        var x_panel = w.child("div").html('Rien à afficher, sélectionnez une catégorie');
+
+        functions_sd.click(function () {
+            x_panel.html('Bienvenue dans l\'assistant dédié aux fonctions du second degré');
+            x_panel.child('br');
+            x_panel.child('br');
+            x_panel.child("button").html('Tracer une fonction de la forme a(x+m)²+p').addClass('btn');
+            x_panel.child('br');
+            x_panel.child('br');
+            x_panel.child("button").html('Tracer une fonction à partir de la forme développée').addClass('btn');
+        });
+
+    });
+
+    //$('#no-formule-mode').click()
+
     $('#ftrace').click(function () {
         if ($('#ftrace_dialog input').node.value == "") {
             alert('Incorrect');
@@ -142,10 +187,15 @@ $(document).ready(function () {
              $('#ftrace_dialog').css('display', "none");
         }
         
-    })
+    });
+
     $('#fcancel').click(function () {
         $('#ftrace_dialog').css("display", "none");
-    })
+    });
+
+    $('#nf-cancel').click(function () {
+        $('#ftrace_no_formule_dialog').css("display", "none");
+    });
 
     var ctx = canvas.getContext('2d');
     
@@ -191,8 +241,8 @@ $(document).ready(function () {
     grid.interval = interval;
 
     grid.makeGrid();
-    grid.newLine(0, -1000 ,0,1000, "crimson");
-    grid.newLine(-1000 ,0,1000, 0, "crimson"); 
+    grid.newLine(0, -1000 ,0,1000, "black", undefined, 1);
+    grid.newLine(-1000 ,0,1000, 0, "black", undefined, 1); 
 
     
     /* 
@@ -248,8 +298,7 @@ $(document).ready(function () {
                 x1 = Math.round(x1); 
                 x2 = Math.round(x2);               
                 y1 = Math.round(y1);               
-                y2 = Math.round(y2);               
-            
+                y2 = Math.round(y2);
             }
 
               trace("[(" + x1 + ";" + y1 + ") (" + x2 + ";" + y2 + ")]");
