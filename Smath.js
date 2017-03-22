@@ -243,10 +243,10 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/^(.+)\(x\+(.+)\)\^([0-9]+)\+(.+)$/i);
-
+        matchs = val.match(/^(.+)\(x\+(.+)\)\^([0-9||\-||\.]+)\+(.+)$/i);
+        //-1(x+3)^(1/18)+3
         if (matchs != null) {
-            this.power(matchs[1], -matchs[2], parseFloat(matchs[4]), matchs[3]);
+            this.power(matchs[1], -matchs[2], parseFloat(matchs[4]), matchs[3], x_result);
             return;
         }
 
@@ -385,7 +385,7 @@ var SMath = function () {
                     actual = -(start - m);
                 }
             }
-            
+
             last = parseFloat(a * Math.pow(actual, power) + p);
 
             if(xxx == true){
