@@ -153,31 +153,46 @@ $(document).ready(function () {
     $('#no-formule-mode').click(function() {
         $('#ftrace_no_formule_dialog').css('display', "block");
         $('#ftrace_no_formule_dialog .action-content').html('Bienvenue sur le mode sans formule (ou découverte). Ce mode vous aide à découvrir les différentes formules qui sont disponibles sur SMath.');
+        
         var w = $('#ftrace_no_formule_dialog .action-content');
-        w.child('span').html(' Sélectionnez une des catégories ci-dessous.');
-        w.child('br');
-        w.child('br');
+            w.child('span').html(' Sélectionnez une des catégories ci-dessous.');
+            w.child('br');
+            w.child('br');
+
         var functions_sd = w.child('button').html('Fonctions du second degré').addClass('btn');
         var vectors = w.child('button').html('Vecteurs').addClass('btn');
         var lines = w.child('button').html('Tracé de segments').addClass('btn');
-        w.child('br');
-        w.child('br');
+                    w.child('br');
+                    w.child('br');
         
         var x_panel = w.child("div").html('Rien à afficher, sélectionnez une catégorie');
 
         functions_sd.click(function () {
+            
             x_panel.html('Bienvenue dans l\'assistant dédié aux fonctions du second degré');
+
             x_panel.child('br');
+
             x_panel.child('br');
-            x_panel.child("button").html('Tracer une fonction de la forme a(x+m)²+p').addClass('btn');
+
+            x_panel.child("button").html('Tracer une fonction de la forme a(x+m)²+p').addClass('btn').click(function () {
+                $('#new_layer').click();
+                $('#ftrace_dialog input').node.value = "1(x-0)²+0";
+                $('#nf-cancel').click()
+            });
+
             x_panel.child('br');
+
             x_panel.child('br');
-            x_panel.child("button").html('Tracer une fonction à partir de la forme développée').addClass('btn');
+
+            x_panel.child("button").html('Tracer une fonction à partir de la forme développée').addClass('btn').click(function () {
+                $('#new_layer').click();
+                $('#ftrace_dialog input').node.value = "ax²+bx+c";
+                $('#nf-cancel').click()
+            });
         });
 
     });
-
-    //$('#no-formule-mode').click()
 
     $('#ftrace').click(function () {
         if ($('#ftrace_dialog input').node.value == "") {
@@ -186,7 +201,6 @@ $(document).ready(function () {
             trace($('#ftrace_dialog input').node.value);
              $('#ftrace_dialog').css('display', "none");
         }
-        
     });
 
     $('#fcancel').click(function () {
