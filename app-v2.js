@@ -73,12 +73,19 @@ var trace = function (math_func) {
                 }
             });
 
-            if(f.draw(math_func) == "error"){
+            var draw_result = f.draw(math_func);
+
+            if(draw_result == "error"){
                 alert('Cette fonction n\'est pas encore reconnue');
                 layer.remove();
-            }else{
-                function_list.push([math_func, f.color]);                
+                c.remove()
+                return;
+            }else if(draw_result == "no-trace"){
+                layer.remove();
+                c.remove()
             }
+            function_list.push([math_func, f.color]);                
+            
  }
 $(document).ready(function () {
     /*

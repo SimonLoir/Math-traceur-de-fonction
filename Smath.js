@@ -137,34 +137,38 @@ var SMath = function () {
     }
 
     this.makeGrid = function () {
-        this.label(0, 0, 0);
         var max_x = this.x_zero / this.interval;
         var max_y = this.y_zero / this.interval;
+        if(this.interval > 200){
+            grid_interval = this.interval / (200 * 10);
+        }else{
+            grid_interval = 1;
+        }
 
-        var x_right = 1;
+        var x_right = 0;
         while (x_right < max_x + 5) {
             this.newLine(x_right, -500, x_right, 500);
-            this.label(x_right, x_right, 0);
-            x_right++;
+            this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval);
+            x_right+= grid_interval;
         }
-        x_right = -1;
+        x_right = 0;
         while (x_right > -max_x - 5) {
             this.newLine(x_right, -500, x_right, 500);
-            this.label(x_right, x_right, 0);
-            x_right--;
+            if(x_right != 0){this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval);}
+            x_right-= grid_interval;
         }
 
-        var y_bottom = 1;
+        var y_bottom = 0;
         while (y_bottom < max_y + 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
-            this.label(y_bottom, 0, y_bottom);
-            y_bottom++;
+            if(y_bottom != 0){this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom);}
+            y_bottom+= grid_interval;
         }
-        y_bottom = -1;
+        y_bottom = 0;
         while (y_bottom > -max_y - 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
-            this.label(y_bottom, 0, y_bottom);
-            y_bottom--;
+            if(y_bottom != 0){this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom);}
+            y_bottom-= grid_interval;
         }
 
     }
@@ -244,7 +248,7 @@ var SMath = function () {
         }
 
         matchs = val.match(/^(.+)\(x\+(.+)\)\^([0-9||\-||\.]+)\+(.+)$/i);
-        //-1(x+3)^(1/18)+3
+
         if (matchs != null) {
             this.power(matchs[1], -matchs[2], parseFloat(matchs[4]), matchs[3], x_result);
             return;
@@ -377,20 +381,16 @@ var SMath = function () {
             
             var actual = start - m;
 
-            var xxx = false;
+            var xxx = 1;
 
             if(x_result[power] != undefined){
                 if(x_result[power][1]%2 != 0 && actual < 0){
-                    xxx = true;
+                    xxx = -1;
                     actual = -(start - m);
                 }
             }
 
-            last = parseFloat(a * Math.pow(actual, power) + p);
-
-            if(xxx == true){
-               last = -last;
-            }
+            last = parseFloat(a * xxx * Math.pow(actual, power) + p);
 
             this.newLine(from[0], from[1], start, last, this.color);
         }
@@ -492,6 +492,19 @@ var SMath = function () {
         ],
         [
             /^vect\[(.+)\]$/i, this.vect
+        ],
+        [
+            /^eval (.+)/i, function (m) {
+                try {
+                    var eval_r = eval(m[1]);
+                    if (eval_r== "no-trace"){
+                        return "no-trace";
+                    }
+                } catch (error) {
+                    alert("Votre code javascript est incorrect" + error.message);
+                    return "error";
+                }
+            }
         ]
     ];
     this.execPlugin = function (val) {
@@ -503,10 +516,10 @@ var SMath = function () {
             if (matchs != null) {
 
                 this.plugin_exec_function = element[1];
-                this.plugin_exec_function(matchs);
+                var ex = this.plugin_exec_function(matchs);
                 this.plugin_exec_function = function () { };
 
-                return;
+                return ex;
             }
         }
         return "error";
