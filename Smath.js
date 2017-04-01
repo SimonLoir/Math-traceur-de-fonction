@@ -37,6 +37,22 @@ var SMath = function () {
         this.ctx.fill();
     }
 
+    this.circle = function (X, Y, radius, color) {
+        var centerX = this.x_zero + X * parseFloat(this.interval);
+        var centerY = this.y_zero - Y * parseFloat(this.interval);
+        radius = radius * this.interval;
+
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        this.ctx.lineWidth = 1;
+        if (color == undefined) {
+            this.ctx.strokeStyle = "#eee";
+        } else {
+            this.ctx.strokeStyle = color;
+        }
+        this.ctx.stroke();
+    }
+
     this.newLine = function (X, Y, X2, Y2, color, arrow, width) {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
@@ -321,6 +337,13 @@ var SMath = function () {
             c = - parseFloat(matchs[3]);
 
             this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/^\(x\-([0-9||\-||\.]+)\)²\+\(y\-([0-9||\-||\.]+)\)²\=([0-9||\-||\.]+)²$/i);
+
+        if (matchs != null) {
+            this.circle(matchs[1], matchs[2], matchs[3], this.color);
             return;
         }
 
