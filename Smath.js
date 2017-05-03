@@ -249,12 +249,7 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/^(.+)\(x\-(.+)\)²\+(.+)$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
-            return;
-        }
+        
 
         matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
 
@@ -347,11 +342,20 @@ var SMath = function () {
             return;
         }
 
+        matchs = val.match(/^(.+)\(x\-(.+)\)²\+(.+)$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
+            return;
+        }
+        
         return this.execPlugin(val);
 
     }
 
     this.power2 = function (a, m, p) {
+        console.log("power 2 ")
+        
         if (a == undefined) {
             a = 0;
         } else {
@@ -377,6 +381,7 @@ var SMath = function () {
         }
     }
     this.power = function (a, m, p, power, x_result) {
+        console.log("power")
         if (a == undefined) {
             a = 0;
         } else {

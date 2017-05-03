@@ -62,7 +62,7 @@ var trace = function (math_func) {
                 if(e.target != show_hide.node){
                     layer.css('display', "none");
                     var action = $('body').child('div').addClass('action');
-                    var action_title = action.child('div').addClass('action-header').html('Éditer la formule');
+                    var action_title = action.child('div').addClass('action-header').html('Informations supplémentaires');
                     var action_content = action.child('div').addClass('action-content').html('Éditer la formule');
                     var action_btns = action.child('div').addClass('btn-group');
                     var cancel_button = action_btns.child('button').html('annuler').addClass('btn');
