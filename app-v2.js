@@ -63,7 +63,25 @@ var trace = function (math_func) {
                     layer.css('display', "none");
                     var action = $('body').child('div').addClass('action');
                     var action_title = action.child('div').addClass('action-header').html('Informations supplémentaires');
-                    var action_content = action.child('div').addClass('action-content').html('Éditer la formule');
+                    var action_content = action.child('div').addClass('action-content').html(function (){
+                            var roots = functions_informations[layer.node.querySelector('.layer-name').innerText];
+                            if(roots != undefined){
+                                if(isNaN(roots.root1)){
+                                    return "Cette fonction n'a pas de racines";
+                                }else{
+                                    var to_show = "Racine(s) : (" + roots.root1 + ";0)";
+                                    if(isNaN(roots.root2) || roots.root1 == roots.root2){
+                                        return to_show + ", cette fonction n'a qu'une racine";
+                                    }else{
+                                        return to_show + "  et (" + roots.root1 + ";0)";
+                                    }
+
+                                }
+                            }else{
+                                return "Pas de racine à afficher, cette fonctionnalité viendra dans les prochaines mises à jour.";
+                            }
+                        }());
+
                     var action_btns = action.child('div').addClass('btn-group');
                     var cancel_button = action_btns.child('button').html('annuler').addClass('btn');
                     cancel_button.click(function () {
@@ -72,6 +90,8 @@ var trace = function (math_func) {
                     });
                 }
             });
+            
+            f.to_eval = math_func;
 
             var draw_result = f.draw(math_func);
 

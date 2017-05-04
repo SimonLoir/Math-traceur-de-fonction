@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+var functions_informations = {};
 var SMath = function () {
 
     this.ctx = "";
@@ -354,7 +355,6 @@ var SMath = function () {
     }
 
     this.power2 = function (a, m, p) {
-        console.log("power 2 ")
         
         if (a == undefined) {
             a = 0;
@@ -379,6 +379,20 @@ var SMath = function () {
             last = parseFloat(a * Math.pow(start - m, 2) + p);
             this.newLine(from[0], from[1], start, last, this.color);
         }
+
+        functions_informations[this.to_eval] = {
+            "root1" : this.getRoot(a, m, p, -1),
+            "root2" : this.getRoot(a, m, p, 1)            
+        }
+    }
+    this.getRoot = function (a, m, p, sign) {
+
+        try {
+            return (sign * Math.sqrt((-1 * p) / a)) + m;
+        } catch (error) {
+           return NaN; 
+        }
+
     }
     this.power = function (a, m, p, power, x_result) {
         console.log("power")
