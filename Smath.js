@@ -388,7 +388,8 @@ var SMath = function () {
     this.getRoot = function (a, m, p, sign) {
 
         try {
-            return (sign * Math.sqrt((-1 * p) / a)) + m;
+            var res =  (sign * Math.sqrt((-1 * p) / a)) + m;
+            return res;
         } catch (error) {
            return NaN; 
         }
@@ -442,6 +443,7 @@ var SMath = function () {
         var exp_2 = -a * Math.pow(first_exp, 2);
         exp_2 = (exp_2 + c);
         this.draw(a + "(x+" + first_exp + ")²+" + exp_2);
+        console.log(a + "(x+" + first_exp + ")²+" + exp_2);
     }
 
     this.vect = function (m) {
@@ -546,6 +548,32 @@ var SMath = function () {
                     alert("Votre code javascript est incorrect" + error.message);
                     return "error";
                 }
+            }
+        ], [
+            /y=([0-9||\-||\.]+)x\+([0-9||\-||\.]+)/i, function (m) {
+                
+                m[1] = parseFloat(m[1]);
+                m[2] = parseFloat(m[2]);
+
+                var point1 = {
+                    x: -1000,
+                    y : 0
+                }
+
+                var point2 = {
+                    x: 1000,
+                    y : 0
+                }
+
+                point1.y = (m[1] * point1.x) + m[2];
+                point2.y = (m[1] * point2.x) + m[2];
+
+                console.log(m);
+                console.log(point1);
+                console.log(point2);
+
+                this.newLine(point1.x, point1.y, point2.x, point2.y, this.color);
+
             }
         ]
     ];

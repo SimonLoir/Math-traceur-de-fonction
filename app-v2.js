@@ -73,7 +73,7 @@ var trace = function (math_func) {
                                     if(isNaN(roots.root2) || roots.root1 == roots.root2){
                                         return to_show + ", cette fonction n'a qu'une racine";
                                     }else{
-                                        return to_show + "  et (" + roots.root1 + ";0)";
+                                        return to_show + "  et (" + roots.root2 + ";0)";
                                     }
 
                                 }
@@ -169,7 +169,7 @@ $(document).ready(function () {
         $('.color-view').css('background', $(this).node.value);
     });
 
-    $(".color-picker").node.value = "#295CBF";
+    $(".color-picker").node.value = "#bd282b";
 
     $('.color-view').css('background', $(".color-picker").node.value);
 
@@ -285,10 +285,6 @@ $(document).ready(function () {
     grid.newLine(0, -1000 ,0,1000, "black", undefined, 1);
     grid.newLine(-1000 ,0,1000, 0, "black", undefined, 1); 
 
-    
-    /* 
-    Drawing-Tool
-    */
     var click = 0;
     var last_point = [];
     $('.draw-area').click(function (e){
@@ -350,6 +346,25 @@ $(document).ready(function () {
         }
     });
 }); 
+
+
+$(document).ready(function () {
+
+    if(page.get('lang') == "" || page.get('lang') == "fr"){
+        // the actual version
+    }else{
+        if(translations[page.get('lang')] != undefined){
+            try {
+            
+            } catch (error) {
+                alert(error);
+            }
+        }else{
+            alert("Cette langue n'est pas supportée");
+        }
+    }
+
+});
 
 
 var page = new ___page();
