@@ -15,10 +15,13 @@
 		}
 
 		function exec_and_sort(expression){
+			expression = expression.replace(/²/g, "^2");
+			expression = expression.replace(/³/g, "^3");
 			/*
 			Séparation des + 
 			*/
 			var sum_of = expression.split('+');
+			var sum_result = {};
 
 			for (var i = 0; i < sum_of.length; i++) {
 				var element = sum_of[i];
@@ -26,6 +29,7 @@
 				Séparation des -
 				*/
 				var sub_of = element.split("-");
+				var sub_result = {};
 
 				for (var sub = 0; sub < sub_of.length; sub++) {
 					var sube = sub_of[sub];
@@ -38,20 +42,16 @@
 
 					for (var mult = 0; mult < mult_of.length; mult++) {
 						var multe = mult_of[mult];
-						/*
-						Séparation des /
-						*/
 						var div_result = {};
 						var div_of = multe.split("/");
 						for (var div = 0; div < div_of.length; div++) {
 							var dive = div_of[div];
+							//Division ici
 							if(dive.indexOf("x") < 0){
-								// no  x inside
 								if(div == 0){
 									div_result["~"] = dive;
 								}
 							}else{
-								// x inside
 								if(div == 0){
 									div_result[function () {
 
@@ -64,7 +64,7 @@
 									}()] = function () {
 
 										if(dive.split('x')[0] != ""){
-											return dive.split('x')[0];
+											return parseFloat(dive.split('x')[0]);
 										}else{
 											return 1;
 										}
@@ -72,21 +72,49 @@
 									}();
 								}
 							}
+							
+						}
+						//Multiplication ici
+						if(mult == 0){
+							mult_result = div_result;
+						}else{
 
 						}
-						console.log(div_result);
+					}
+					//Sourstraction ici
+					if(sub == 0){
+						sub_result = mult_result;
+					}else{
+						
 					}
 				}
-
+				//Somme ici
+				if(i == 0){
+					sum_result = sub_result;
+				}else{
+					var keys = Object.keys(sub_result);
+					for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+						var key = keys[ixxxx];
+						if(sum_result[key] != undefined){
+							sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
+						}else{
+							sum_result[key] = parseFloat(sub_result[key]);
+						}
+					}
+				}
 			}
+			
+			return array_to_exp(sum_result);
 
-			return;
+		}
 
+		function array_to_exp (array){
+			return array;
 		}
 
 		var e = document.querySelector('p');
 
-		e.innerHTML += exec('x²+3-5x+2x²');
+		e.innerHTML += JSON.stringify(exec('x^4+3-5x+2x²+1000x²+10000x+x²+3x²'));
 
     </script>
 </body>
