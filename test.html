@@ -6,9 +6,87 @@
 </head>
 <body>
     <h1>Test area</h1>
+	<p></p>
     <script>
-       var expression = "6x+(3*5*(18+33/5)*x)";
+		function exec(expression){
+			if(expression.indexOf(')') < 0){
+				return exec_and_sort(expression);
+			}
+		}
 
+		function exec_and_sort(expression){
+			/*
+			Séparation des + 
+			*/
+			var sum_of = expression.split('+');
+
+			for (var i = 0; i < sum_of.length; i++) {
+				var element = sum_of[i];
+				/*
+				Séparation des -
+				*/
+				var sub_of = element.split("-");
+
+				for (var sub = 0; sub < sub_of.length; sub++) {
+					var sube = sub_of[sub];
+					/*
+					Séparation des *
+					*/
+					var mult_of = sube.split("*");
+					
+					var mult_result = {};
+
+					for (var mult = 0; mult < mult_of.length; mult++) {
+						var multe = mult_of[mult];
+						/*
+						Séparation des /
+						*/
+						var div_result = {};
+						var div_of = multe.split("/");
+						for (var div = 0; div < div_of.length; div++) {
+							var dive = div_of[div];
+							if(dive.indexOf("x") < 0){
+								// no  x inside
+								if(div == 0){
+									div_result["~"] = dive;
+								}
+							}else{
+								// x inside
+								if(div == 0){
+									div_result[function () {
+
+										if(dive.split('x')[1] != ""){
+											return "x" + dive.split('x')[1];
+										}else{
+											return "x";
+										}
+
+									}()] = function () {
+
+										if(dive.split('x')[0] != ""){
+											return dive.split('x')[0];
+										}else{
+											return 1;
+										}
+
+									}();
+								}
+							}
+
+						}
+						console.log(div_result);
+					}
+				}
+
+			}
+
+			return;
+
+		}
+
+		var e = document.querySelector('p');
+
+		e.innerHTML += exec('x²+3-5x+2x²');
 
     </script>
 </body>
