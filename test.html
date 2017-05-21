@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Zone de test : OP</title>
+	<meta charset="UTF-8">
+	<title>Zone de test : OP</title>
 </head>
+
 <body>
-    <h1>Test area</h1>
+	<h1>Test area</h1>
+	<input type="text">
 	<p></p>
-    <script>
-		function exec(expression){
-			if(expression.indexOf(')') < 0){
+	<script>
+		function exec(expression) {
+			if (expression.indexOf(')') < 0) {
 				return exec_and_sort(expression);
 			}
 		}
 
-		function exec_and_sort(expression){
+		function exec_and_sort(expression) {
 			expression = expression.replace(/²/g, "^2");
 			expression = expression.replace(/³/g, "^3");
 			/*
@@ -37,7 +40,7 @@
 					Séparation des *
 					*/
 					var mult_of = sube.split("*");
-					
+
 					var mult_result = {};
 
 					for (var mult = 0; mult < mult_of.length; mult++) {
@@ -47,75 +50,98 @@
 						for (var div = 0; div < div_of.length; div++) {
 							var dive = div_of[div];
 							//Division ici
-							if(dive.indexOf("x") < 0){
-								if(div == 0){
+							if (dive.indexOf("x") < 0) {
+								if (div == 0) {
 									div_result["~"] = dive;
 								}
-							}else{
-								if(div == 0){
+							} else {
+								if (div == 0) {
 									div_result[function () {
 
-										if(dive.split('x')[1] != ""){
+										if (dive.split('x')[1] != "") {
 											return "x" + dive.split('x')[1];
-										}else{
+										} else {
 											return "x";
 										}
 
 									}()] = function () {
 
-										if(dive.split('x')[0] != ""){
+										if (dive.split('x')[0] != "") {
 											return parseFloat(dive.split('x')[0]);
-										}else{
+										} else {
 											return 1;
 										}
 
 									}();
 								}
 							}
-							
+
 						}
 						//Multiplication ici
-						if(mult == 0){
+						if (mult == 0) {
 							mult_result = div_result;
-						}else{
+						} else {
+							var keys = Object.keys(div_result);
+							for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+								var key = keys[ixxxx];
+								if (key.indexOf('x') > 0) {
 
+								} else {
+									var x_keys = Object.keys(mult_result);
+									for (var index = 0; index < x_keys.length; index++) {
+										var xkey = x_keys[index];
+										mult_result[xkey] = parseFloat(mult_result[xkey]) * parseFloat(div_result[key]);
+									}
+								}
+							}
 						}
 					}
 					//Sourstraction ici
-					if(sub == 0){
+					if (sub == 0) {
 						sub_result = mult_result;
-					}else{
-						
+					} else {
+						var keys = Object.keys(mult_result);
+						for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+							var key = keys[ixxxx];
+							if (sub_result[key] != undefined) {
+								sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
+							} else {
+								sub_result[key] = - parseFloat(mult_result[key]);
+							}
+						}
 					}
 				}
 				//Somme ici
-				if(i == 0){
+				if (i == 0) {
 					sum_result = sub_result;
-				}else{
+				} else {
 					var keys = Object.keys(sub_result);
 					for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
 						var key = keys[ixxxx];
-						if(sum_result[key] != undefined){
+						if (sum_result[key] != undefined) {
 							sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
-						}else{
+						} else {
 							sum_result[key] = parseFloat(sub_result[key]);
 						}
 					}
 				}
 			}
-			
+
 			return array_to_exp(sum_result);
 
 		}
 
-		function array_to_exp (array){
+		function array_to_exp(array) {
 			return array;
 		}
 
 		var e = document.querySelector('p');
+		var i = document.querySelector('input');
 
-		e.innerHTML += JSON.stringify(exec('x^4+3-5x+2x²+1000x²+10000x+x²+3x²'));
-
-    </script>
+		i.onkeyup = function () {
+			e.innerHTML = JSON.stringify(exec(i.value));
+		}
+	</script>
 </body>
+
 </html>
