@@ -84,7 +84,9 @@
 							var keys = Object.keys(div_result);
 							for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
 								var key = keys[ixxxx];
-								if (key.indexOf('x') > 0) {
+								if (key.indexOf('x') >= 0) {
+									
+									mult_result = mult_by(mult_result, key, div_result[key]); // work in progress
 
 								} else {
 									var x_keys = Object.keys(mult_result);
@@ -133,6 +135,38 @@
 
 		function array_to_exp(array) {
 			return array;
+		}
+
+		function mult_by(mult_result, key, mult) {
+
+			if(key == "x"){
+				var exp = 1;
+			}else if(key.indexOf('x^') == 0){
+				var exp = parseFloat(key.replace('x^', ""));
+			}
+			
+			var keys = Object.keys(mult_result);
+
+			var end_array = {};
+
+			for (var i = 0; i < keys.length; i++) {
+				var element = keys[i];
+				if(element == "~"){
+					var end_key = "x^" + exp;
+				}else if(element == "x"){
+					var end_key = "x^" + (exp + 1);
+				}else{
+					var end_key = "x^" + (exp + parseFloat(element.split("^")[1]));
+				}
+				//console.log(end_key);
+				var value = parseFloat(mult_result[element]) * mult;
+				//console.log(value);
+				end_array[end_key] = value;
+
+			}
+
+			return end_array;
+
 		}
 
 		var e = document.querySelector('p');
