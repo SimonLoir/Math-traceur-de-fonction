@@ -67,9 +67,9 @@ var SMath = function () {
         }
         this.ctx.moveTo(X, Y);
         this.ctx.lineTo(X2, Y2);
-        if(width == undefined){
+        if (width == undefined) {
             this.ctx.lineWidth = 1;
-        }else{
+        } else {
             this.ctx.lineWidth = width;
         }
         this.ctx.stroke();
@@ -156,9 +156,9 @@ var SMath = function () {
     this.makeGrid = function () {
         var max_x = this.x_zero / this.interval;
         var max_y = this.y_zero / this.interval;
-        if(this.interval > 200){
+        if (this.interval > 200) {
             grid_interval = this.interval / (200 * 10);
-        }else{
+        } else {
             grid_interval = 1;
         }
 
@@ -166,26 +166,26 @@ var SMath = function () {
         while (x_right < max_x + 5) {
             this.newLine(x_right, -500, x_right, 500);
             this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval);
-            x_right+= grid_interval;
+            x_right += grid_interval;
         }
         x_right = 0;
         while (x_right > -max_x - 5) {
             this.newLine(x_right, -500, x_right, 500);
-            if(x_right != 0){this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval);}
-            x_right-= grid_interval;
+            if (x_right != 0) { this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval); }
+            x_right -= grid_interval;
         }
 
         var y_bottom = 0;
         while (y_bottom < max_y + 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
-            if(y_bottom != 0){this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom);}
-            y_bottom+= grid_interval;
+            if (y_bottom != 0) { this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom); }
+            y_bottom += grid_interval;
         }
         y_bottom = 0;
         while (y_bottom > -max_y - 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
-            if(y_bottom != 0){this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom);}
-            y_bottom-= grid_interval;
+            if (y_bottom != 0) { this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom); }
+            y_bottom -= grid_interval;
         }
 
     }
@@ -203,7 +203,7 @@ var SMath = function () {
 
         val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
             x_result[p1 / p2] = [p1, p2];
-            return p1/p2;
+            return p1 / p2;
         });
 
         if (val == "x²") {
@@ -250,7 +250,7 @@ var SMath = function () {
             return;
         }
 
-        
+
 
         matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
 
@@ -349,13 +349,13 @@ var SMath = function () {
             this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
             return;
         }
-        
+
         return this.execPlugin(val);
 
     }
 
     this.power2 = function (a, m, p) {
-        
+
         if (a == undefined) {
             a = 0;
         } else {
@@ -381,17 +381,17 @@ var SMath = function () {
         }
 
         functions_informations[this.to_eval] = {
-            "root1" : this.getRoot(a, m, p, -1),
-            "root2" : this.getRoot(a, m, p, 1)            
+            "root1": this.getRoot(a, m, p, -1),
+            "root2": this.getRoot(a, m, p, 1)
         }
     }
     this.getRoot = function (a, m, p, sign) {
 
         try {
-            var res =  (sign * Math.sqrt((-1 * p) / a)) + m;
+            var res = (sign * Math.sqrt((-1 * p) / a)) + m;
             return res;
         } catch (error) {
-           return NaN; 
+            return NaN;
         }
 
     }
@@ -412,22 +412,22 @@ var SMath = function () {
         } else {
             p = parseFloat(p);
         }
-        if(x_result == undefined){
+        if (x_result == undefined) {
             x_result = {};
         }
-        var start =  -(this.x_zero / this.interval);
+        var start = -(this.x_zero / this.interval);
         var last = parseFloat(a * Math.pow(start - m, power) + p);
         while (start <= this.x_zero / this.interval) {
             var from = [start, last];
-            
+
             start += 0.002;
-            
+
             var actual = start - m;
 
             var xxx = 1;
 
-            if(x_result[power] != undefined){
-                if(x_result[power][1]%2 != 0 && actual < 0){
+            if (x_result[power] != undefined) {
+                if (x_result[power][1] % 2 != 0 && actual < 0) {
                     xxx = -1;
                     actual = -(start - m);
                 }
@@ -541,7 +541,7 @@ var SMath = function () {
             /^eval (.+)/i, function (m) {
                 try {
                     var eval_r = eval(m[1]);
-                    if (eval_r== "no-trace"){
+                    if (eval_r == "no-trace") {
                         return "no-trace";
                     }
                 } catch (error) {
@@ -551,18 +551,18 @@ var SMath = function () {
             }
         ], [
             /y=([0-9||\-||\.]+)x\+([0-9||\-||\.]+)/i, function (m) {
-                
+
                 m[1] = parseFloat(m[1]);
                 m[2] = parseFloat(m[2]);
 
                 var point1 = {
                     x: -1000,
-                    y : 0
+                    y: 0
                 }
 
                 var point2 = {
                     x: 1000,
-                    y : 0
+                    y: 0
                 }
 
                 point1.y = (m[1] * point1.x) + m[2];
@@ -626,5 +626,165 @@ var SMath = function () {
         }
     }
 
-}
 
+
+
+
+    this.exec = function (expression) {
+        if (expression.indexOf(')') < 0) {
+            return this.exec_and_sort(expression);
+        }
+    }
+
+    this.exec_and_sort = function (expression) {
+        expression = expression.replace(/²/g, "^2");
+        expression = expression.replace(/³/g, "^3");
+        /*
+        Séparation des + 
+        */
+        var sum_of = expression.split('+');
+        var sum_result = {};
+
+        for (var i = 0; i < sum_of.length; i++) {
+            var element = sum_of[i];
+            /*
+            Séparation des -
+            */
+            var sub_of = element.split("-");
+            var sub_result = {};
+
+            for (var sub = 0; sub < sub_of.length; sub++) {
+                var sube = sub_of[sub];
+                /*
+                Séparation des *
+                */
+                var mult_of = sube.split("*");
+
+                var mult_result = {};
+
+                for (var mult = 0; mult < mult_of.length; mult++) {
+                    var multe = mult_of[mult];
+                    var div_result = {};
+                    var div_of = multe.split("/");
+                    for (var div = 0; div < div_of.length; div++) {
+                        var dive = div_of[div];
+                        //Division ici
+                        if (dive.indexOf("x") < 0) {
+                            if (div == 0) {
+                                div_result["~"] = dive;
+                            }
+                        } else {
+                            if (div == 0) {
+                                div_result[function () {
+
+                                    if (dive.split('x')[1] != "") {
+                                        return "x" + dive.split('x')[1];
+                                    } else {
+                                        return "x";
+                                    }
+
+                                }()] = function () {
+
+                                    if (dive.split('x')[0] != "") {
+                                        return parseFloat(dive.split('x')[0]);
+                                    } else {
+                                        return 1;
+                                    }
+
+                                }();
+                            }
+                        }
+
+                    }
+                    //Multiplication ici
+                    if (mult == 0) {
+                        mult_result = div_result;
+                    } else {
+                        var keys = Object.keys(div_result);
+                        for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+                            var key = keys[ixxxx];
+                            if (key.indexOf('x') >= 0) {
+
+                                mult_result = this.mult_by(mult_result, key, div_result[key]); // work in progress
+
+                            } else {
+                                var x_keys = Object.keys(mult_result);
+                                for (var index = 0; index < x_keys.length; index++) {
+                                    var xkey = x_keys[index];
+                                    mult_result[xkey] = parseFloat(mult_result[xkey]) * parseFloat(div_result[key]);
+                                }
+                            }
+                        }
+                    }
+                }
+                //Sourstraction ici
+                if (sub == 0) {
+                    sub_result = mult_result;
+                } else {
+                    var keys = Object.keys(mult_result);
+                    for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+                        var key = keys[ixxxx];
+                        if (sub_result[key] != undefined) {
+                            sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
+                        } else {
+                            sub_result[key] = - parseFloat(mult_result[key]);
+                        }
+                    }
+                }
+            }
+            //Somme ici
+            if (i == 0) {
+                sum_result = sub_result;
+            } else {
+                var keys = Object.keys(sub_result);
+                for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+                    var key = keys[ixxxx];
+                    if (sum_result[key] != undefined) {
+                        sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
+                    } else {
+                        sum_result[key] = parseFloat(sub_result[key]);
+                    }
+                }
+            }
+        }
+
+        return this.array_to_exp(sum_result);
+
+    }
+
+    this.array_to_exp = function (array) {
+        return array;
+    }
+
+    this.mult_by = function (mult_result, key, mult) {
+
+        if (key == "x") {
+            var exp = 1;
+        } else if (key.indexOf('x^') == 0) {
+            var exp = parseFloat(key.replace('x^', ""));
+        }
+
+        var keys = Object.keys(mult_result);
+
+        var end_array = {};
+
+        for (var i = 0; i < keys.length; i++) {
+            var element = keys[i];
+            if (element == "~") {
+                var end_key = "x^" + exp;
+            } else if (element == "x") {
+                var end_key = "x^" + (exp + 1);
+            } else {
+                var end_key = "x^" + (exp + parseFloat(element.split("^")[1]));
+            }
+
+            var value = parseFloat(mult_result[element]) * mult;
+
+            end_array[end_key] = value;
+
+        }
+
+        return end_array;
+
+    }
+}
