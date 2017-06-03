@@ -236,22 +236,6 @@ var SMath = function () {
             macths = null;
         }
 
-        matchs = val.match(/^(.+)x\^3$/i);
-
-        if (matchs != null) {
-            this.power(matchs[1], 0, 0, 3);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x\^([0-9||\-||\.]+)$/i);
-
-        if (matchs != null) {
-            this.power(matchs[1], 0, 0, parseFloat(matchs[2]), x_result);
-            return;
-        }
-
-
-
         matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
 
         if (matchs != null) {
@@ -259,12 +243,6 @@ var SMath = function () {
             return;
         }
 
-        matchs = val.match(/^(.+)\(x\+(.+)\)\^([0-9||\-||\.]+)\+(.+)$/i);
-
-        if (matchs != null) {
-            this.power(matchs[1], -matchs[2], parseFloat(matchs[4]), matchs[3], x_result);
-            return;
-        }
 
         matchs = val.match(/^(.+)\(x\-(.+)\)²\-(.+)$/i);
 
@@ -394,49 +372,6 @@ var SMath = function () {
             return NaN;
         }
 
-    }
-    this.power = function (a, m, p, power, x_result) {
-        console.log("power")
-        if (a == undefined) {
-            a = 0;
-        } else {
-            a = parseFloat(a);
-        }
-        if (m == undefined) {
-            m = 0;
-        } else {
-            m = parseFloat(m);
-        }
-        if (p == undefined) {
-            p = 0;
-        } else {
-            p = parseFloat(p);
-        }
-        if (x_result == undefined) {
-            x_result = {};
-        }
-        var start = -(this.x_zero / this.interval);
-        var last = parseFloat(a * Math.pow(start - m, power) + p);
-        while (start <= this.x_zero / this.interval) {
-            var from = [start, last];
-
-            start += 0.002;
-
-            var actual = start - m;
-
-            var xxx = 1;
-
-            if (x_result[power] != undefined) {
-                if (x_result[power][1] % 2 != 0 && actual < 0) {
-                    xxx = -1;
-                    actual = -(start - m);
-                }
-            }
-
-            last = parseFloat(a * xxx * Math.pow(actual, power) + p);
-
-            this.newLine(from[0], from[1], start, last, this.color);
-        }
     }
     this.toCan = function (a, b, c, val) {
         var first_exp = (b / a) * (1 / 2);
@@ -592,7 +527,17 @@ var SMath = function () {
                 return ex;
             }
         }
-        return "error";
+
+        var exp_processed = this.exec(val);
+
+        if(exp_processed == "invalid_expression_error"){
+            return "error";
+        }else{
+            this.traceFromArray(exp_processed);
+            return exp_processed;
+        }
+
+        
     }
     this.plugin_exec_function = function () { };
 
@@ -626,13 +571,41 @@ var SMath = function () {
         }
     }
 
+    this.traceFromArray = function (array) {
+        console.log(array);
+        var start = -150;
+        var last = 0;
+        while (start <= 150) {
+            var from = [start, last];
+            start += 0.002;
+            last = function () {
+                var result = 0;
 
+                for (var i = 0; i < Object.keys(array).length; i++) {
+                    var element = Object.keys(array)[i];
+                    if(element == "~"){
+                        if(array[element] != ""){
+                            result += array[element];
+                        }
+                    }else if(element == "x"){
+                        result += array[element] * start;
+                    }else{
+                        result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                    }
+                }
 
+                return result;
+            }();
+            this.newLine(from[0], from[1], start, last, this.color);
+        }
+    }
 
 
     this.exec = function (expression) {
         if (expression.indexOf(')') < 0) {
             return this.exec_and_sort(expression);
+        }else{
+            return "invalid_expression_error";
         }
     }
 
