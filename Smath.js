@@ -191,143 +191,7 @@ var SMath = function () {
     }
 
     this.draw = function (val) {
-        val = val.replace("^2", "²");
-        val = val.replace("³", "^3");
-        val = val.replace("-x", "-1x");
-
-        if (val[0] == "x") {
-            val = "1" + val;
-        }
-
-        var x_result = {};
-
-        val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
-            x_result[p1 / p2] = [p1, p2];
-            return p1 / p2;
-        });
-
-        if (val == "x²") {
-            this.power2(1, 0, 0);
-            return;
-        }
-        if (val == "x^3") {
-            this.power(1, 0, 0, 3);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], 0, 0);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²\+([0-9||\-||\.]+)$/i);
-
-        if (matchs != null) {
-            val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
-            macths = null;
-        }
-
-        matchs = val.match(/^(.+)x²\-([0-9||\-||\.]+)$/i);
-
-        if (matchs != null) {
-            val = matchs[1] + "(x-" + 0 + ")²+" + -matchs[2];
-            macths = null;
-        }
-
-        matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
-            return;
-        }
-
-
-        matchs = val.match(/^(.+)\(x\-(.+)\)²\-(.+)$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
-            return;
-        }
-
-        matchs = val.match(/^(.+)\(x\+(.+)\)²\-(.+)$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²\+(.+)x\+(.+)$/i)
-
-        if (matchs != null) {
-
-            var a, b, c;
-
-            a = parseFloat(matchs[1]);
-            b = parseFloat(matchs[2]);
-            c = parseFloat(matchs[3]);
-
-            this.toCan(a, b, c, val);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²\-(.+)x\+(.+)$/i)
-
-        if (matchs != null) {
-
-            var a, b, c;
-
-            a = parseFloat(matchs[1]);
-            b = -parseFloat(matchs[2]);
-            c = parseFloat(matchs[3]);
-
-            this.toCan(a, b, c, val);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²\+(.+)x\-(.+)$/i)
-
-        if (matchs != null) {
-
-            var a, b, c;
-
-            a = parseFloat(matchs[1]);
-            b = parseFloat(matchs[2]);
-            c = - parseFloat(matchs[3]);
-
-            this.toCan(a, b, c, val);
-            return;
-        }
-
-        matchs = val.match(/^(.+)x²\-(.+)x\-(.+)$/i)
-
-        if (matchs != null) {
-
-            var a, b, c;
-
-            a = parseFloat(matchs[1]);
-            b = -parseFloat(matchs[2]);
-            c = - parseFloat(matchs[3]);
-
-            this.toCan(a, b, c, val);
-            return;
-        }
-
-        matchs = val.match(/^\(x\-([0-9||\-||\.]+)\)²\+\(y\-([0-9||\-||\.]+)\)²\=([0-9||\-||\.]+)²$/i);
-
-        if (matchs != null) {
-            this.circle(matchs[1], matchs[2], matchs[3], this.color);
-            return;
-        }
-
-        matchs = val.match(/^(.+)\(x\-(.+)\)²\+(.+)$/i);
-
-        if (matchs != null) {
-            this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
-            return;
-        }
-
+      
         return this.execPlugin(val);
 
     }
@@ -530,9 +394,12 @@ var SMath = function () {
 
         var exp_processed = this.exec(val);
 
-        if(exp_processed == "invalid_expression_error"){
+        if(exp_processed == "unknown expression"){
             return "error";
-        }else{
+        }/*else if(exp_processed.indexOf('correcte') >= 0){
+            alert(exp_processed);
+            return "error";
+        }*/else{
             this.traceFromArray(exp_processed);
             return exp_processed;
         }
@@ -600,16 +467,47 @@ var SMath = function () {
         }
     }
 
+    this.verify = function ( exp ) {
 
-    this.exec = function (expression) {
-        if (expression.indexOf(')') < 0) {
+        var o_count = 0;
+        var c_count = 0;
+
+        for (var i = 0; i < exp.length; i++) {
+            var char = exp[i];
+            if(char == "("){
+                o_count++;
+
+            }else if(char == ")"){
+                c_count++;
+            }
+        }
+
+        if(o_count == c_count){
+            return true;
+        }else{
+            return "Erreur de syntaxe";
+        }
+
+    }
+
+    this.exec = function ( expression ) {
+        if (expression.indexOf('(') < 0) {
             return this.exec_and_sort(expression);
         }else{
-            return "invalid_expression_error";
+            var ver = this.verify(expression);
+            if(ver == true){
+
+                return "unknown expression";
+            }else{
+                return 'Cette expression n\'est pas correcte : ' + ver;
+            }
         }
     }
 
     this.exec_and_sort = function (expression) {
+        if(expression.indexOf('-') == "0"){
+            expression = "0" + expression;
+        }
         expression = expression.replace(/²/g, "^2");
         expression = expression.replace(/³/g, "^3");
         /*
@@ -678,7 +576,7 @@ var SMath = function () {
                             var key = keys[ixxxx];
                             if (key.indexOf('x') >= 0) {
 
-                                mult_result = this.mult_by(mult_result, key, div_result[key]); // work in progress
+                                mult_result = this.mult_by(mult_result, key, div_result[key]);
 
                             } else {
                                 var x_keys = Object.keys(mult_result);
@@ -761,3 +659,145 @@ var SMath = function () {
 
     }
 }
+
+
+/**
+ * This.draw()
+ *  *   val = val.replace("^2", "²");
+        val = val.replace("³", "^3");
+        val = val.replace("-x", "-1x");
+
+        if (val[0] == "x") {
+            val = "1" + val;
+        }
+
+        var x_result = {};
+
+        val = val.replace(/\(([0-9]+)\/([0-9]+)\)/i, function (value, p1, p2) {
+            x_result[p1 / p2] = [p1, p2];
+            return p1 / p2;
+        });
+
+        if (val == "x²") {
+            this.power2(1, 0, 0);
+            return;
+        }
+        if (val == "x^3") {
+            this.power(1, 0, 0, 3);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], 0, 0);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\+([0-9||\-||\.]+)$/i);
+
+        if (matchs != null) {
+            val = matchs[1] + "(x-" + 0 + ")²+" + matchs[2];
+            macths = null;
+        }
+
+        matchs = val.match(/^(.+)x²\-([0-9||\-||\.]+)$/i);
+
+        if (matchs != null) {
+            val = matchs[1] + "(x-" + 0 + ")²+" + -matchs[2];
+            macths = null;
+        }
+
+        matchs = val.match(/^(.+)\(x\+(.+)\)²\+(.+)$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], -matchs[2], parseFloat(matchs[3]));
+            return;
+        }
+
+
+        matchs = val.match(/^(.+)\(x\-(.+)\)²\-(.+)$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], matchs[2], -parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/^(.+)\(x\+(.+)\)²\-(.+)$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], -matchs[2], -parseFloat(matchs[3]));
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\+(.+)x\+(.+)$/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = parseFloat(matchs[2]);
+            c = parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\-(.+)x\+(.+)$/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = -parseFloat(matchs[2]);
+            c = parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\+(.+)x\-(.+)$/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = parseFloat(matchs[2]);
+            c = - parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/^(.+)x²\-(.+)x\-(.+)$/i)
+
+        if (matchs != null) {
+
+            var a, b, c;
+
+            a = parseFloat(matchs[1]);
+            b = -parseFloat(matchs[2]);
+            c = - parseFloat(matchs[3]);
+
+            this.toCan(a, b, c, val);
+            return;
+        }
+
+        matchs = val.match(/^\(x\-([0-9||\-||\.]+)\)²\+\(y\-([0-9||\-||\.]+)\)²\=([0-9||\-||\.]+)²$/i);
+
+        if (matchs != null) {
+            this.circle(matchs[1], matchs[2], matchs[3], this.color);
+            return;
+        }
+
+        matchs = val.match(/^(.+)\(x\-(.+)\)²\+(.+)$/i);
+
+        if (matchs != null) {
+            this.power2(matchs[1], matchs[2], parseFloat(matchs[3]));
+            return;
+        }
+
+ */
