@@ -543,6 +543,7 @@ var SMath = function () {
                         if (dive.indexOf("x") < 0) {
                             if (div == 0) {
                                 div_result["~"] = parseFloat(dive);
+                                
                             } else {
                                 var x_keys = Object.keys(div_result);
                                 for (var index = 0; index < x_keys.length; index++) {
