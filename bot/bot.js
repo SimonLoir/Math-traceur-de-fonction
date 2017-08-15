@@ -3,9 +3,9 @@ var low_power_device = false;
 
 $(document).ready(function () {
     setTimeout(function () {
-        document.querySelector('.messages').innerHTML = '<div class="wrapper"><div class="message">Bonjour, je suis SMath ! Je suis un bot capable de résoudre des équations graphiquement. Je peux aussi te servir de calculatrice :-). Pour commencer, tu peux entrer l\'expression que tu voudrais résoudre. Tu peux aussi écrire aide pour que je t\'explique ce dont je suis capable et comment je fonctionne.</div></div>';
+        document.querySelector('.messages').innerHTML = '<div class="wrapper"><div class="message">Bonjour, je suis SMath ! Je suis un bot capable de résoudre des équations graphiquement. Je peux aussi te servir de calculatrice :-). Pour commencer, tu peux entrer l\'expression que tu voudrais résoudre. Tu peux aussi écrire aide pour que je t\'explique ce dont je suis capable et comment je fonctionne.<br /> Attention: Je suis encore en alpha, certaines fonctionnalités annoncées ne fonctionnent peut-être pas.</div></div>';
 
-    }, 1500);
+    }, 500);
 
     AR.GET("bot/php.php", function ( data ) {
 
@@ -134,7 +134,7 @@ $(document).ready(function () {
 
                 }, 300);
 
-                return 'Voici ce que je peux dessiner :<br /><a href="index.html#functions=%5B%5B%22' + real_exp + '%22%2C%22%23bd282b%22%5D%5D">Voir sur SMath</a>';
+                return 'Voici ce que je peux dessiner :<br /><a href="graph.html#functions=%5B%5B%22' + real_exp + '%22%2C%22%23bd282b%22%5D%5D">Voir sur SMath</a>';
                 //return JSON.stringify(this.s.exec(exp.replace('graphique ', "")));
             } else if (exp.indexOf("aide") >= 0 || exp.indexOf("help") >= 0) {
                 return "";

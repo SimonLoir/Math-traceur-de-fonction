@@ -1,0 +1,137 @@
+<!--
+/*
+Copyright (C) 2017  Simon Loir
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/.
+*/    
+-->
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Smath</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="extjs.js"></script>
+    <script src="Smath.js"></script>
+    <meta property="og:title" content="Smath - designed by Simon Loir">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.'">
+    <meta name="description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.">
+    <meta name="keywords" content="Simon Loir, Simon Math, SMath, SLMath, fonctions, math, fonction second degré, géométrie, mathématiques, INDSé, 4ème année, secondaire fonctions, simonloir.esy.es, simonloir, loir simon">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <img src="logo.svg" alt=""> Smath <span class="desktop"> version  alpha </span>2.17<span class="desktop">.08.15 (français)</span>
+            <button class="show-hide">Options</button>
+        </div>
+
+        <div class="left-tool-bar">
+            <button class="" id="new_layer">+</button>
+            <button class="" id="zoom-more">&#128269;</button>
+            <button class="" id="zoom-less">&#128269;</button>
+            <button class="" id="pen-tool">&#128393;</button>
+            <button id="need-help">?</button>
+        </div>
+        <div class="draw-area">
+            <div class="canvas">
+                <canvas id="layer-grid"></canvas>
+            </div>
+        </div>
+        <div class="right-tool-bar">
+            <div class="color-view">
+                <input type="color" class="color-picker">
+            </div>
+            <div class="container">
+                <div class="options">
+                    <span class="layer active">Calques et fonctions</span>
+                </div>
+                <div class="layer-function-view">
+                    <div class="layer">
+                        <div class="preview"></div>
+                        <span class="layer-name">Grid</span><button>&#128274;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="options">
+                    <span class="layer active">Affichage</span>
+                    <span class="functions">Paramètres</span>
+                </div>
+                <div class="view">
+                    <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
+                    <span><br />Zoom : <span id="zoom-level">1</span></span><br /><a href="#zoom=50;--">Paramètres par défaut (supprime toutes les fonctions)</a>
+                    <button class="apply" id="apply_zoom">Appliquer</button>
+                </div>
+            </div>
+
+            <div class="container pencil-tool-board" style="display: none;">
+                <div class="options">
+                    <span class="layer active">Outil ligne</span>
+                </div>
+                <div class="view">
+                    Type de ligne : <select name="" id="line-type">
+                        <option value="h">Horizontale</option>
+                        <option value="v">Verticale</option>
+                        <option value="o">Oblique</option>                    
+                    </select>
+                    <label for="check">
+                        <input type="checkbox" name="" checked="true" id="round"> "coller" aux intersections
+                    </label>
+                    <br />
+                </div>
+            </div>
+
+            <br /><br /> Copyright &copy; 2017 Simon Loir <br /><br />
+            <div style="text-align:center;padding:8px;">
+                <img src="logo.svg" style="margin:auto;width:40%;">
+            </div>
+            <p>Retrouvez le projet sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
+
+        </div>
+        
+        <div class="action" style="display: none;" id="ftrace_dialog">
+            <div class="action-header">Tracer quelque chose</div>
+            <div class="action-content">
+                <p>
+                    Entrez une expression :
+                    <br />
+                    <input type="text"><br />
+                    <br /><br />
+                    <button class="btn" id="no-formule-mode">Mode sans formule / découverte</button>
+                </p>
+            </div>
+            <div class="btn-group"><button id="ftrace">Valider</button><button id="fcancel">Annuler</button></div>
+        </div>
+
+        <div class="action full-screen" style="display: none;" id="ftrace_no_formule_dialog">
+            <div class="action-header">Mode sans formule // mode découverte</div>
+            <div class="action-content">
+            </div>
+            <div class="btn-group"><button id="nf-cancel">Annuler</button></div>
+        </div>
+
+        <div class="popup-start">
+            &#8592; Cliquez ici pour tracer quelque chose
+        </div>
+    </div>
+    <script src="app-v2.js"></script>
+    <script src="translations.js"></script>
+</body>
+
+</html>
