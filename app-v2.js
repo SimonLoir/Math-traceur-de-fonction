@@ -108,6 +108,21 @@ var trace = function (math_func) {
             
  }
 $(document).ready(function () {
+
+    $('.show-hide').click(function () {
+
+        if($(this).node.innerHTML == "Options"){
+            $(this).node.innerHTML = "Masquer";
+            $('.right-tool-bar').addClass('force-show');       
+        }else{
+            $(this).node.innerHTML = "Options";
+            $('.right-tool-bar').removeClass('force-show');       
+            
+        }
+
+    });
+
+
     /*
     * Grid Layer
     */

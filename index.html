@@ -1,132 +1,110 @@
-<!--
-/*
-Copyright (C) 2017  Simon Loir
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see http://www.gnu.org/licenses/.
-*/    
--->
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Smath</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="extjs.js"></script>
-    <script src="Smath.js"></script>
-    <meta property="og:title" content="Smath - designed by Simon Loir">
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="" />
-    <meta property="og:description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.'">
-    <meta name="description" content="Bienvenue sur SMath, un petit site web qui vous permet de tracer des fonctions simplement. SMath est un programme gratuit et libre de droit. Vous pouvez le copier et l'utiliser gratuitement.">
-    <meta name="keywords" content="Simon Loir, Simon Math, SMath, SLMath, fonctions, math, fonction second degré, géométrie, mathématiques, INDSé, 4ème année, secondaire fonctions, simonloir.esy.es, simonloir, loir simon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SMath</title>
 </head>
-
 <body>
-    <div class="header">
-        <img src="logo.svg" alt=""> Smath version alpha 2.0.5 #002 ~ french - Last update : SUN 2017-04-05, 21:09
+    <div class="centred-content">
+        <img src="logo.svg" alt="">
+        <h1>Bienvenue sur SMath</h1>
+        <p>SMath est une suite logicielle en ligne basée sur le monde des mathématiques.</p>
+        <a href="math-bot.html"><button>SMath bot (alpha)</button></a>
+        <a href="graph.html"><button>SMath (alpha)</button></a>
+        <br /><br />
+        &copy; Copyright 2017 Simon Loir
+        <script>
+            setTimeout(function() {
+                document.querySelector('.centred-content').classList.add('new-coords');
+            }, 200);
+
+            var list = document.getElementsByTagName('a');
+
+            for (var i = 0; i < list.length; i++) {
+                var a = list[i];
+                a.onclick = function () {
+                    document.querySelector('.centred-content').classList.remove('new-coords');
+                    var e = this;
+                    setTimeout(function() {
+                        window.location.href = e.href;
+                    }, 400);
+                    return false;
+                }
+            }
+
+            
+        </script>
     </div>
 
-    <div class="left-tool-bar">
-        <button class="" id="new_layer">+</button>
-        <button class="" id="zoom-more">&#128269;</button>
-        <button class="" id="zoom-less">&#128269;</button>
-        <button class="" id="pen-tool">&#128393;</button>
-        <button id="need-help">?</button>
-    </div>
+    <style>
+        body{
+            background:rgba(240,240,240,0.85);
+            color:rgba(0,0,0,0.75);
+            text-align: center;
+            padding: 25px;
+            font-family: sans-serif;
+        }
 
-    <div class="right-tool-bar">
-        <div class="color-view">
-            <input type="color" class="color-picker">
-        </div>
-        <div class="container">
-            <div class="options">
-                <span class="layer active">Calques et fonctions</span>
-            </div>
-            <div class="layer-function-view">
-                <div class="layer">
-                    <div class="preview"></div>
-                    <span class="layer-name">Grid</span><button>&#128274;</button>
-                </div>
-            </div>
-        </div>
+        .centred-content{
+            opacity: 0;
+            position: fixed;
+            transition: 0.85s;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
 
-        <div class="container">
-            <div class="options">
-                <span class="layer active">Affichage</span>
-                <span class="functions">Paramètres</span>
-            </div>
-            <div class="view">
-                <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
-                <span><br />Zoom : <span id="zoom-level">1</span></span><br /><a href="#zoom=50;--">Paramètres par défaut (supprime toutes les fonctions)</a>
-                <button class="apply" id="apply_zoom">Appliquer</button>
-            </div>
-        </div>
+        .new-coords {
+            opacity: 1;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
 
-        <div class="container pencil-tool-board" style="display: none;">
-            <div class="options">
-                <span class="layer active">Outil ligne</span>
-            </div>
-            <div class="view">
-                Type de ligne : <select name="" id="line-type">
-                    <option value="h">Horizontale</option>
-                    <option value="v">Verticale</option>
-                    <option value="o">Oblique</option>                    
-                </select>
-                <label for="check">
-                    <input type="checkbox" name="" checked="true" id="round"> "coller" aux intersections
-                </label>
-                <br />
-            </div>
-        </div>
+        img{
+            width:300px;
+        }
+        button{
+            position: relative;
+            background:white;
+            border:none;
+            min-width: 40%;
+            text-align:center;
+            padding: 8px;
+            margin: 15px;
+            border-radius: 4px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+        }
 
-        <br /><br /> Copyright &copy; 2017 Simon Loir <br /><br />
-        <div style="text-align:center;padding:8px;">
-            <img src="logo.svg" style="margin:auto;width:40%;">
-        </div>
-        <p>Retrouvez le projet sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
-        
-    </div>
-    <div class="draw-area">
-        <div class="canvas">
-            <canvas id="layer-grid"></canvas>
-        </div>
-    </div>
-    <div class="action" style="display: none;" id="ftrace_dialog">
-        <div class="action-header">Tracer quelque chose</div>
-        <div class="action-content">
-            <p>
-                Entrez une expression :
-                <br />
-                <input type="text"><br />
-                <br /><br />
-                <button class="btn" id="no-formule-mode">Mode sans formule / découverte</button>
-            </p>
-        </div>
-        <div class="btn-group"><button id="ftrace">Valider</button><button id="fcancel">Annuler</button></div>
-    </div>
+        @media (max-width:500px){
+            img{
+                width:50%;
+            }
+            h1{
+                font-size: 20px;
+            }
+            .centred-content {
+                width: calc(100% - 25px);
+            }
 
-    <div class="action full-screen" style="display: none;" id="ftrace_no_formule_dialog">
-        <div class="action-header">Mode sans formule // mode découverte</div>
-        <div class="action-content">
-         </div>
-        <div class="btn-group"><button id="nf-cancel">Annuler</button></div>
-    </div>
+            button{
+                margin:8px;
+                min-width: 45%;
+            }
+        }
 
-    <div class="popup-start">
-        &#8592; Cliquez ici pour tracer quelque chose
-    </div>
-    <script src="app-v2.js"></script>
-    <script src="translations.js"></script>
+        @media (max-width:350px){
+           
+            button{
+                margin:8px;
+                width:100%;
+                width:calc(100% - 8px);
+                
+            }
+        }
+    </style>
 </body>
-
 </html>
