@@ -137,7 +137,14 @@ $(document).ready(function () {
                 return 'Voici ce que je peux dessiner :<br /><a href="graph.html#functions=%5B%5B%22' + real_exp + '%22%2C%22%23bd282b%22%5D%5D">Voir sur SMath</a>';
                 //return JSON.stringify(this.s.exec(exp.replace('graphique ', "")));
             } else if (exp.indexOf("aide") >= 0 || exp.indexOf("help") >= 0) {
-                return "";
+                var s = "<br />";
+                var help = "Comment fonctionne le bot SMath ?<ul>" + s
+                + "<li>json {expression mathématique} retourne l'expression mathématique en JSON</li>" + s
+                + "<li>graphique {expression mathématique} trace le graphique en fonction de l'expression</li>" + s
+                + "<li>:g ou @ tracent un graphique par rapport à la dernière expression en mémoire</li>" + s 
+                + "<li>aide ou help retournent l'aide</li>" + s
+                + "<li>simplement écrire l'expression mathématique va la simplifier et tenter de l'ordonner</li></ul>"
+                return help;
             } else {
                 this.last = bot.stringify(this.s.exec(exp));
                 return "Voici l'expression simplifiée et ordonnée : " + this.last;

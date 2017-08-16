@@ -75,7 +75,7 @@ var SMath = function () {
         this.ctx.stroke();
 
         if (arrow == true) {
-            console.log(X + "/" + Y + " ++ " + X2 + "/" + Y2);
+           // console.log(X + "/" + Y + " ++ " + X2 + "/" + Y2);
 
             if (X < X2) {
                 if (Y > Y2) {
@@ -242,7 +242,7 @@ var SMath = function () {
         var exp_2 = -a * Math.pow(first_exp, 2);
         exp_2 = (exp_2 + c);
         this.draw(a + "(x+" + first_exp + ")²+" + exp_2);
-        console.log(a + "(x+" + first_exp + ")²+" + exp_2);
+        //console.log(a + "(x+" + first_exp + ")²+" + exp_2);
     }
 
     this.vect = function (m) {
@@ -367,9 +367,9 @@ var SMath = function () {
                 point1.y = (m[1] * point1.x) + m[2];
                 point2.y = (m[1] * point2.x) + m[2];
 
-                console.log(m);
-                console.log(point1);
-                console.log(point2);
+                //console.log(m);
+                //console.log(point1);
+                //console.log(point2);
 
                 this.newLine(point1.x, point1.y, point2.x, point2.y, this.color);
 
@@ -396,10 +396,7 @@ var SMath = function () {
 
         if (exp_processed == "unknown expression") {
             return "error";
-        }/*else if(exp_processed.indexOf('correcte') >= 0){
-            alert(exp_processed);
-            return "error";
-        }*/else {
+        }else {
             this.traceFromArray(exp_processed);
             return exp_processed;
         }
@@ -439,7 +436,7 @@ var SMath = function () {
     }
 
     this.traceFromArray = function (array) {
-        console.log(array);
+        //console.log(array);
         var start = -150;
         var last = 0;
         while (start <= 150) {
@@ -456,6 +453,8 @@ var SMath = function () {
                         }
                     } else if (element == "x") {
                         result += array[element] * start;
+                    } else if( element.indexOf("^m") > 0) {
+                        result += array[element] * ( 1 / Math.pow(start, parseFloat(element.split("^m")[1])) ); 
                     } else {
                         result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
                     }
@@ -491,17 +490,55 @@ var SMath = function () {
     }
 
     this.exec = function (expression) {
+        //sconsole.log(expression);
         if (expression.indexOf('(') < 0) {
             return this.exec_and_sort(expression);
         } else {
             var ver = this.verify(expression);
             if (ver == true) {
-
-                return "unknown expression";
+                return this.parseExp(expression);
             } else {
                 return 'Cette expression n\'est pas correcte : ' + ver;
             }
         }
+    }
+
+    this.index = 0;
+    this.byIndexes = {};
+
+    this.parseExp = function (exp){
+
+        if(exp[0] == "("){
+            exp = "1*" + exp; 
+        }
+
+        var inside = ""; 
+        var level = 0;
+        for (var i = 0; i < exp.length; i++) {
+            var char = exp[i];
+            if(char == "("){
+                level ++;
+                if(level == 1) {
+                    inside = "";
+                }else{
+                    inside += "(";                    
+                }
+            }else if(char == ")"){
+                level--;
+                if(level == 0){
+                    this.index ++;
+                    this.byIndexes["$" + this.index] = this.exec(inside);
+                    exp = exp.replace('(' + inside + ')',  "$" + this.index);
+                }else{
+                    inside += ")";
+                }
+            }else{
+                inside += char;
+            }
+
+        }
+        
+        return this.exec(exp);
     }
 
     this.exec_and_sort = function (expression) {
@@ -510,6 +547,7 @@ var SMath = function () {
         }
         expression = expression.replace(/²/g, "^2");
         expression = expression.replace(/³/g, "^3");
+        expression = expression.replace(/\^\-/g, "^m");
         /*
         Séparation des + 
         */
@@ -542,8 +580,11 @@ var SMath = function () {
                         //Division ici
                         if (dive.indexOf("x") < 0) {
                             if (div == 0) {
-                                div_result["~"] = parseFloat(dive);
-                                
+                                if(dive.indexOf('$') == 0){
+                                    div_result = this.byIndexes[dive];
+                                }else{
+                                    div_result["~"] = parseFloat(dive);
+                                }
                             } else {
                                 var x_keys = Object.keys(div_result);
                                 for (var index = 0; index < x_keys.length; index++) {
@@ -575,27 +616,61 @@ var SMath = function () {
                         }
 
                     }
+
+                    //console.log(div_result);
+
                     //Multiplication ici
                     if (mult == 0) {
                         mult_result = div_result;
+                        
                     } else {
                         var keys = Object.keys(div_result);
-                        for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
-                            var key = keys[ixxxx];
-                            if (key.indexOf('x') >= 0) {
+                        var mult_keys = Object.keys(mult_result);
 
-                                mult_result = this.mult_by(mult_result, key, div_result[key]);
+                        console.log("Keys :",  keys, JSON.stringify(div_result));
+                        console.log("Keys2 :",  mult_keys, JSON.stringify(mult_result));
 
-                            } else {
-                                var x_keys = Object.keys(mult_result);
-                                for (var index = 0; index < x_keys.length; index++) {
-                                    var xkey = x_keys[index];
-                                    mult_result[xkey] = parseFloat(mult_result[xkey]) * parseFloat(div_result[key]);
+
+                        for (var i_m = 0; i_m < mult_keys.length; i_m++) {
+                            var mkey = mult_keys[i_m];
+                            
+                            if(mkey == "~"){
+                                if(mult_result[mkey] != undefined){
+                                    
+                                    for (var i_keys_mul = 0; i_keys_mul < keys.length; i_keys_mul++) {
+                                        var mkdiv = keys[i_keys_mul];
+    
+                                        if(mkdiv == "~"){
+                                            mult_result[mkey] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]) 
+                                        }else{
+                                            if(mult_result[mkdiv] == undefined){
+                                                mult_result[mkdiv] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]);
+                                                //delete mult_result[mkey];console.log("d");
+                                            }else{
+                                                mult_result[mkdiv] += parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]);
+                                            }
+                                            delete div_result[mkdiv]
+                                        }
+    
+                                    }
                                 }
+                            }else{
+                                for (var i_keys_mul = 0; i_keys_mul < keys.length; i_keys_mul++) {
+                                    var mkdiv = keys[i_keys_mul];
+
+                                    if(mkdiv == "~"){
+                                        mult_result[mkey] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]) 
+                                    }else{
+                                        //advanced parenthesis support
+                                    }
+
+                                }                          
                             }
+
                         }
                     }
                 }
+                
                 //Sourstraction ici
                 if (sub == 0) {
                     sub_result = mult_result;
@@ -635,42 +710,44 @@ var SMath = function () {
         return array;
     }
 
-    this.mult_by = function (mult_result, key, mult) {
+    this.stringify = function (array) {
+        var text = "";
 
-        if (key == "x") {
-            var exp = 1;
-        } else if (key.indexOf('x^') == 0) {
-            var exp = parseFloat(key.replace('x^', ""));
-        }
-
-        var keys = Object.keys(mult_result);
-
-        var end_array = {};
+        var keys = Object.keys(array);//.sort().reverse()
+        var new_keys = [];
 
         for (var i = 0; i < keys.length; i++) {
             var element = keys[i];
             if (element == "~") {
-                var end_key = "x^" + exp;
-            } else if (element == "x") {
-                var end_key = "x^" + (exp + 1);
+
             } else {
-                var end_key = "x^" + (exp + parseFloat(element.split("^")[1]));
+                if(element.indexOf('x') == 0){
+
+                    if(element == "x"){
+                        new_keys.push("1");
+                    }else{
+                        new_keys.push(element.replace('x^', ""));
+                    }
+
+                }else{
+                    alert('Unknown error while parsing');
+                }
             }
-
-            var value = parseFloat(mult_result[element]) * mult;
-
-            end_array[end_key] = value;
 
         }
 
-        return end_array;
+        new_keys.sort().reverse()
 
-    }
+        keys = [];
 
-    this.stringify = function (array) {
-        var text = "";
-
-        var keys = Object.keys(array).sort().reverse();
+        for (var i = 0; i < new_keys.length; i++) {
+            var key = new_keys[i];
+            if(key == "1"){
+                keys.push("x");
+            }else{
+                keys.push('x^' + key);
+            }
+        }
 
         for (var i = 0; i < keys.length; i++) {
             var element = keys[i];
