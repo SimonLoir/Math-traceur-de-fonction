@@ -75,7 +75,7 @@ var SMath = function () {
         this.ctx.stroke();
 
         if (arrow == true) {
-           // console.log(X + "/" + Y + " ++ " + X2 + "/" + Y2);
+            // console.log(X + "/" + Y + " ++ " + X2 + "/" + Y2);
 
             if (X < X2) {
                 if (Y > Y2) {
@@ -396,7 +396,7 @@ var SMath = function () {
 
         if (exp_processed == "unknown expression") {
             return "error";
-        }else {
+        } else {
             this.traceFromArray(exp_processed);
             return exp_processed;
         }
@@ -453,8 +453,8 @@ var SMath = function () {
                         }
                     } else if (element == "x") {
                         result += array[element] * start;
-                    } else if( element.indexOf("^m") > 0) {
-                        result += array[element] * ( 1 / Math.pow(start, parseFloat(element.split("^m")[1])) ); 
+                    } else if (element.indexOf("^m") > 0) {
+                        result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
                     } else {
                         result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
                     }
@@ -505,39 +505,45 @@ var SMath = function () {
 
     this.index = 0;
     this.byIndexes = {};
+    this.byIndexes2 = {};
 
-    this.parseExp = function (exp){
+    this.parseExp = function (exp) {
 
-        if(exp[0] == "("){
-            exp = "1*" + exp; 
+        if (exp[0] == "(") {
+            exp = "1*" + exp;
         }
 
-        var inside = ""; 
+        var inside = "";
         var level = 0;
         for (var i = 0; i < exp.length; i++) {
             var char = exp[i];
-            if(char == "("){
-                level ++;
-                if(level == 1) {
+            if (char == "(") {
+                level++;
+                if (level == 1) {
                     inside = "";
-                }else{
-                    inside += "(";                    
+                } else {
+                    inside += "(";
                 }
-            }else if(char == ")"){
+            } else if (char == ")") {
                 level--;
-                if(level == 0){
-                    this.index ++;
-                    this.byIndexes["$" + this.index] = this.exec(inside);
-                    exp = exp.replace('(' + inside + ')',  "$" + this.index);
-                }else{
+                if (level == 0) {
+                    this.index++;
+                    var index = this.index;
+                    this.byIndexes["$" + index] = this.exec(inside);
+                    this.byIndexes2["$" + index] = this.stringify(this.exec(inside));
+
+                    //console.log("Exrpession " + this.byIndexes2["$" + index] + " has for index $" + index);
+
+                    exp = exp.replace('(' + inside + ')', "$" + index);
+                } else {
                     inside += ")";
                 }
-            }else{
+            } else {
                 inside += char;
             }
 
         }
-        
+        //console.log(exp);
         return this.exec(exp);
     }
 
@@ -580,9 +586,9 @@ var SMath = function () {
                         //Division ici
                         if (dive.indexOf("x") < 0) {
                             if (div == 0) {
-                                if(dive.indexOf('$') == 0){
+                                if (dive.indexOf('$') == 0) {
                                     div_result = this.byIndexes[dive];
-                                }else{
+                                } else {
                                     div_result["~"] = parseFloat(dive);
                                 }
                             } else {
@@ -622,55 +628,54 @@ var SMath = function () {
                     //Multiplication ici
                     if (mult == 0) {
                         mult_result = div_result;
-                        
+
                     } else {
-                        var keys = Object.keys(div_result);
+                        /*console.log("Keys :",  keys, JSON.stringify(div_result));
+                        console.log("Keys2 :",  mult_keys, JSON.stringify(mult_result));*/
+                        var div_keys = Object.keys(div_result);
                         var mult_keys = Object.keys(mult_result);
+                        var new_mult_result = {}
 
-                        console.log("Keys :",  keys, JSON.stringify(div_result));
-                        console.log("Keys2 :",  mult_keys, JSON.stringify(mult_result));
+                        for (var index_mult_keys = 0; index_mult_keys < mult_keys.length; index_mult_keys++) {
+                            var e_mult = mult_keys[index_mult_keys];
+                            var number_of_e_mult = mult_result[e_mult];
 
+                            for (var index_div_keys = 0; index_div_keys < div_keys.length; index_div_keys++) {
+                                var e_div = div_keys[index_div_keys];
+                                var number_of_e_div = div_result[e_div];
 
-                        for (var i_m = 0; i_m < mult_keys.length; i_m++) {
-                            var mkey = mult_keys[i_m];
-                            
-                            if(mkey == "~"){
-                                if(mult_result[mkey] != undefined){
-                                    
-                                    for (var i_keys_mul = 0; i_keys_mul < keys.length; i_keys_mul++) {
-                                        var mkdiv = keys[i_keys_mul];
-    
-                                        if(mkdiv == "~"){
-                                            mult_result[mkey] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]) 
-                                        }else{
-                                            if(mult_result[mkdiv] == undefined){
-                                                mult_result[mkdiv] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]);
-                                                //delete mult_result[mkey];console.log("d");
-                                            }else{
-                                                mult_result[mkdiv] += parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]);
-                                            }
-                                            delete div_result[mkdiv]
-                                        }
-    
-                                    }
+                                if(e_mult == "~" && e_div == e_mult){
+                                    var e_end_power = "~";
+                                }else if(e_mult == "x" && e_div == e_mult){
+                                    var e_end_power = "x^2";
+                                }else if(e_mult == "~" && e_div.indexOf('x') == 0){
+                                    var e_end_power = e_div;
+                                }else if(e_div == "~" && e_mult.indexOf('x') == 0){
+                                    var e_end_power = e_mult;
+                                }else if(e_div == "x" && "~" && e_mult.indexOf('x^') == 0){
+                                    var e_end_power = "x^" + ( parseFloat( e_mult.replace( "x^" , "" ) ) + 1 );
+                                }else if(e_mult == "x" && "~" && e_div.indexOf('x^') == 0){
+                                    var e_end_power = "x^" + ( parseFloat( e_div.replace( "x^" , "" ) ) + 1 );
+                                }else{
+                                    var e_end_power = "x^" + ( parseFloat( e_div.replace( "x^" , "" ) ) + parseFloat( e_mult.replace( "x^" , "" ) ) );                                    
                                 }
-                            }else{
-                                for (var i_keys_mul = 0; i_keys_mul < keys.length; i_keys_mul++) {
-                                    var mkdiv = keys[i_keys_mul];
 
-                                    if(mkdiv == "~"){
-                                        mult_result[mkey] = parseFloat(mult_result[mkey]) * parseFloat(div_result[mkdiv]) 
-                                    }else{
-                                        //advanced parenthesis support
-                                    }
 
-                                }                          
+                                if(new_mult_result[e_end_power] != undefined){
+                                    new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                                }else{
+                                    new_mult_result[e_end_power]  = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                                }
+
                             }
 
+
                         }
+
+                        mult_result = new_mult_result;
                     }
                 }
-                
+
                 //Sourstraction ici
                 if (sub == 0) {
                     sub_result = mult_result;
@@ -721,15 +726,15 @@ var SMath = function () {
             if (element == "~") {
 
             } else {
-                if(element.indexOf('x') == 0){
+                if (element.indexOf('x') == 0) {
 
-                    if(element == "x"){
+                    if (element == "x") {
                         new_keys.push("1");
-                    }else{
+                    } else {
                         new_keys.push(element.replace('x^', ""));
                     }
 
-                }else{
+                } else {
                     alert('Unknown error while parsing');
                 }
             }
@@ -742,9 +747,9 @@ var SMath = function () {
 
         for (var i = 0; i < new_keys.length; i++) {
             var key = new_keys[i];
-            if(key == "1"){
+            if (key == "1") {
                 keys.push("x");
-            }else{
+            } else {
                 keys.push('x^' + key);
             }
         }
