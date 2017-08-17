@@ -19,4 +19,8 @@ app.on("ready", function () {
         protocol: "file:",
         slashes: true
     }));
+    main_window.on("closed", function () {
+        main_window = null;
+        app.exit();
+    }); 
 });
