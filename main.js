@@ -9,11 +9,8 @@ const url = require('url');
 
 app.on("ready", function () {
     const screen = electron.screen;
-    var main_window = new bw({
-        width:screen.getPrimaryDisplay().size.width ,
-        height:screen.getPrimaryDisplay().size.height ,
-        backgroundColor:"white"
-    });
+    var main_window = new bw();
+    main_window.maximize();
     main_window.loadURL(url.format({
         pathname: path.join(__dirname, "index.html"),
         protocol: "file:",
