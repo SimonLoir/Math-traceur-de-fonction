@@ -4,7 +4,9 @@
   "description": "Traceur de fonctions",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "win-64" : "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.5",
+    "win-32" : "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.5 --arch=ia32"
   },
   "repository": {
     "type": "git",

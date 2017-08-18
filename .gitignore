@@ -1,1 +1,3 @@
-Windows Installer/setup.exe
+Windows Installer/setup-x64.exe
+Windows Installer/setup-x86.exe
+releases/*
