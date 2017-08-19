@@ -40,70 +40,20 @@
 
         </div>
     </div>
-    <script>
-        var s = new SMath();
 
-        $(document).ready(function () {
+    <div class="action" style="display: none;" id="prompt_dialog">
+        <div class="action-header">Action requise</div>
+        <div class="action-content">
+            <p>
+                <span class="prompt_text"></span>
+                <br />
+                <input type="text" id="prompt_default"><br />
+            </p>
+        </div>
+        <div class="btn-group"><button id="pvalidate">Ok</button><button id="pcancel">Annuler</button></div>
+    </div>
 
-            var chart = jsChart(".graph", {
-
-                chart: {
-
-                    title: "SMath stats",
-                    title_color: "darkgray",
-                    type: "circular",
-                    width: "fit",
-                    height: "fit",
-                    theme: "none",
-                    hide: []
-                },
-
-                datasets: [] // dataset structure : {"label": "Test 1","value": 500}
-
-            });
-
-
-
-            $("#new").click(function () {
-                
-                var x = prompt('xi (caractère)');
-                if (x == null || x.trim() == "") {
-                    return;
-                }
-                var e = prompt('Effectif', 1);
-                if (e == null || e.trim() == "") {
-                    return;
-                }
-                e = parseFloat(e);
-                chart.setDataSets([]);
-                if (s.stats.buffer.tab[x.trim()] != undefined) {
-                    s.stats.buffer.tab[x.trim()] += e;
-                } else {
-                    s.stats.buffer.tab[x.trim()] = e;
-                }
-
-                var keys = Object.keys(s.stats.buffer.tab);
-
-                keys = keys.sort();
-
-                var table = document.querySelector('.e_table');
-
-                table.innerHTML = "<tr><th>xi</th><th>effectif</th><th>effectif cumulé</th></tr>"
-                var eff = 0;
-                for (var i = 0; i < keys.length; i++) {
-                    var key = keys[i];
-                    eff += s.stats.buffer.tab[key];
-                    table.innerHTML += "<tr>"
-                        + "<td>" + key + "</td>"
-                        + "<td>" + s.stats.buffer.tab[key] + "</td>"
-                        + "<td>" + eff + "</td>"
-                        + "</tr>";
-                    chart.newDataSet({"label": key,"value":  s.stats.buffer.tab[key] })
-                }
-            });
-
-        });
-    </script>
+    <script src="stats.js"></script>
 </body>
 
 </html>
