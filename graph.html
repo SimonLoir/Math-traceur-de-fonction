@@ -53,12 +53,17 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
             </div>
         </div>
         <div class="right-tool-bar">
-            <div class="color-view">
-                <input type="color" class="color-picker">
+            <div class="container">
+                <div class="options">
+                    <span class="layer">Couleur</span>
+                </div>
+                <div class="color-view">
+                    <input type="color" class="color-picker">
+                </div>
             </div>
             <div class="container">
                 <div class="options">
-                    <span class="layer active">Calques et fonctions</span>
+                    <span class="layer">Calques et fonctions</span>
                 </div>
                 <div class="layer-function-view">
                     <div class="layer">
@@ -70,8 +75,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
             <div class="container">
                 <div class="options">
-                    <span class="layer active">Affichage</span>
-                    <span class="functions">Paramètres</span>
+                    <span class="layer">Affichage</span>
                 </div>
                 <div class="view">
                     <label for="Interval">Intervalle : <input type="number" value="50" id="Interval" />pixels</label>
@@ -82,7 +86,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
             <div class="container pencil-tool-board" style="display: none;">
                 <div class="options">
-                    <span class="layer active">Outil ligne</span>
+                    <span class="layer">Outil ligne</span>
                 </div>
                 <div class="view">
                     Type de ligne : <select name="" id="line-type">
@@ -99,12 +103,15 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
 
             <br /><br /> Copyright &copy; 2017 Simon Loir <br /><br />
             <div style="text-align:center;padding:8px;">
-                <img src="logo.svg" style="margin:auto;width:40%;">
+                Ouvrir : <a href="math-bot.html" style="color:crimson;">SMath Bot alpha</a>
+            </div>
+            <div style="text-align:center;padding:8px;">
+                Ouvrir : <a href="stats/index.html" style="color:crimson;">SMath Stats</a>
             </div>
             <p>Retrouvez le projet sur <a href="https://github.com/SimonLoir/Math-traceur-de-fonctions" style="color:Crimson;">Github</a></p>
 
         </div>
-        
+
         <div class="action" style="display: none;" id="ftrace_dialog">
             <div class="action-header">Tracer quelque chose</div>
             <div class="action-content">
@@ -114,7 +121,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/.
                     <input type="text"><br />
                     <br /><br />
                     <button class="btn" id="no-formule-mode">Mode sans formule / découverte</button>
-                  </p>
+                </p>
             </div>
             <div class="btn-group"><button id="ftrace">Valider</button><button id="fcancel">Annuler</button></div>
         </div>
