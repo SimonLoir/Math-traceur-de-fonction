@@ -23,11 +23,11 @@ $(document).ready(function () {
 
     $("#new").click(function () {
 
-        prompt('xi (caractère)', "", function ( x ) {
+        prompt('xi (caractère)', "", function (x) {
             if (x == null || x.trim() == "") {
                 return;
             }
-            prompt('Effectif', 1, function (e){
+            prompt('Effectif', 1, function (e) {
 
                 if (e == null || e.trim() == "") {
                     return;
@@ -39,33 +39,11 @@ $(document).ready(function () {
                 } else {
                     s.stats.buffer.tab[x.trim()] = e;
                 }
-        
-                var keys = Object.keys(s.stats.buffer.tab);
-        
-                keys = keys.sort();
-        
-                var table = document.querySelector('.e_table');
-                
-                var use_classes = $('#use_classes').node.checked;
 
-                console.log(use_classes);
-
-                table.innerHTML = "<tr><th>xi</th><th>effectif</th><th>effectif cumulé</th></tr>"
-                var eff = 0;
-                for (var i = 0; i < keys.length; i++) {
-                    var key = keys[i];
-                    eff += s.stats.buffer.tab[key];
-                    table.innerHTML += "<tr>"
-                        + "<td>" + key + "</td>"
-                        + "<td>" + s.stats.buffer.tab[key] + "</td>"
-                        + "<td>" + eff + "</td>"
-                        + "</tr>";
-                    chart.newDataSet({ "label": key, "value": s.stats.buffer.tab[key] })
-                }
-
+                build();
             });
         });
-        
+
     });
 
 });
@@ -90,17 +68,47 @@ window.prompt = function (text, value, callback) {
     var val = "";
     validate.onclick = function () {
         val = document.querySelector("#prompt_default").value;
-        dialog.style.display = "none";            
+        dialog.style.display = "none";
         callback(val);
     }
     var cancel = document.querySelector("#pcancel");
     var canceled = false;
     cancel.onclick = function () {
-        dialog.style.display = "none";    
+        dialog.style.display = "none";
     }
 }
 
 function sleep(ms) {
     ms += new Date().getTime();
     while (new Date() < ms) { }
-} 
+}
+
+function build() {
+    var keys = Object.keys(s.stats.buffer.tab);
+
+    keys = keys.sort();
+
+    var table = document.querySelector('.e_table');
+
+    var use_classes = $('#use_classes').node.checked;
+
+    if (use_classes == true) {
+        var th0 = "<th>Classe</th>";
+    } else {
+        var th0 = "";
+    }
+
+    table.innerHTML = "<tr>" + th0 + "<th>xi</th><th>effectif</th><th>effectif cumulé</th></tr>"
+    var eff = 0;
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        eff += s.stats.buffer.tab[key];
+        table.innerHTML += "<tr>"
+            + "<td>" + key + "</td>"
+            + "<td>" + s.stats.buffer.tab[key] + "</td>"
+            + "<td>" + eff + "</td>"
+            + "</tr>";
+        chart.newDataSet({ "label": key, "value": s.stats.buffer.tab[key] })
+    }
+
+}
