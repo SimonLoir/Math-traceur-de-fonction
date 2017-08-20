@@ -45,7 +45,11 @@ $(document).ready(function () {
                 keys = keys.sort();
         
                 var table = document.querySelector('.e_table');
-        
+                
+                var use_classes = $('#use_classes').node.checked;
+
+                console.log(use_classes);
+
                 table.innerHTML = "<tr><th>xi</th><th>effectif</th><th>effectif cumulé</th></tr>"
                 var eff = 0;
                 for (var i = 0; i < keys.length; i++) {
