@@ -13,7 +13,7 @@
     "url": "git+https://github.com/SimonLoir/Math-traceur-de-fonctions.git"
   },
   "author": "Simon Loir",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/SimonLoir/Math-traceur-de-fonctions/issues"
   },
