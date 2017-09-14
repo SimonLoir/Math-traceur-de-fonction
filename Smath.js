@@ -537,6 +537,11 @@ var SMath = function () {
         expression = expression.replace(/²/g, "^2");
         expression = expression.replace(/³/g, "^3");
         expression = expression.replace(/\^\-/g, "^m");
+        expression = expression.replace(/(\d|[a-z])\$/g, function (m, $1){
+            console.log('');
+            return $1 + "*$";
+        })
+        console.log(expression);
         /*
         Séparation des + 
         */
