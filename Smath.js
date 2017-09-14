@@ -275,14 +275,113 @@ var SMath = function () {
     }
 
     this.plugin = [
-        [/^cos\(x\)$/i, function (m) {
-            this.cos();
+        [/^(([0-9]|\.)*)cos\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+            var $1 = m[1];
+            var $2 = m[2];
+            var $3 = m[3];
+            var $4 = m[4];
+            var $5 = m[5];
+            if ($1 == "") {
+                var big_times = 1;
+            } else {
+                var big_times = parseFloat($1);
+            }
+            if ($4 == "") {
+                var add2 = 0;
+            } else {
+                if ($4 == "") {
+                    var add2 = 0;
+                } else {
+                    var add2 = parseFloat($4 + $5);
+                }
+            }
+
+            if ($3 == "") {
+                alert('Une erreur est survenue : cos undefined');
+                return;
+            } else {
+                var array_x = this.exec_and_sort($3);
+            }
+
+            var array = {
+                times: big_times,
+                inside: array_x,
+                add2: add2
+            }
+            console.log(array);
+            return this.cos(array);
         }],
-        [/^sin\(x\)$/i, function (m) {
-            this.sin();
+        [/^(([0-9]|\.)*)sin\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+            var $1 = m[1];
+            var $2 = m[2];
+            var $3 = m[3];
+            var $4 = m[4];
+            var $5 = m[5];
+            if ($1 == "") {
+                var big_times = 1;
+            } else {
+                var big_times = parseFloat($1);
+            }
+            if ($4 == "") {
+                var add2 = 0;
+            } else {
+                if ($4 == "") {
+                    var add2 = 0;
+                } else {
+                    var add2 = parseFloat($4 + $5);
+                }
+            }
+
+            if ($3 == "") {
+                alert('Une erreur est survenue : cos undefined');
+                return;
+            } else {
+                var array_x = this.exec_and_sort($3);
+            }
+
+            var array = {
+                times: big_times,
+                inside: array_x,
+                add2: add2
+            }
+            console.log(array);
+            return this.sin(array);
         }],
-        [/^tan\(x\)$/i, function (m) {
-            this.tan();
+         [/^(([0-9]|\.)*)tan\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+            var $1 = m[1];
+            var $2 = m[2];
+            var $3 = m[3];
+            var $4 = m[4];
+            var $5 = m[5];
+            if ($1 == "") {
+                var big_times = 1;
+            } else {
+                var big_times = parseFloat($1);
+            }
+            if ($4 == "") {
+                var add2 = 0;
+            } else {
+                if ($4 == "") {
+                    var add2 = 0;
+                } else {
+                    var add2 = parseFloat($4 + $5);
+                }
+            }
+
+            if ($3 == "") {
+                alert('Une erreur est survenue : cos undefined');
+                return;
+            } else {
+                var array_x = this.exec_and_sort($3);
+            }
+
+            var array = {
+                times: big_times,
+                inside: array_x,
+                add2: add2
+            }
+            console.log(array);
+            return this.tan(array);
         }],
         [
             /\[\((.+);(.+)\) \((.+);(.+)\)\]/i, function (m) {
@@ -388,27 +487,70 @@ var SMath = function () {
     }
     this.plugin_exec_function = function () { };
 
-    this.cos = function () {
+    this.cos = function (args) {
+
         var start = -200;
-        var last = Math.cos(start);
+        var last = last = args.times * Math.cos(args.times2 * start + args.add1) + args.add2;
+        var array = args.inside;
         while (start <= 200) {
             var from = [start, last];
             start += 0.002;
-            last = Math.cos(start);
+            last = args.times * Math.cos(function () {
+                var result = 0;
+
+                for (var i = 0; i < Object.keys(array).length; i++) {
+                    var element = Object.keys(array)[i];
+                    if (element == "~") {
+                        if (array[element] != "") {
+                            result += array[element];
+                        }
+                    } else if (element == "x") {
+                        result += array[element] * start;
+                    } else if (element.indexOf("^m") > 0) {
+                        result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+                    } else {
+                        result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                    }
+                }
+
+                return result;
+            }()) + args.add2;
             this.newLine(from[0], from[1], start, last, this.color);
         }
     }
 
-    this.sin = function () {
+    this.sin = function (args) {
+
         var start = -200;
-        var last = Math.sin(start);
+        var last = last = args.times * Math.sin(args.times2 * start + args.add1) + args.add2;
+        var array = args.inside;
         while (start <= 200) {
             var from = [start, last];
             start += 0.002;
-            last = Math.sin(start);
+            last = args.times * Math.sin(function () {
+                var result = 0;
+
+                for (var i = 0; i < Object.keys(array).length; i++) {
+                    var element = Object.keys(array)[i];
+                    if (element == "~") {
+                        if (array[element] != "") {
+                            result += array[element];
+                        }
+                    } else if (element == "x") {
+                        result += array[element] * start;
+                    } else if (element.indexOf("^m") > 0) {
+                        result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+                    } else {
+                        result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                    }
+                }
+
+                return result;
+            }()) + args.add2;
             this.newLine(from[0], from[1], start, last, this.color);
         }
     }
+
 
     this.tan = function () {
         var start = -200;
@@ -537,7 +679,7 @@ var SMath = function () {
         expression = expression.replace(/²/g, "^2");
         expression = expression.replace(/³/g, "^3");
         expression = expression.replace(/\^\-/g, "^m");
-        expression = expression.replace(/(\d|[a-z])\$/g, function (m, $1){
+        expression = expression.replace(/(\d|[a-z])\$/g, function (m, $1) {
             console.log('');
             return $1 + "*$";
         })
@@ -632,27 +774,27 @@ var SMath = function () {
                                 var e_div = div_keys[index_div_keys];
                                 var number_of_e_div = div_result[e_div];
 
-                                if(e_mult == "~" && e_div == e_mult){
+                                if (e_mult == "~" && e_div == e_mult) {
                                     var e_end_power = "~";
-                                }else if(e_mult == "x" && e_div == e_mult){
+                                } else if (e_mult == "x" && e_div == e_mult) {
                                     var e_end_power = "x^2";
-                                }else if(e_mult == "~" && e_div.indexOf('x') == 0){
+                                } else if (e_mult == "~" && e_div.indexOf('x') == 0) {
                                     var e_end_power = e_div;
-                                }else if(e_div == "~" && e_mult.indexOf('x') == 0){
+                                } else if (e_div == "~" && e_mult.indexOf('x') == 0) {
                                     var e_end_power = e_mult;
-                                }else if(e_div == "x" && "~" && e_mult.indexOf('x^') == 0){
-                                    var e_end_power = "x^" + ( parseFloat( e_mult.replace( "x^" , "" ) ) + 1 );
-                                }else if(e_mult == "x" && "~" && e_div.indexOf('x^') == 0){
-                                    var e_end_power = "x^" + ( parseFloat( e_div.replace( "x^" , "" ) ) + 1 );
-                                }else{
-                                    var e_end_power = "x^" + ( parseFloat( e_div.replace( "x^" , "" ) ) + parseFloat( e_mult.replace( "x^" , "" ) ) );                                    
+                                } else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
+                                    var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
+                                } else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
+                                    var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
+                                } else {
+                                    var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
                                 }
 
 
-                                if(new_mult_result[e_end_power] != undefined){
+                                if (new_mult_result[e_end_power] != undefined) {
                                     new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
-                                }else{
-                                    new_mult_result[e_end_power]  = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                                } else {
+                                    new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
                                 }
 
                             }
@@ -783,10 +925,10 @@ var SMath = function () {
 
         return text;
     }
-    
+
     this.stats = {
 
-        buffer: {tab:{}}
+        buffer: { tab: {} }
 
     }
 
