@@ -682,6 +682,10 @@ var SMath = function () {
         expression = expression.replace(/(\d|[a-z])\$/g, function (m, $1) {
             console.log('');
             return $1 + "*$";
+        });
+        expression = expression.replace(/(\d|[a-z])pi/g, function (m, $1) {
+            console.log('');
+            return $1 + "*pi";
         })
         console.log(expression);
         /*
@@ -718,6 +722,8 @@ var SMath = function () {
                             if (div == 0) {
                                 if (dive.indexOf('$') == 0) {
                                     div_result = this.byIndexes[dive];
+                                }else if(dive == "pi"){
+                                    div_result["~"] = Math.PI;
                                 } else {
                                     div_result["~"] = parseFloat(dive);
                                 }

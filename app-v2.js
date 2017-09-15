@@ -177,6 +177,28 @@ $(document).ready(function () {
         $('#ftrace_dialog').css('display', "block");
     });
 
+    $('#download_image').click(function () {
+        //alert('Impossible de télécharger l\'image pour le moment');return;
+        var all_canvases = $('.canvas').node.querySelectorAll('canvas');
+        var new_canvas = document.createElement('canvas');
+        var nc_ctx = new_canvas.getContext('2d');
+
+        new_canvas.height = canvas.height / 1.5
+        new_canvas.width = canvas.width /1.5
+        
+        for (var i = 0; i < all_canvases.length; i++) {
+            var c_canvas = all_canvases[i];
+            nc_ctx.drawImage(c_canvas, 0, 0, parseInt(new_canvas.width) ,parseInt(new_canvas.height) );
+            console.log(c_canvas);
+        }
+        var a = document.createElement('a');
+        a.href = new_canvas.toDataURL().replace('image/png', "image/png; filename=smath.png");
+        document.body.appendChild(a);
+        a.download = "smath.png";
+        a.click();
+        //document.body.innerHTML = '<img src="' + new_canvas.toDataURL() + '" style="width:100%;"></img>'
+    });
+
     $('#no-formule-mode').click(function() {
         $('#ftrace_no_formule_dialog').css('display', "block");
         $('#ftrace_no_formule_dialog .action-content').html('Bienvenue sur le mode sans formule (ou découverte). Ce mode vous aide à découvrir les différentes formules qui sont disponibles sur SMath.');
@@ -239,6 +261,8 @@ $(document).ready(function () {
     });
 
     var ctx = canvas.getContext('2d');
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0,canvas.width, canvas.height);
     
     if(page.get('zoom') != ""){
          $('#Interval').node.value = page.get('zoom');
