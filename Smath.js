@@ -334,7 +334,7 @@ var SMath = function () {
             console.log(array);
             return this.cos(array);
         }],
-        [/^(([0-9]|\.)*)sin\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+        [/^(([0-9]|\.|\-)*)sin\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
             var $1 = m[1];
             var $2 = m[2];
             var $3 = m[3];
@@ -342,9 +342,12 @@ var SMath = function () {
             var $5 = m[5];
             if ($1 == "") {
                 var big_times = 1;
-            } else {
+            } else if($1 == "-"){
+                var big_times = -1;
+            }else {
                 var big_times = parseFloat($1);
             }
+
             if ($4 == "") {
                 var add2 = 0;
             } else {
@@ -370,7 +373,7 @@ var SMath = function () {
             console.log(array);
             return this.sin(array);
         }],
-         [/^(([0-9]|\.)*)tan\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+         [/^(([0-9]|\.|\-)*)tan\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
             var $1 = m[1];
             var $2 = m[2];
             var $3 = m[3];
@@ -378,6 +381,8 @@ var SMath = function () {
             var $5 = m[5];
             if ($1 == "") {
                 var big_times = 1;
+            } else if($1 == "-"){
+                var big_times = -1;
             } else {
                 var big_times = parseFloat($1);
             }
