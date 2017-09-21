@@ -183,8 +183,8 @@ $(document).ready(function () {
         var new_canvas = document.createElement('canvas');
         var nc_ctx = new_canvas.getContext('2d');
 
-        new_canvas.height = canvas.height / 1.5
-        new_canvas.width = canvas.width /1.5
+        new_canvas.height = canvas.height / 1.5;
+        new_canvas.width = canvas.width / 1.5;
         
         for (var i = 0; i < all_canvases.length; i++) {
             var c_canvas = all_canvases[i];
