@@ -136,45 +136,68 @@ var SMath = function () {
         this.ctx.fill();
     }
 
-    this.makeGrid = function () {
+    this.makeGrid = function (force_grid_interval, ix, iy) {
+        this.ctx.clearRect(0,0,this.height, this.width);
+        
+        this.ctx.fillStyle = "white";
+        this.ctx.fillRect(0,0,this.width, this.height);
+        
         var max_x = this.x_zero / this.interval;
         var max_y = this.y_zero / this.interval;
-        if (this.interval > 200) {
-            grid_interval = this.interval / (200 * 10);
-        } else {
-            grid_interval = 1;
-        }
 
+        
+        if(force_grid_interval == true){
+            var that = this;
+            var getVal = function (val) {
+                if(val == undefined){
+                    return 1;
+                }else{
+                    return that.exec_and_sort( "" + val )["~"];
+                }
+            }
+            grid_interval_x = getVal(ix);
+            grid_interval_y = getVal(iy);
+        }else{
+            if (this.interval > 200) {
+                grid_interval_x = this.interval / (200 * 10);
+                grid_interval_y = this.interval / (200 * 10);
+                
+            } else {
+                grid_interval_x = 1;
+                grid_interval_y = 1;
+            }
+        }
         var x_right = 0;
         while (x_right < max_x + 5) {
             this.newLine(x_right, -500, x_right, 500);
             this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval);
-            x_right += grid_interval;
+            x_right += grid_interval_x;
         }
         x_right = 0;
         while (x_right > -max_x - 5) {
             this.newLine(x_right, -500, x_right, 500);
             if (x_right != 0) { this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval); }
-            x_right -= grid_interval;
+            x_right -= grid_interval_x;
         }
-
+        
         var y_bottom = 0;
         while (y_bottom < max_y + 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
             if (y_bottom != 0) { this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom); }
-            y_bottom += grid_interval;
+            y_bottom += grid_interval_y;
         }
         y_bottom = 0;
         while (y_bottom > -max_y - 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
             if (y_bottom != 0) { this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom); }
-            y_bottom -= grid_interval;
+            y_bottom -= grid_interval_y;
         }
-
+        this.newLine(0, -1000 ,0,1000, "black", false, 1);
+        this.newLine(-1000 ,0,1000, 0, "black", false, 1); 
     }
-
+    
     this.draw = function (val) {
-
+        
         return this.execPlugin(val);
 
     }

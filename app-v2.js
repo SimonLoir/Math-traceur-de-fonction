@@ -2,6 +2,7 @@ var id = 0;
 var global_canvas;
 var function_list = [];
 var zoom = 1;
+var grid_global;
 var trace = function (math_func) {
          var layer = $('.layer-function-view').child('div');
             layer.addClass('layer');
@@ -124,6 +125,10 @@ $(document).ready(function () {
         window.location.hash = "zoom=" + $('#Interval').node.value + ";functions=" + encodeURIComponent(JSON.stringify(function_list));
     });
 
+    $('#apply_axis').click(function () {
+        grid_global.makeGrid(true, $('#ox_axis').node.value, $('#oy_axis').node.value)
+    });
+
     $('#zoom-more').click(function () {
         zoom += parseFloat(0.2);
         $('#zoom-level').html(zoom);
@@ -196,7 +201,6 @@ $(document).ready(function () {
         document.body.appendChild(a);
         a.download = "smath.png";
         a.click();
-        //document.body.innerHTML = '<img src="' + new_canvas.toDataURL() + '" style="width:100%;"></img>'
     });
 
     $('#no-formule-mode').click(function() {
@@ -261,8 +265,6 @@ $(document).ready(function () {
     });
 
     var ctx = canvas.getContext('2d');
-    ctx.fillStyle = "white";
-    ctx.fillRect(0,0,canvas.width, canvas.height);
     
     if(page.get('zoom') != ""){
          $('#Interval').node.value = page.get('zoom');
@@ -304,10 +306,12 @@ $(document).ready(function () {
     grid.x_zero = x_zero;
     grid.y_zero = y_zero;
     grid.interval = interval;
+    grid.height = canvas.height;
+    grid.width = canvas.width;
 
     grid.makeGrid();
-    grid.newLine(0, -1000 ,0,1000, "black", undefined, 1);
-    grid.newLine(-1000 ,0,1000, 0, "black", undefined, 1); 
+
+    grid_global = grid;
 
     var click = 0;
     var last_point = [];
