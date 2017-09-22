@@ -3,6 +3,13 @@ var global_canvas;
 var function_list = [];
 var zoom = 1;
 var grid_global;
+
+if(typeof process === 'object' && process + '' === '[object process]'){
+    //SMath is used by the app
+}else{
+    //SMath is used by a web client
+}
+
 var trace = function (math_func) {
          var layer = $('.layer-function-view').child('div');
             layer.addClass('layer');
@@ -50,23 +57,10 @@ var trace = function (math_func) {
                     var action = $('body').child('div').addClass('action');
                     var action_title = action.child('div').addClass('action-header').html('Informations supplémentaires');
                     var action_content = action.child('div').addClass('action-content').html(function (){
-                            var roots = functions_informations[layer.node.querySelector('.layer-name').innerText];
-                            if(roots != undefined){
-                                if(isNaN(roots.root1)){
-                                    return "Cette fonction n'a pas de racines";
-                                }else{
-                                    var to_show = "Racine(s) : (" + roots.root1 + ";0)";
-                                    if(isNaN(roots.root2) || roots.root1 == roots.root2){
-                                        return to_show + ", cette fonction n'a qu'une racine";
-                                    }else{
-                                        return to_show + "  et (" + roots.root2 + ";0)";
-                                    }
+                        
+                        return "~~";
 
-                                }
-                            }else{
-                                return "Pas de racine à afficher, cette fonctionnalité viendra dans les prochaines mises à jour.";
-                            }
-                        }());
+                    }());
 
                     var action_btns = action.child('div').addClass('btn-group');
                     var cancel_button = action_btns.child('button').html('annuler').addClass('btn');

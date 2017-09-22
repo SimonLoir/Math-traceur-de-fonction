@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SMath</title>
 </head>
+
 <body>
     <div class="centred-content">
         <img src="logo.svg" alt="">
@@ -13,10 +15,9 @@
         <p>SMath est une suite logicielle en ligne basée sur le monde des mathématiques.</p>
         <a href="math-bot.html"><button>SMath bot (alpha)</button></a>
         <a href="graph.html"><button>SMath (alpha)</button></a>
-        <br /><br />
-        &copy; Copyright 2017 Simon Loir
+        <br /><br /> &copy; Copyright 2017 Simon Loir
         <script>
-            setTimeout(function() {
+            setTimeout(function () {
                 document.querySelector('.centred-content').classList.add('new-coords');
             }, 200);
 
@@ -27,27 +28,32 @@
                 a.onclick = function () {
                     document.querySelector('.centred-content').classList.remove('new-coords');
                     var e = this;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = e.href;
                     }, 400);
                     return false;
                 }
             }
 
-            
+            if (typeof process === 'object' && process + '' === '[object process]') {
+                //SMath is used by the app
+                //alert('A new version of smath is available');
+            } else {
+                //SMath is used by a web client
+            }
         </script>
     </div>
 
     <style>
-        body{
-            background:rgba(240,240,240,0.85);
-            color:rgba(0,0,0,0.75);
+        body {
+            background: rgba(240, 240, 240, 0.85);
+            color: rgba(0, 0, 0, 0.75);
             text-align: center;
             padding: 25px;
             font-family: sans-serif;
         }
 
-        .centred-content{
+        .centred-content {
             opacity: 0;
             position: fixed;
             transition: 0.85s;
@@ -63,48 +69,49 @@
             transform: translateX(-50%) translateY(-50%);
         }
 
-        img{
-            width:300px;
+        img {
+            width: 300px;
         }
-        button{
+
+        button {
             position: relative;
-            background:white;
-            border:none;
+            background: white;
+            border: none;
             min-width: 40%;
-            text-align:center;
+            text-align: center;
             padding: 8px;
             margin: 15px;
             border-radius: 4px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.15);
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
             cursor: pointer;
         }
 
-        @media (max-width:500px){
-            img{
-                width:50%;
+        @media (max-width:500px) {
+            img {
+                width: 50%;
             }
-            h1{
+            h1 {
                 font-size: 20px;
             }
             .centred-content {
                 width: calc(100% - 25px);
             }
 
-            button{
-                margin:8px;
+            button {
+                margin: 8px;
                 min-width: 45%;
             }
         }
 
-        @media (max-width:350px){
-           
-            button{
-                margin:8px;
-                width:100%;
-                width:calc(100% - 8px);
-                
+        @media (max-width:350px) {
+
+            button {
+                margin: 8px;
+                width: 100%;
+                width: calc(100% - 8px);
             }
         }
     </style>
 </body>
+
 </html>
