@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SMath</title>
+    <script src="extjs.js"></script>
 </head>
 
 <body>
@@ -13,6 +14,7 @@
         <img src="logo.svg" alt="">
         <h1>Bienvenue sur SMath</h1>
         <p>SMath est une suite logicielle en ligne basée sur le monde des mathématiques.</p>
+        <span id="download"></span><br />
         <a href="math-bot.html"><button>SMath bot (alpha)</button></a>
         <a href="graph.html"><button>SMath (alpha)</button></a>
         <br /><br /> &copy; Copyright 2017 Simon Loir
@@ -36,8 +38,16 @@
             }
 
             if (typeof process === 'object' && process + '' === '[object process]') {
-                //SMath is used by the app
-                //alert('A new version of smath is available');
+                var fs = require("fs");
+                var version = fs.readFileSync("version.html", "utf-8");
+
+                AR.GET("https://simonloir.github.io/Math-traceur-de-fonctions/version.html", function (data) {
+                    if(data != version){
+                        $('#download').html('<b style="color:crimson;">Une nouvelle version de smath est disponible sur simonloir.be/smath</b>');
+                    }else{
+                        $('#download').html('SMath est à jour ! version ' + version);
+                    }
+                });
             } else {
                 //SMath is used by a web client
             }
