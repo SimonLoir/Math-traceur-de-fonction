@@ -123,6 +123,13 @@ $(document).ready(function () {
         window.location.href = "export/index.html#functions=" + encodeURIComponent(JSON.stringify(function_list));
     });
 
+    $('#import_to_smath').click(function () {
+        //window.location.href = "https://simonloir.be/saccount/#from=smath;redirect_to=" + window.location.href;
+        window.location.href = "export/import.html"
+    });
+
+
+
     $('#apply_axis').click(function () {
         grid_global.makeGrid(true, $('#ox_axis').node.value, $('#oy_axis').node.value)
     });

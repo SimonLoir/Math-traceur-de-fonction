@@ -30,9 +30,8 @@
     <script>
         function update(e) {
             var url = e.contentWindow.location.href;
-            console.log(url)
-            if (url.indexOf('#ok') >= 0) {
-                window.location.href = "../graph.html#functions=" + page.get("functions");
+            if (url.indexOf('https://simonloir.be/math/') == 0) {
+                window.location.href = "../graph.html" + url.replace('https://simonloir.be/math/', "");
             }
         }
         var page = new ___page();
@@ -79,7 +78,7 @@
             
         }
         $(document).ready(function () {
-            $('iframe').node.src = "https://simonloir.be/saccount/#from=smath;functions=" + page.get("functions");
+            $('iframe').node.src = "https://simonloir.be/saccount/#from=smath;redirect_to=https://simonloir.be/math"
             $('a').node.href = "../graph.html#functions=" + page.get("functions")
         });
         </script>
