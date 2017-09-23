@@ -39,7 +39,7 @@
 
             if (typeof process === 'object' && process + '' === '[object process]') {
                 var fs = require("fs");
-                var version = fs.readFileSync("version.html", "utf-8");
+                var version = fs.readFileSync(__dirname + "/version.html", "utf-8");
 
                 AR.GET("https://simonloir.github.io/Math-traceur-de-fonctions/version.html", function (data) {
                     if(data != version){

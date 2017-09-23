@@ -4,12 +4,6 @@ var function_list = [];
 var zoom = 1;
 var grid_global;
 
-if(typeof process === 'object' && process + '' === '[object process]'){
-    //SMath is used by the app
-}else{
-    //SMath is used by a web client
-}
-
 var trace = function (math_func) {
          var layer = $('.layer-function-view').child('div');
             layer.addClass('layer');
@@ -89,6 +83,13 @@ var trace = function (math_func) {
  }
 $(document).ready(function () {
 
+    if(typeof process === 'object' && process + '' === '[object process]'){
+        //SMath is used by the app
+        //$("body").html('error : smath is unavailable')
+    }else{
+        //SMath is used by a web client
+    }
+
     $('.show-hide').click(function () {
 
         if($(this).node.innerHTML == "Options"){
@@ -96,8 +97,7 @@ $(document).ready(function () {
             $('.right-tool-bar').addClass('force-show');       
         }else{
             $(this).node.innerHTML = "Options";
-            $('.right-tool-bar').removeClass('force-show');       
-            
+            $('.right-tool-bar').removeClass('force-show');
         }
 
     });
@@ -117,6 +117,10 @@ $(document).ready(function () {
 
     $('#apply_zoom').click(function () {
         window.location.hash = "zoom=" + $('#Interval').node.value + ";functions=" + encodeURIComponent(JSON.stringify(function_list));
+    });
+
+    $('#export_to_smath').click(function () {
+        window.location.href = "export/index.html#functions=" + encodeURIComponent(JSON.stringify(function_list));
     });
 
     $('#apply_axis').click(function () {
@@ -385,6 +389,33 @@ $(document).ready(function () {
             alert("Cette langue n'est pas supportée");
         }
     }
+    /*var _startX = 0;
+    var _startY = 0;
+    var _offsetX = 0;			
+    var _offsetY = 0;
+    var _dragElement;
+    $('.canvas').node.onmousedown = OnMouseDown;
+    $('.canvas').node.onmouseup = OnMouseUp;
+    
+    function OnMouseDown(event){
+    	document.onmousemove = OnMouseMove;
+        _startX = event.clientX;
+    	_startY = event.clientY;
+    	_offsetX = $('.canvas').node.offsetLeft;
+    	_offsetY = $('.canvas').node.offsetTop;
+    	_dragElement = $('.canvas').node;
+    
+    }
+    
+    function OnMouseMove(event){
+       	_dragElement.style.left = (_offsetX + event.clientX - _startX) + 'px';
+    	_dragElement.style.top = (_offsetY + event.clientY - _startY) + 'px';
+    }
+    
+    function OnMouseUp(event){
+    	document.onmousemove = null;
+    	_dragElement=null;
+    }*/
 
 });
 

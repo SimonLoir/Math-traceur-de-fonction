@@ -23,6 +23,7 @@ app.on("ready", function () {
         welcome.close();
         
         main_window.maximize();
+        //main_window.openDevTools();
         main_window.loadURL(url.format({
             pathname: path.join(__dirname, "index.html"),
             protocol: "file:",

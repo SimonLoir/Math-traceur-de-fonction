@@ -21,7 +21,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\SMath
 DisableProgramGroupPage=yes
-OutputDir=C:\wamp64\www\4gt6\Windows Installer
+OutputDir=C:\gen
 OutputBaseFilename=setup-x64
 Compression=lzma
 SolidCompression=yes
@@ -34,8 +34,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\wamp64\www\4gt6\releases\smath-win32-x64\smath.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\wamp64\www\4gt6\releases\smath-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\simon\Documents\SmATH\releases\smath-win32-x64\smath.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\simon\Documents\SmATH\releases\smath-win32-x64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
