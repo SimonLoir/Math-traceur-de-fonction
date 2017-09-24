@@ -41,7 +41,7 @@
                 var fs = require("fs");
                 var version = fs.readFileSync(__dirname + "/version.html", "utf-8");
 
-                AR.GET("https://simonloir.github.io/Math-traceur-de-fonctions/version.html", function (data) {
+                AR.GET("https://simonloir.be/math/version.html", function (data) {
                     if(data != version){
                         $('#download').html('<b style="color:crimson;">Une nouvelle version de smath est disponible sur simonloir.be/smath</b>');
                     }else{

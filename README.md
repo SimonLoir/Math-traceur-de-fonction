@@ -2,7 +2,7 @@
 # Math-traceur-de-fonctions
 Traceur de fonctions
 
-https://simonloir.github.io/Math-traceur-de-fonctions/
+https://simonloir.be/math/
 
 Page web traçant des fonctions mathématiques (principalement la fonction x² et ses dérivés)
 
