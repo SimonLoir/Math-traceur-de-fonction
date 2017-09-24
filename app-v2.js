@@ -27,6 +27,8 @@ var trace = function (math_func) {
             f.x_zero = x_zero;
             f.y_zero = y_zero;
             f.interval = interval;
+            f.start = -1 * c.width / interval;
+            f.end = c.width / interval;
             f.color = $(".color-picker").node.value;
             color.css('background', f.color);
             

@@ -1,5 +1,9 @@
 var functions_informations = {};
+
 var SMath = function () {
+
+    this.start = -200;
+    this.end = 200;
 
     this.ctx = "";
 
@@ -517,10 +521,10 @@ var SMath = function () {
 
     this.cos = function (args) {
 
-        var start = -200;
+        var start = this.start;
         var last = last = args.times * Math.cos(args.times2 * start + args.add1) + args.add2;
         var array = args.inside;
-        while (start <= 200) {
+        while (start <= this.end) {
             var from = [start, last];
             start += 0.002;
             last = args.times * Math.cos(function () {
@@ -549,10 +553,10 @@ var SMath = function () {
 
     this.sin = function (args) {
 
-        var start = -200;
+        var start = this.start;
         var last = last = args.times * Math.sin(args.times2 * start + args.add1) + args.add2;
         var array = args.inside;
-        while (start <= 200) {
+        while (start <= this.end) {
             var from = [start, last];
             start += 0.002;
             last = args.times * Math.sin(function () {
@@ -580,19 +584,50 @@ var SMath = function () {
     }
 
 
-    this.tan = function () {
-        var start = -200;
-        while (start <= 200) {
-            this.newPoint(start, Math.tan(start), this.color);
-            start += 0.001;
+    this.tan = function (args) {
+        var start = this.start;
+        var last = last = args.times * Math.tan(args.times2 * start + args.add1) + args.add2;
+        var array = args.inside;
+        while (start <= this.end) {
+            var from = [start, last];
+            start += 0.002;
+            if(isNaN(last)){
+                console.log('not a number' + start);
+            }
+            last = args.times * Math.tan(function () {
+                var result = 0;
+
+                for (var i = 0; i < Object.keys(array).length; i++) {
+                    var element = Object.keys(array)[i];
+                    if (element == "~") {
+                        if (array[element] != "") {
+                            result += array[element];
+                        }
+                    } else if (element == "x") {
+                        result += array[element] * start;
+                    } else if (element.indexOf("^m") > 0) {
+                        result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+                    } else {
+                        result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                    }
+                }
+                if(result % Math.PI/2 == 0){
+                    return result;
+                }else{
+                    return NaN;
+                }
+            }()) + args.add2;
+            if(!isNaN(last)){
+                this.newLine(from[0], from[1], start, last, this.color);
+            }
         }
     }
 
     this.traceFromArray = function (array) {
         //console.log(array);
-        var start = -150;
+        var start = this.start;
         var last = 0;
-        while (start <= 150) {
+        while (start <= this.end) {
             var from = [start, last];
             start += 0.002;
             last = function () {
