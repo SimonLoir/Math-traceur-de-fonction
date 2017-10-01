@@ -100,11 +100,14 @@ $(document).ready(function () {
 
                     var canvas = big_canvas.appendChild(document.createElement('canvas'));
 
-                    canvas.style.width = "300%"
-                    canvas.style.height = "300%"
+                    canvas.style.width = "300%";
+                    canvas.style.height = "300%";
 
                     canvas.height = canvas.scrollHeight;
                     canvas.width = canvas.scrollWidth;
+
+                    canvas.style.width = canvas.width + "px";
+                    canvas.style.height = canvas.height + "px";
 
                     var ctx = canvas.getContext('2d');
 
@@ -135,7 +138,6 @@ $(document).ready(function () {
                 }, 300);
 
                 return 'Voici ce que je peux dessiner :<br /><a href="graph.html#functions=%5B%5B%22' + real_exp + '%22%2C%22%23bd282b%22%5D%5D">Voir sur SMath</a>';
-                //return JSON.stringify(this.s.exec(exp.replace('graphique ', "")));
             } else if (exp.indexOf("aide") >= 0 || exp.indexOf("help") >= 0) {
                 var s = "<br />";
                 var help = "Comment fonctionne le bot SMath ?<ul>" + s
