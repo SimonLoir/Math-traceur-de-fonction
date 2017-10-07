@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SMath Series</title>
+    <link rel="stylesheet" href="stats.css">
+    <script src="../extjs.js"></script>
+    <script src="../Smath.js"></script>
+
+</head>
+<style>
+    [contenteditable]{
+        border:1px solid cornflowerblue;
+    }
+</style>
+<body>
+    <div class="scms-header">
+        <div class="scms-header">
+            <img class="scms-header-logo" alt="" src="../logo.svg">
+            <span class="scms-header-title">SMath Series (Work in progress)</span>
+            <div class="scms-header-actions">
+               <a class="scms-header-actions-link" href="../index.html">Home</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        Commencer à x <sub contenteditable="true">0</sub> arrêter le tableau à x <sub contenteditable="true">100</sub><br />
+        Données : 
+        <div contenteditable="true" style="margin:5px;padding:5px;">
+            x0 = 3<br />
+            x5 = 10
+        </div>
+        À calculer : 
+        <div contenteditable="true" style="margin:5px;padding:5px;">
+            x22 = ?
+            <br />type = ?
+            <br />r = ?
+        </div>
+        Résultats
+        <div style="margin:5px;padding:5px;border:1px solid orange;">
+            
+        </div>
+    </div>
+
+    <div class="action" style="display: none;" id="prompt_dialog">
+        <div class="action-header">Action requise</div>
+        <div class="action-content">
+            <p>
+                <span class="prompt_text"></span>
+                <br />
+                <input type="text" id="prompt_default"><br />
+            </p>
+        </div>
+        <div class="btn-group"><button id="pvalidate">Ok</button><button id="pcancel">Annuler</button></div>
+    </div>
+
+    <script src="series.js"></script>
+</body>
+
+</html>
