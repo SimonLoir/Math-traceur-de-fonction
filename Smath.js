@@ -630,28 +630,33 @@ var SMath = function () {
         while (start <= this.end) {
             var from = [start, last];
             start += 0.002;
+            let smath_object = this;
             last = function () {
-                var result = 0;
-
-                for (var i = 0; i < Object.keys(array).length; i++) {
-                    var element = Object.keys(array)[i];
-                    if (element == "~") {
-                        if (array[element] != "") {
-                            result += array[element];
-                        }
-                    } else if (element == "x") {
-                        result += array[element] * start;
-                    } else if (element.indexOf("^m") > 0) {
-                        result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-                    } else {
-                        result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
-                    }
-                }
-
-                return result;
+                
+                return smath_object.getFor(start, array);
             }();
             this.newLine(from[0], from[1], start, last, this.color);
         }
+    }
+
+    this.getFor = function (start, array){
+        var result = 0;
+        for (var i = 0; i < Object.keys(array).length; i++) {
+            var element = Object.keys(array)[i];
+            if (element == "~") {
+                if (array[element] != "") {
+                    result += array[element];
+                }
+            } else if (element == "x") {
+                result += array[element] * start;
+            } else if (element.indexOf("^m") >= 0) {
+                result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+            } else {
+                result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+            }
+        }
+
+        return result;
     }
 
     this.verify = function (exp) {

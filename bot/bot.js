@@ -61,7 +61,48 @@ $(document).ready(function () {
             if (exp.indexOf('json ') == 0) {
                 this.last = "";
                 return JSON.stringify(this.s.exec(exp.replace('json ', "")));
-            } else if (exp.indexOf('eval ') == 0) {
+            }else if(exp.indexOf("pour x =") == 0){
+                if(this.last.indexOf("NaN") == -1 && this.exec_exp != undefined){
+                    exp = parseFloat(exp.replace("pour x =", ""));
+
+                    return this.s.getFor(exp, this.exec_exp);
+
+                }else{
+                    return "erreur";
+                }
+
+            } else if(exp.indexOf("de") == 0){
+                
+                try {
+                    let matches = /de(.+)à(.+)/g.exec(exp);
+
+                    let from = parseFloat(matches[1].replace(/(.*)x(.*)\=(.*)/g, function ($1, $2, $3, $4){
+                        return $4;
+                    }));
+
+                    let to = parseFloat(matches[2].replace(/(.*)x(.*)\=(.*)/g, function ($1, $2, $3, $4){
+                        return $4;
+                    }));
+
+                    let string = "<table><tr><th>x</th><th>valeur</th></tr>";
+
+                    i = from;
+
+                    while (i <= to) {
+                        string += "<tr><td>" + i + "</td><td>" + this.s.getFor(i, this.exec_exp) + "</td></tr>";
+                        i++;
+                    }
+                    console.log(from);
+                    console.log(to);
+
+                    return string + "</table>";
+
+
+                } catch (error) {
+                    alert(error)
+                }
+
+            }else if (exp.indexOf('eval ') == 0) {
                 this.last = "";
                 try {
                     var eval_r = this.eval(exp.replace('eval ', ""));
@@ -148,8 +189,15 @@ $(document).ready(function () {
                 + "<li>simplement écrire l'expression mathématique va la simplifier et tenter de l'ordonner</li></ul>"
                 return help;
             } else {
-                this.last = bot.stringify(this.s.exec(exp));
-                return "Voici l'expression simplifiée et ordonnée : " + this.last;
+                var exec_exp = this.s.exec(exp)
+                this.exec_exp = exec_exp;
+                this.last = bot.stringify(exec_exp);
+                if(this.last.indexOf("NaN") > -1){
+                    return "Command non reconnue ou expression incorrecte. ";
+                }else{
+                    return "Voici l'expression simplifiée et ordonnée : " + this.last;
+                }
+                
             }
 
         },

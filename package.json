@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "win-64" : "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7",
-    "win-32" : "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7 --arch=ia32"
+    "win-64": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7",
+    "win-32": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7 --arch=ia32"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/SimonLoir/Math-traceur-de-fonctions/issues"
   },
-  "homepage": "https://github.com/SimonLoir/Math-traceur-de-fonctions#readme"
+  "homepage": "https://github.com/SimonLoir/Math-traceur-de-fonctions#readme",
+  "dependencies": {
+    "electron": "^1.8.1"
+  }
 }
