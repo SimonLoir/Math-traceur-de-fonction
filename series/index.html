@@ -28,20 +28,17 @@
     </div>
 
     <div class="content">
-        Commencer à x <sub contenteditable="true">0</sub> arrêter le tableau à x <sub contenteditable="true">100</sub><br />
+        Commencer à x <sub id="xstart" oninput="calculate(this)">0</sub> arrêter le tableau à x <sub id="xend" contenteditable="true" oninput="calculate(this)">20</sub><br />
         Données : 
-        <div contenteditable="true" style="margin:5px;padding:5px;">
-            x0 = 3<br />
-            x5 = 10
+        <div id="data" contenteditable="true" style="margin:5px;padding:5px;" oninput="calculate(this)">
+            <br />
         </div>
         À calculer : 
-        <div contenteditable="true" style="margin:5px;padding:5px;">
-            x22 = ?
-            <br />type = ?
-            <br />r = ?
+        <div id="to_know" contenteditable="true" style="margin:5px;padding:5px;" oninput="calculate(this)">
+            <br />
         </div>
         Résultats
-        <div style="margin:5px;padding:5px;border:1px solid orange;">
+        <div id="result"style="margin:5px;padding:5px;border:1px solid orange;overflow:auto;">
             
         </div>
     </div>

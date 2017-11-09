@@ -45,7 +45,11 @@
 
                 AR.GET("https://simonloir.be/math/version.html", function (data) {
                     if(data != version){
+
                         $('#download').html('<b style="color:crimson;">Une nouvelle version de smath est disponible sur simonloir.be/smath</b>');
+                        if(data == "endofsupport"){
+                            $('#download').html('<b style="color:crimson;">Le projet SMath est désormais abandonné. Vous possèdez la dernière version de SMath. Il n\'y aura plus de mise à jour sauf en cas de reprise du projet. </b>');   
+                        }
                     }else{
                         $('#download').html('SMath est à jour ! version ' + version);
                     }
