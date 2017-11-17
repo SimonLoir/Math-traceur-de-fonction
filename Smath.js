@@ -141,31 +141,31 @@ var SMath = function () {
     }
 
     this.makeGrid = function (force_grid_interval, ix, iy) {
-        this.ctx.clearRect(0,0,this.height, this.width);
-        
+        this.ctx.clearRect(0, 0, this.height, this.width);
+
         this.ctx.fillStyle = "white";
-        this.ctx.fillRect(0,0,this.width, this.height);
-        
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
         var max_x = this.x_zero / this.interval;
         var max_y = this.y_zero / this.interval;
 
-        
-        if(force_grid_interval == true){
+
+        if (force_grid_interval == true) {
             var that = this;
             var getVal = function (val) {
-                if(val == undefined){
+                if (val == undefined) {
                     return 1;
-                }else{
-                    return that.exec_and_sort( "" + val )["~"];
+                } else {
+                    return that.exec_and_sort("" + val)["~"];
                 }
             }
             grid_interval_x = getVal(ix);
             grid_interval_y = getVal(iy);
-        }else{
+        } else {
             if (this.interval > 200) {
                 grid_interval_x = this.interval / (200 * 10);
                 grid_interval_y = this.interval / (200 * 10);
-                
+
             } else {
                 grid_interval_x = 1;
                 grid_interval_y = 1;
@@ -183,7 +183,7 @@ var SMath = function () {
             if (x_right != 0) { this.label(" " + x_right.toString().substr(0, 4), x_right, 2 / this.interval); }
             x_right -= grid_interval_x;
         }
-        
+
         var y_bottom = 0;
         while (y_bottom < max_y + 5) {
             this.newLine(-500, y_bottom, 500, y_bottom);
@@ -196,12 +196,12 @@ var SMath = function () {
             if (y_bottom != 0) { this.label(" " + y_bottom.toString().substr(0, 4), 0, y_bottom); }
             y_bottom -= grid_interval_y;
         }
-        this.newLine(0, -1000 ,0,1000, "black", false, 1);
-        this.newLine(-1000 ,0,1000, 0, "black", false, 1); 
+        this.newLine(0, -1000, 0, 1000, "black", false, 1);
+        this.newLine(-1000, 0, 1000, 0, "black", false, 1);
     }
-    
+
     this.draw = function (val) {
-        
+
         return this.execPlugin(val);
 
     }
@@ -346,9 +346,9 @@ var SMath = function () {
             var $5 = m[5];
             if ($1 == "") {
                 var big_times = 1;
-            } else if($1 == "-"){
+            } else if ($1 == "-") {
                 var big_times = -1;
-            }else {
+            } else {
                 var big_times = parseFloat($1);
             }
 
@@ -377,7 +377,7 @@ var SMath = function () {
             console.log(array);
             return this.sin(array);
         }],
-         [/^(([0-9]|\.|\-)*)tan\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
+        [/^(([0-9]|\.|\-)*)tan\((.*)\)([\+|\-]*)([0-9]*)$/i, function (m) {
             var $1 = m[1];
             var $2 = m[2];
             var $3 = m[3];
@@ -385,7 +385,7 @@ var SMath = function () {
             var $5 = m[5];
             if ($1 == "") {
                 var big_times = 1;
-            } else if($1 == "-"){
+            } else if ($1 == "-") {
                 var big_times = -1;
             } else {
                 var big_times = parseFloat($1);
@@ -591,7 +591,7 @@ var SMath = function () {
         while (start <= this.end) {
             var from = [start, last];
             start += 0.002;
-            if(isNaN(last)){
+            if (isNaN(last)) {
                 console.log('not a number' + start);
             }
             last = args.times * Math.tan(function () {
@@ -611,13 +611,13 @@ var SMath = function () {
                         result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
                     }
                 }
-                if(result % Math.PI/2 == 0){
+                if (result % Math.PI / 2 == 0) {
                     return result;
-                }else{
+                } else {
                     return NaN;
                 }
             }()) + args.add2;
-            if(!isNaN(last)){
+            if (!isNaN(last)) {
                 this.newLine(from[0], from[1], start, last, this.color);
             }
         }
@@ -632,14 +632,14 @@ var SMath = function () {
             start += 0.002;
             let smath_object = this;
             last = function () {
-                
+
                 return smath_object.getFor(start, array);
             }();
             this.newLine(from[0], from[1], start, last, this.color);
         }
     }
 
-    this.getFor = function (start, array){
+    this.getFor = function (start, array) {
         var result = 0;
         for (var i = 0; i < Object.keys(array).length; i++) {
             var element = Object.keys(array)[i];
@@ -657,6 +657,87 @@ var SMath = function () {
         }
 
         return result;
+    }
+
+    this.getRoots = function (array) {
+        let keys = Object.keys(array);//.sort().reverse()
+        let new_keys = [];
+
+        for (var i = 0; i < keys.length; i++) {
+            var element = keys[i];
+            if (element == "~") {
+
+            } else {
+                if (element.indexOf('x') == 0) {
+
+                    if (element == "x") {
+                        new_keys.push("1");
+                    } else {
+                        new_keys.push(element.replace('x^', ""));
+                    }
+
+                } else {
+                    alert('Unknown error while parsing');
+                }
+            }
+
+        }
+
+        new_keys.sort().reverse()
+
+        keys = [];
+
+        for (var i = 0; i < new_keys.length; i++) {
+            var key = new_keys[i];
+            if (key == "1") {
+                keys.push("x");
+            } else {
+                keys.push('x^' + key);
+            }
+        }
+
+        console.log(keys)
+
+        return this.getRootsWithHorner(array, keys);
+    }
+
+    this.getRootsWithHorner = function (array, keys){
+        if(keys[0] == "x^2"){
+            return this.getPower2Roots(array);
+        }else if(keys[0] == "x"){
+            try {
+                return (-1 * this.getValue(array, "~"))/this.getValue(array, "x");
+            } catch (error) {
+                return [];
+            }
+        }else if(keys == []){
+            return [];
+        }else{
+            let power = keys[0].replace('x^');
+            
+        }
+    }
+
+    this.getPower2Roots = function (array) {
+        let a = this.getValue(array, "x^2");
+        let b = this.getValue(array, "x");
+        let c = this.getValue(array, "~");
+
+        let delta = Math.pow(b, 2) - 4 * a * c;
+
+        if(delta >= 0){
+            return [(Math.sqrt(delta) - b) / (2 * a) , (-1 * Math.sqrt(delta) - b) / (2 * a)];
+        }else{
+            return [];
+        }
+    }
+
+    this.getValue = function (array, value){
+        if(array[value] == undefined){
+            return 0;
+        }else{
+            return array[value];
+        }
     }
 
     this.verify = function (exp) {
@@ -790,7 +871,7 @@ var SMath = function () {
                             if (div == 0) {
                                 if (dive.indexOf('$') == 0) {
                                     div_result = this.byIndexes[dive];
-                                }else if(dive == "pi"){
+                                } else if (dive == "pi") {
                                     div_result["~"] = Math.PI;
                                 } else {
                                     div_result["~"] = parseFloat(dive);

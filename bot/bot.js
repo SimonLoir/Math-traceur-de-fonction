@@ -1,9 +1,10 @@
 var server_operations = false;
 var low_power_device = false;
+var bot;
 
 $(document).ready(function () {
     setTimeout(function () {
-        document.querySelector('.messages').innerHTML = '<div class="wrapper"><div class="message">Bonjour, je suis SMath ! Je suis un bot capable de résoudre des équations graphiquement. Je peux aussi te servir de calculatrice :-). Pour commencer, tu peux entrer l\'expression que tu voudrais résoudre. Tu peux aussi écrire aide pour que je t\'explique ce dont je suis capable et comment je fonctionne.<br /> Attention: Je suis encore en alpha, certaines fonctionnalités annoncées ne fonctionnent peut-être pas.</div></div>';
+        document.querySelector('.messages').innerHTML = '<div class="wrapper"><div class="message">Bonjour, je suis SMath ! Je suis un bot capable de résoudre des équations graphiquement. Je peux aussi te servir de calculatrice :-). Pour commencer, tu peux entrer l\'expression que tu voudrais résoudre. Tu peux aussi écrire aide pour que je t\'explique ce dont je suis capable et comment je fonctionne.<br /> Attention: Je suis encore en alpha, certaines fonctionnalités annoncées ne fonctionnent peut-être pas.<br />Si tu veux utiliser des virgules, remplace les par des points : 0,5 devient 0.5 dans smath</div></div>';
 
     }, 500);
 
@@ -50,7 +51,7 @@ $(document).ready(function () {
         document.querySelector('.messages').scrollTop = document.querySelector('.messages').scrollHeight
     }
 
-    var bot = {
+    bot = {
         eval: function (exp){
             return eval(exp);
         },
@@ -71,10 +72,22 @@ $(document).ready(function () {
                     return "erreur";
                 }
 
-            } else if(exp.indexOf("de") == 0){
+            }else if(exp.indexOf("racines") == 0){
+                if(this.last.indexOf("NaN") == -1 && this.exec_exp != undefined){
+                    try {
+                        return this.s.getRoots(this.exec_exp);
+                    } catch (error) {
+                        alert(error)
+                    }
+
+                }else{
+                    return "erreur";
+                }
+
+            }  else if(exp.indexOf("de") == 0){
                 
                 try {
-                    let matches = /de(.+)à(.+)/g.exec(exp);
+                    let matches = /de(.+)à(.+)par(.+)/g.exec(exp);
 
                     let from = parseFloat(matches[1].replace(/(.*)x(.*)\=(.*)/g, function ($1, $2, $3, $4){
                         return $4;
@@ -84,13 +97,15 @@ $(document).ready(function () {
                         return $4;
                     }));
 
+                    let by = parseFloat(matches[3]);
+
                     let string = "<table><tr><th>x</th><th>valeur</th></tr>";
 
                     i = from;
 
                     while (i <= to) {
                         string += "<tr><td>" + i + "</td><td>" + this.s.getFor(i, this.exec_exp) + "</td></tr>";
-                        i++;
+                        i += by;
                     }
                     console.log(from);
                     console.log(to);
