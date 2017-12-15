@@ -651,6 +651,10 @@ var SMath = function () {
                 result += array[element] * start;
             } else if (element.indexOf("^m") >= 0) {
                 result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+            } else if (element == "over"){
+                
+                result = result / this.getFor(start, array[element]);
+
             } else {
                 result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
             }
@@ -701,20 +705,20 @@ var SMath = function () {
         return this.getRootsWithHorner(array, keys);
     }
 
-    this.getRootsWithHorner = function (array, keys){
-        if(keys[0] == "x^2"){
+    this.getRootsWithHorner = function (array, keys) {
+        if (keys[0] == "x^2") {
             return this.getPower2Roots(array);
-        }else if(keys[0] == "x"){
+        } else if (keys[0] == "x") {
             try {
-                return (-1 * this.getValue(array, "~"))/this.getValue(array, "x");
+                return (-1 * this.getValue(array, "~")) / this.getValue(array, "x");
             } catch (error) {
                 return [];
             }
-        }else if(keys == []){
+        } else if (keys == []) {
             return [];
-        }else{
+        } else {
             let power = keys[0].replace('x^');
-            
+
         }
     }
 
@@ -725,17 +729,17 @@ var SMath = function () {
 
         let delta = Math.pow(b, 2) - 4 * a * c;
 
-        if(delta >= 0){
-            return [(Math.sqrt(delta) - b) / (2 * a) , (-1 * Math.sqrt(delta) - b) / (2 * a)];
-        }else{
+        if (delta >= 0) {
+            return [(Math.sqrt(delta) - b) / (2 * a), (-1 * Math.sqrt(delta) - b) / (2 * a)];
+        } else {
             return [];
         }
     }
 
-    this.getValue = function (array, value){
-        if(array[value] == undefined){
+    this.getValue = function (array, value) {
+        if (array[value] == undefined) {
             return 0;
-        }else{
+        } else {
             return array[value];
         }
     }
@@ -806,8 +810,6 @@ var SMath = function () {
                     this.byIndexes["$" + index] = this.exec(inside);
                     this.byIndexes2["$" + index] = this.stringify(this.exec(inside));
 
-                    //console.log("Exrpession " + this.byIndexes2["$" + index] + " has for index $" + index);
-
                     exp = exp.replace('(' + inside + ')', "$" + index);
                 } else {
                     inside += ")";
@@ -817,7 +819,7 @@ var SMath = function () {
             }
 
         }
-        //console.log(exp);
+
         return this.exec(exp);
     }
 
@@ -867,8 +869,13 @@ var SMath = function () {
                     for (var div = 0; div < div_of.length; div++) {
                         var dive = div_of[div];
                         //Division ici
-                        if (dive.indexOf("x") < 0) {
-                            if (div == 0) {
+
+                        /**
+                         * When it's the fist element term
+                         */
+
+                        if (div == 0) {
+                            if (dive.indexOf("x") < 0) {
                                 if (dive.indexOf('$') == 0) {
                                     div_result = this.byIndexes[dive];
                                 } else if (dive == "pi") {
@@ -876,16 +883,8 @@ var SMath = function () {
                                 } else {
                                     div_result["~"] = parseFloat(dive);
                                 }
-                            } else {
-                                var x_keys = Object.keys(div_result);
-                                for (var index = 0; index < x_keys.length; index++) {
-                                    var xkey = x_keys[index];
-                                    div_result[xkey] = parseFloat(div_result[xkey]) / parseFloat(dive);
-                                }
 
-                            }
-                        } else {
-                            if (div == 0) {
+                            } else {
                                 div_result[function () {
 
                                     if (dive.split('x')[1] != "") {
@@ -904,96 +903,141 @@ var SMath = function () {
 
                                 }();
                             }
+                            //console.log(div_result);
+                        } else if (div == 1) {
+                            //console.log("2", div_result);
+                            div_result["over"] = this.exec_and_sort(dive);
                         }
 
-                    }
+                        //console.log(div_result);
 
-                    //console.log(div_result);
+                    }
 
                     //Multiplication ici
                     if (mult == 0) {
                         mult_result = div_result;
-
                     } else {
-                        /*console.log("Keys :",  keys, JSON.stringify(div_result));
-                        console.log("Keys2 :",  mult_keys, JSON.stringify(mult_result));*/
-                        var div_keys = Object.keys(div_result);
-                        var mult_keys = Object.keys(mult_result);
-                        var new_mult_result = {}
-
-                        for (var index_mult_keys = 0; index_mult_keys < mult_keys.length; index_mult_keys++) {
-                            var e_mult = mult_keys[index_mult_keys];
-                            var number_of_e_mult = mult_result[e_mult];
-
-                            for (var index_div_keys = 0; index_div_keys < div_keys.length; index_div_keys++) {
-                                var e_div = div_keys[index_div_keys];
-                                var number_of_e_div = div_result[e_div];
-
-                                if (e_mult == "~" && e_div == e_mult) {
-                                    var e_end_power = "~";
-                                } else if (e_mult == "x" && e_div == e_mult) {
-                                    var e_end_power = "x^2";
-                                } else if (e_mult == "~" && e_div.indexOf('x') == 0) {
-                                    var e_end_power = e_div;
-                                } else if (e_div == "~" && e_mult.indexOf('x') == 0) {
-                                    var e_end_power = e_mult;
-                                } else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
-                                    var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
-                                } else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
-                                    var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
-                                } else {
-                                    var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
-                                }
-
-
-                                if (new_mult_result[e_end_power] != undefined) {
-                                    new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
-                                } else {
-                                    new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
-                                }
-
-                            }
-
-
-                        }
-
-                        mult_result = new_mult_result;
+                        mult_result = this.multiply(mult_result, div_result)
                     }
                 }
 
                 //Sourstraction ici
+                
                 if (sub == 0) {
                     sub_result = mult_result;
                 } else {
-                    var keys = Object.keys(mult_result);
-                    for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
-                        var key = keys[ixxxx];
-                        if (sub_result[key] != undefined) {
-                            sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
-                        } else {
-                            sub_result[key] = - parseFloat(mult_result[key]);
+                    if(sub_result["over"] == undefined){
+                        try {
+                            sub_result = this.sub(mult_result, sub_result);
+                        } catch (error) {
+                        }
+                    }else{
+                        try {
+                            sub_result = this.sub(this.multiply(sub_result["over"], mult_result), sub_result);
+                        } catch (error) {                        
                         }
                     }
                 }
+                
             }
             //Somme ici
             if (i == 0) {
                 sum_result = sub_result;
             } else {
-                var keys = Object.keys(sub_result);
-                for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
-                    var key = keys[ixxxx];
-                    if (sum_result[key] != undefined) {
-                        sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
-                    } else {
-                        sum_result[key] = parseFloat(sub_result[key]);
+                if(sum_result["over"] == undefined){
+                    try {
+                        sum_result = this.add(sub_result, sum_result);
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }else{
+                    try {
+                        sum_result = this.add(this.multiply(sum_result["over"], sub_result), sum_result);
+                    } catch (error) {                        
                     }
                 }
+                
             }
         }
 
         return this.array_to_exp(sum_result);
 
+    }
+
+    this.add = function (sub_result, sum_result){
+        var keys = Object.keys(sub_result);
+        for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+            var key = keys[ixxxx];
+            if (sum_result[key] != undefined) {
+                sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
+            } else {
+                sum_result[key] = parseFloat(sub_result[key]);
+            }
+        }
+        return sum_result;
+    }
+
+    this.sub = function (mult_result, sub_result) {
+        var keys = Object.keys(mult_result);
+        for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
+            var key = keys[ixxxx];
+            if (sub_result[key] != undefined) {
+                sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
+            } else {
+                sub_result[key] = - parseFloat(mult_result[key]);
+            }
+        }
+        return sub_result;
+    }
+
+    this.multiply = function (mult_result, div_result) {
+        var div_keys = Object.keys(div_result);
+        var mult_keys = Object.keys(mult_result);
+        var new_mult_result = {}
+
+        for (var index_mult_keys = 0; index_mult_keys < mult_keys.length; index_mult_keys++) {
+            var e_mult = mult_keys[index_mult_keys];
+            var number_of_e_mult = mult_result[e_mult];
+
+            //if(e_mult != "over"){
+            for (var index_div_keys = 0; index_div_keys < div_keys.length; index_div_keys++) {
+                var e_div = div_keys[index_div_keys];
+                var number_of_e_div = div_result[e_div];
+                if (e_div != "over") {
+
+                    if (e_mult == "~" && e_div == e_mult) {
+                        var e_end_power = "~";
+                    } else if (e_mult == "x" && e_div == e_mult) {
+                        var e_end_power = "x^2";
+                    } else if (e_mult == "~" && e_div.indexOf('x') == 0) {
+                        var e_end_power = e_div;
+                    } else if (e_div == "~" && e_mult.indexOf('x') == 0) {
+                        var e_end_power = e_mult;
+                    } else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
+                        var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
+                    } else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
+                        var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
+                    } else {
+                        var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
+                    }
+
+
+                    if (new_mult_result[e_end_power] != undefined) {
+                        new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                    } else {
+                        new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                    }
+                } else {
+                    new_mult_result["over"] = div_result[e_div];
+                }
+            }
+            //}
+        }
+        if (mult_result["over"] != undefined) {
+            new_mult_result["over"] = mult_result["over"];
+        }
+        mult_result = new_mult_result;
+        return mult_result
     }
 
     this.array_to_exp = function (array) {
@@ -1020,7 +1064,7 @@ var SMath = function () {
                     }
 
                 } else {
-                    alert('Unknown error while parsing');
+                    console.log('Unknown error while parsing');
                 }
             }
 
@@ -1076,6 +1120,10 @@ var SMath = function () {
 
         if (text == "x^3") {
             text = "x³";
+        }
+
+        if(array["over"] != undefined){
+            text = "(" + text + ")/(" + this.stringify(array["over"]) + ")"  
         }
 
         return text;

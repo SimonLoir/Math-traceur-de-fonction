@@ -9,7 +9,7 @@
 
 <body>
 	<h1>Test area</h1>
-	<input type="text" value="3*(x-(x+3))">
+	<input type="text" value="x/(x+1)">
 	<p></p>
 	
 	<script>
@@ -17,8 +17,15 @@
 		var i = document.querySelector('input');
 		var s = new SMath();
 		i.onkeyup = function () {
-			e.innerHTML = JSON.stringify(s.exec(i.value));
+			console.clear();
+			try {
+				e.innerHTML = JSON.stringify(s.exec(i.value));
+				e.innerHTML += s.stringify(s.exec(i.value));
+			} catch (error) {
+				
+			}
 		}
+		i.onkeyup();
 	</script>
 </body>
 
