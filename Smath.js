@@ -15,7 +15,7 @@ var SMath = function () {
         var X = this.x_zero + X * parseFloat(this.interval);
         var Y = this.y_zero - Y * parseFloat(this.interval);
         this.ctx.beginPath();
-        this.ctx.lineWidth = 1;
+        this.ctx.lineWidth = 2;
         if (color != undefined) {
             this.ctx.fillStyle = color;
         } else {
@@ -243,6 +243,7 @@ var SMath = function () {
             var res = (sign * Math.sqrt((-1 * p) / a)) + m;
             return res;
         } catch (error) {
+            console.log(error)
             return NaN;
         }
 
@@ -458,6 +459,7 @@ var SMath = function () {
                         return "no-trace";
                     }
                 } catch (error) {
+                    console.log(error)
                     alert("Votre code javascript est incorrect" + error.message);
                     return "error";
                 }
@@ -651,8 +653,8 @@ var SMath = function () {
                 result += array[element] * start;
             } else if (element.indexOf("^m") >= 0) {
                 result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-            } else if (element == "over"){
-                
+            } else if (element == "over") {
+
                 result = result / this.getFor(start, array[element]);
 
             } else {
@@ -712,6 +714,7 @@ var SMath = function () {
             try {
                 return (-1 * this.getValue(array, "~")) / this.getValue(array, "x");
             } catch (error) {
+                console.log(error)
                 return [];
             }
         } else if (keys == []) {
@@ -878,6 +881,7 @@ var SMath = function () {
                             if (dive.indexOf("x") < 0) {
                                 if (dive.indexOf('$') == 0) {
                                     div_result = this.byIndexes[dive];
+
                                 } else if (dive == "pi") {
                                     div_result["~"] = Math.PI;
                                 } else {
@@ -903,10 +907,24 @@ var SMath = function () {
 
                                 }();
                             }
-                            //console.log(div_result);
-                        } else if (div == 1) {
-                            //console.log("2", div_result);
-                            div_result["over"] = this.exec_and_sort(dive);
+                            console.log('==>', expression, div_result["over"])
+                        } else if (div >= 1) {
+
+                            try {
+                                if (div_result["over"] == undefined) {
+                                    div_result["over"] = { "~": 1 };
+                                }
+                                var over1 = div_result["over"];
+                                var d1 = this.del(div_result, "over");
+                                var x = this.exec_and_sort(dive);
+                                var over2 = x["over"] || { "~": 1 };
+                                var d2 = this.del(x, "over");
+                                console.log(d1, d2, over1, over2)
+                                div_result = this.multiply(d1, over2);
+                                div_result["over"] = this.multiply(d2, over1);
+                            } catch (error) {
+                                console.log(error)
+                            }
                         }
 
                         //console.log(div_result);
@@ -922,41 +940,83 @@ var SMath = function () {
                 }
 
                 //Sourstraction ici
-                
+
                 if (sub == 0) {
                     sub_result = mult_result;
                 } else {
-                    if(sub_result["over"] == undefined){
+                    /*if (sub_result["over"] == undefined) {
                         try {
                             sub_result = this.sub(mult_result, sub_result);
                         } catch (error) {
+                            console.log(error)
                         }
-                    }else{
+                    } else {
                         try {
                             sub_result = this.sub(this.multiply(sub_result["over"], mult_result), sub_result);
-                        } catch (error) {                        
+                        } catch (error) {
+                            console.log(error)
                         }
+                    }*/
+                    if (mult_result["over"] == undefined) {
+
+                        mult_result["over"] = { "~": 1 }
+                    }
+                    if (sub_result["over"] == undefined) {
+                        sub_result["over"] = { "~": 1 }
+                    }
+                    try {
+                        var over = this.multiply(sub_result["over"], mult_result["over"]);
+                        sum_over = sub_result["over"];
+                        sub_over = mult_result["over"];
+                        let smr = sub_result;
+                        let sbr = mult_result;
+                        delete smr["over"];
+                        delete sbr["over"]
+                        var first_term = this.multiply(sbr, sum_over);
+                        var second_term = this.multiply(smr, sub_over);
+                        sub_result = this.sub(first_term, second_term);
+                        sub_result["over"] = over;
+                    } catch (error) {
+                        console.log(error)
+                        console.log(error)
                     }
                 }
-                
+
             }
             //Somme ici
             if (i == 0) {
                 sum_result = sub_result;
             } else {
-                if(sum_result["over"] == undefined){
-                    try {
-                        sum_result = this.add(sub_result, sum_result);
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }else{
-                    try {
-                        sum_result = this.add(this.multiply(sum_result["over"], sub_result), sum_result);
-                    } catch (error) {                        
-                    }
+                if (sub_result["over"] == undefined) {
+
+                    sub_result["over"] = { "~": 1 }
                 }
-                
+                if (sum_result["over"] == undefined) {
+                    sum_result["over"] = { "~": 1 }
+                }
+                try {
+                    var over = this.multiply(sum_result["over"], sub_result["over"]);
+                    sum_over = sum_result["over"];
+                    sub_over = sub_result["over"];
+                    let smr = sum_result;
+                    let sbr = sub_result;
+                    delete smr["over"];
+                    delete sbr["over"]
+                    var first_term = this.multiply(smr, sub_over);
+                    var second_term = this.multiply(sbr, sum_over);
+                    sum_result = this.add(first_term, second_term);
+                    sum_result["over"] = over;
+                } catch (error) {
+                    console.log(error)
+                    console.log(error)
+                }
+            }
+        }
+
+        if (sum_result["over"] != undefined) {
+            if (Object.keys(sum_result["over"]).length == 1 && Object.keys(sum_result["over"])[0] == "~" && sum_result["over"]["~"] == 1) {
+                console.log("over_one")
+                delete sum_result["over"];
             }
         }
 
@@ -964,7 +1024,12 @@ var SMath = function () {
 
     }
 
-    this.add = function (sub_result, sum_result){
+    this.del = function (array, item) {
+        delete array[item];
+        return array;
+    }
+
+    this.add = function (sub_result, sum_result) {
         var keys = Object.keys(sub_result);
         for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
             var key = keys[ixxxx];
@@ -994,49 +1059,66 @@ var SMath = function () {
         var div_keys = Object.keys(div_result);
         var mult_keys = Object.keys(mult_result);
         var new_mult_result = {}
+        var over = {};
+
+        if (mult_result["over"] == undefined) {
+            mult_result["over"] = { "~": 1 };
+            if (div_result["over"] == undefined) {
+                over = { "~": 1 };
+            } else {
+                over = this.multiply(mult_result["over"], div_result["over"])
+            }
+        } else if (div_result["over"] == undefined) {
+            div_result["over"] = { "~": 1 };
+            over = this.multiply(mult_result["over"], div_result["over"])
+        } else {
+            over = this.multiply(mult_result["over"], div_result["over"])
+        }
 
         for (var index_mult_keys = 0; index_mult_keys < mult_keys.length; index_mult_keys++) {
             var e_mult = mult_keys[index_mult_keys];
             var number_of_e_mult = mult_result[e_mult];
 
-            //if(e_mult != "over"){
-            for (var index_div_keys = 0; index_div_keys < div_keys.length; index_div_keys++) {
-                var e_div = div_keys[index_div_keys];
-                var number_of_e_div = div_result[e_div];
-                if (e_div != "over") {
+            if (e_mult != "over") {
+                for (var index_div_keys = 0; index_div_keys < div_keys.length; index_div_keys++) {
+                    var e_div = div_keys[index_div_keys];
+                    var number_of_e_div = div_result[e_div];
+                    if (e_div != "over") {
 
-                    if (e_mult == "~" && e_div == e_mult) {
-                        var e_end_power = "~";
-                    } else if (e_mult == "x" && e_div == e_mult) {
-                        var e_end_power = "x^2";
-                    } else if (e_mult == "~" && e_div.indexOf('x') == 0) {
-                        var e_end_power = e_div;
-                    } else if (e_div == "~" && e_mult.indexOf('x') == 0) {
-                        var e_end_power = e_mult;
-                    } else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
-                        var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
-                    } else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
-                        var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
-                    } else {
-                        var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
+                        if (e_mult == "~" && e_div == e_mult) {
+                            var e_end_power = "~";
+                        } else if (e_mult == "x" && e_div == e_mult) {
+                            var e_end_power = "x^2";
+                        } else if (e_mult == "~" && e_div.indexOf('x') == 0) {
+                            var e_end_power = e_div;
+                        } else if (e_div == "~" && e_mult.indexOf('x') == 0) {
+                            var e_end_power = e_mult;
+                        } else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
+                            var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
+                        } else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
+                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
+                        } else {
+                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
+                        }
+
+
+                        if (new_mult_result[e_end_power] != undefined) {
+                            new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                        } else {
+                            new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                        }
                     }
-
-
-                    if (new_mult_result[e_end_power] != undefined) {
-                        new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
-                    } else {
-                        new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
-                    }
-                } else {
-                    new_mult_result["over"] = div_result[e_div];
                 }
             }
-            //}
         }
-        if (mult_result["over"] != undefined) {
-            new_mult_result["over"] = mult_result["over"];
-        }
+        new_mult_result["over"] = over;
         mult_result = new_mult_result;
+        if (mult_result["over"] != undefined) {
+            if (Object.keys(mult_result["over"]).length == 1 && Object.keys(mult_result["over"])[0] == "~" && mult_result["over"]["~"] == 1) {
+                console.log("over_one")
+                delete mult_result["over"];
+            }
+        }
         return mult_result
     }
 
@@ -1122,8 +1204,8 @@ var SMath = function () {
             text = "x³";
         }
 
-        if(array["over"] != undefined){
-            text = "(" + text + ")/(" + this.stringify(array["over"]) + ")"  
+        if (array["over"] != undefined) {
+            text = "(" + text + ")/(" + this.stringify(array["over"]) + ")"
         }
 
         return text;

@@ -19,8 +19,10 @@
 		i.onkeyup = function () {
 			console.clear();
 			try {
-				e.innerHTML = JSON.stringify(s.exec(i.value));
-				e.innerHTML += s.stringify(s.exec(i.value));
+				var ex = s.exec(i.value);
+				e.innerHTML = JSON.stringify(ex);
+				e.innerHTML += s.stringify(ex);
+				e.innerHTML += "<hr />";
 			} catch (error) {
 				
 			}
