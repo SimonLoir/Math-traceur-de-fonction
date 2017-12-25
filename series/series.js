@@ -135,6 +135,8 @@ function calculate(e) {
                 }
             }
         }
+    }else{
+        result.html(result.html() + "<br />Type de suite : SA"); 
     }
 
 }

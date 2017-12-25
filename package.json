@@ -1,12 +1,13 @@
 {
   "name": "smath",
-  "version": "2.17.9",
+  "version": "2.17.12",
   "description": "Traceur de fonctions",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "win-64": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7",
-    "win-32": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.7.7 --arch=ia32"
+    "win-64": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.8.1",
+    "win-32": "electron-packager . --platefrom=win32 --overwrite --asar --out=releases --icon=logo.ico --electron-version=1.8.1 --arch=ia32",
+    "dist": "build --windows --linux --ia32 --x64"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,16 @@
     "url": "https://github.com/SimonLoir/Math-traceur-de-fonctions/issues"
   },
   "homepage": "https://github.com/SimonLoir/Math-traceur-de-fonctions#readme",
-  "dependencies": {
-    "electron": "^1.8.1"
+  "dependencies": {},
+  "build": {
+    "appId": "simonloir.smath",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "devDependencies": {
+    "electron": "^1.8.1",
+    "electron-builder": "^19.49.0",
+    "electron-packager": "^9.1.0"
   }
 }

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SMath 2.17"
-#define MyAppVersion "2.17.09.24"
+#define MyAppVersion "2.17.12.25"
 #define MyAppPublisher "Simon Loir"
 #define MyAppURL "https://simonloir.be/math"
 #define MyAppExeName "smath.exe"
