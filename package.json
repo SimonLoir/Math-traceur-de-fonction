@@ -24,12 +24,12 @@
     "appId": "simonloir.smath",
     "win": {
       "target": "nsis",
-      "icon": "src/logo.ico"
+      "icon": "logo.ico"
     }
   },
   "devDependencies": {
     "electron": "^1.8.1",
-    "electron-builder": "^19.49.0",
+    "electron-builder": "^19.49.3",
     "electron-packager": "^9.1.0"
   }
 }
