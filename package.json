@@ -23,7 +23,8 @@
   "build": {
     "appId": "simonloir.smath",
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "src/logo.ico"
     }
   },
   "devDependencies": {
