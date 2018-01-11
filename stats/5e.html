@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SMath Stats</title>
+    <link rel="stylesheet" href="stats.css">
+    <script src="ext-chart-js.js"></script>
+    <script src="../extjs.js"></script>
+    <script src="../Smath.js"></script>
+
+</head>
+
+<body>
+    <div class="scms-header">
+        <div class="scms-header">
+            <img class="scms-header-logo" alt="" src="../logo.svg">
+            <span class="scms-header-title">SMath Stats 5e</span>
+            <div class="scms-header-actions">
+                <a class="scms-header-actions-link" href="../index.html">Home</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="wrapper" style="position:absolute;top:0;left:0;bottom:0;width:calc(50% - 25px);padding:0;margin:0;height:100%;overflow:auto;padding:25px;">
+            <button onclick='calc()'>Calculer et tracer</button><button onclick='toggleActions()'>Afficher/masquer actions sur les cellules</button>  <br>
+            <table style="min-width:400px;">
+                <thead>
+                    <tr>
+                        <th>x
+                            <sub>i</sub>
+                        </th>
+                        <th>y
+                            <sub>i</sub>
+                        </th>
+                        <th id="action">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="body">
+                    <tr id="add-line">
+                        <td colspan="3" style="cursor:pointer;"><button>+</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <style>
+                #action{display: none}
+                .a{display: none}
+                .show .a, .show #action{
+                    display:table-cell;
+                }
+            </style>
+            <div id="result">
+                
+            </div>
+        </div>
+        <div class="graph" style="height:100%;width:50%;position:absolute;top:0;right:0;bottom:0;border-left:1px solid darkgray;overflow:auto;">
+
+        </div>
+    </div>
+
+    <div class="action" style="display: none;" id="prompt_dialog">
+        <div class="action-header">Action requise</div>
+        <div class="action-content">
+            <p>
+                <span class="prompt_text"></span>
+                <br />
+                <input type="text" id="prompt_default">
+                <br />
+            </p>
+        </div>
+        <div class="btn-group">
+            <button id="pvalidate">Ok</button>
+            <button id="pcancel">Annuler</button>
+        </div>
+    </div>
+
+    <script src="stats.5e.js"></script>
+
+</body>
+
+</html>

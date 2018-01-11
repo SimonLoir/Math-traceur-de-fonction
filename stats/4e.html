@@ -25,9 +25,19 @@
     </div>
 
     <div class="content">
-        <div class="wrapper" style="position:absolute;top:0;left:0;bottom:0;width:100%;padding:0;margin:0;height:100%;overflow:auto;padding:25px;text-align:center;">
-           <a href="#" onclick="alert('Forbidden')">SMath Stats 4e</a>
-           <a href="5e.html">SMath Stats 5e</a>
+        <div class="wrapper" style="position:absolute;top:0;left:0;bottom:0;width:calc(50% - 25px);padding:0;margin:0;height:100%;overflow:auto;padding:25px;">
+            <button id="new">+</button>
+            <label for="use_classes"><input type="checkbox" id="use_classes" checked>Utiliser des classes</label>
+            <label for="mediane"><input type="checkbox" id="mediane">Calculer la médiane</label>
+            <label for="cq1"><input type="checkbox" id="cq1">Calculer le 1er quartile</label>
+            <label for="cq3"><input type="checkbox" id="cq3">Calculer le 3ème quartile</label>
+            <label for="moyenne"><input type="checkbox" id="moyenne">Calculer la moyenne</label>
+            <table style="width:calc(100% - 25px);" class="e_table">
+
+            </table>
+        </div>
+        <div class="graph" style="height:100%;width:50%;position:absolute;top:0;right:0;bottom:0;border-left:1px solid darkgray;">
+
         </div>
     </div>
 
