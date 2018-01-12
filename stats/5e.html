@@ -25,7 +25,7 @@
     </div>
 
     <div class="content">
-        <div class="wrapper" style="position:absolute;top:0;left:0;bottom:0;width:calc(50% - 25px);padding:0;margin:0;height:100%;overflow:auto;padding:25px;">
+        <div class="wrapper" style="">
             <button onclick='calc()'>Calculer et tracer</button><button onclick='toggleActions()'>Afficher/masquer actions sur les cellules</button>  <br>
             <table style="min-width:400px;">
                 <thead>
@@ -53,12 +53,31 @@
                 .show .a, .show #action{
                     display:table-cell;
                 }
+                .wrapper{position:absolute;top:0;left:0;bottom:0;width:calc(50% - 25px);padding:0;margin:0;height:100%;overflow:auto;padding:25px;}
+                .graph{height:100%;width:50%;position:absolute;top:0;right:0;bottom:0;border-left:1px solid darkgray;overflow:auto;}
+                
+                @media (max-width:600px){
+                    .wrapper{
+                        width:calc(100% - 25px);
+                        top: 0;
+                        left: 0;right: 0;
+                        height: calc(50% - 25px);
+                    }
+                    .graph{
+                        width:100%;
+                        left: 0;right: 0;
+                        bottom: 0px;
+                        top:calc(50% + 25px);
+                        height: auto;
+                    }
+                }
+            
             </style>
             <div id="result">
                 
             </div>
         </div>
-        <div class="graph" style="height:100%;width:50%;position:absolute;top:0;right:0;bottom:0;border-left:1px solid darkgray;overflow:auto;">
+        <div class="graph" style="">
 
         </div>
     </div>
