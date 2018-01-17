@@ -49,11 +49,16 @@ function calc() {
 
     let a = xitimesyi / sqarex;
     let b = _y - a * _x;
-    let exp = a + "x+" + b;
+    if(b > 0){
+        var exp = a + "x+" + b;
+    }else{
+        var exp = a + "x" + b;        
+    }
 
     $('#result').html(
         "Résultats : <br />" + 
-        "Equation de la droite de régression : " + exp
+        "Equation de la droite de régression : " + exp + "<br>" +
+        "r = " + ( xitimesyi / (Math.sqrt(sqarex) * Math.sqrt(sqarey) ) )
     )
 
     draw(exp);
@@ -100,10 +105,16 @@ function draw(real_exp) {
 
 }
 
-$('#add-line').click(function() {
+function addLine(str) {
+
     var before = $('#body').node.insertBefore(document.createElement('tr'), this);
     $(before).addClass('line');
-    var xi = $(before).child('td').html('')
+    var xi = $(before).child('td')
+    if(typeof str == "number"){
+        xi.html(str);
+    }else{
+        xi.html('');
+    }
     xi = xi.node;
     xi.contentEditable = true;
     xi.focus();
@@ -112,14 +123,19 @@ $('#add-line').click(function() {
     yi = yi.node;
     yi.contentEditable = true;
 
-    var a = $(before).child('td').html('<button>supprimer</button>')
+    let a = $(before).child('td')
     a.addClass('a');
-    a.click(function () {
-
+    a.child("button").html("supprimer").click(function () {
+    
         $(before).remove();
-
+    
     });
-});
+    a.child("button").html("ajouter avant").click(function() {
+        addLine.bind(before)();
+    });
+}
+
+$('#add-line').click(addLine);
 
 
 function toggleActions (){
@@ -132,4 +148,32 @@ function toggleActions (){
         addLine.colspan = 3        
         e.classList.add('show');
     }
+}
+
+function createInterval(){
+    try {
+        let content = $('#int').node.value;
+        let spl = content.split(':');
+        let from = parseFloat(spl[0].split('->')[0]);
+        let to = parseFloat(spl[0].split('->')[1]);
+        let interval = parseFloat(spl[1]);
+        
+        if(isNaN(from) || isNaN(to) || isNaN(interval)){
+            
+            console.log(from, to, interval);
+            
+            throw "ee"; 
+        }
+
+        for (let i = from; i <= to; i+=interval) {
+            addLine.bind($('#add-line').node)(i);
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        alert('Format incorrect : de->à:intervalle \nex:0->10:1');
+    }
+    
+
 }
