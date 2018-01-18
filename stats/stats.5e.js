@@ -31,9 +31,12 @@ function calc() {
         __y.push(e - _y)
     });
 
+    let xitimesyia = [];
     // Sum Xi*Yi
     for (let i = 0; i < xs.length; i++) {
-        xitimesyi += __x[i] * __y[i];   
+        let r = __x[i] * __y[i];
+        xitimesyi +=  r;
+        xitimesyia.push(r)
     }
 
     // Xi^2
@@ -59,7 +62,32 @@ function calc() {
         "Résultats : <br />" + 
         "Equation de la droite de régression : " + exp + "<br>" +
         "r = " + ( xitimesyi / (Math.sqrt(sqarex) * Math.sqrt(sqarey) ) )
-    )
+    );
+
+    let table = $('#result').child('table');
+
+    let header = table.child('tr');
+    header.child('th').html('x<sub>i</sub>');
+    header.child('th').html('y<sub>i</sub>');
+    header.child('th').html('X<sub>i</sub>');
+    header.child('th').html('Y<sub>i</sub>');
+    header.child('th').html('X<sub>i</sub>*Y<sub>i</sub>');
+    header.child('th').html('X<sub>i</sub><sup>2<sup>');
+    header.child('th').html('Y<sub>i</sub><sup>2<sup>');
+
+    console.log(_x)
+    
+    for (let i = 0; i < xs.length; i++) {
+        console.log(i)
+        let tr = table.child('tr');
+        tr.child('td').html(xs[i])
+        tr.child('td').html(ys[i])
+        tr.child('td').html(__x[i])
+        tr.child('td').html(__y[i])
+        tr.child('td').html(xitimesyia[i])
+        tr.child('td').html(Math.pow(__x[i], 2))
+        tr.child('td').html(Math.pow(__y[i], 2))
+    }
 
     draw(exp);
 }
