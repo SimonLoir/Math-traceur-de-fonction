@@ -1,0 +1,28 @@
+{
+  "name": "smath",
+  "version": "3.0.0",
+  "description": "A graphical calculator that works everywhere",
+  "main": "app/main.js",
+  "scripts": {
+    "test": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonLoir/SMath.git"
+  },
+  "author": "Simon Loir",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SimonLoir/SMath/issues"
+  },
+  "homepage": "https://github.com/SimonLoir/SMath#readme",
+  "dependencies": {
+    "css-loader": "^0.28.9",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.1",
+    "ts-loader": "^3.4.0",
+    "typescript": "^2.7.1",
+    "webpack": "^3.10.0"
+  }
+}
