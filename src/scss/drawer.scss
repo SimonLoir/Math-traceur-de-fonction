@@ -1,0 +1,117 @@
+$accent_color:red;
+$borders_color:lightgray;
+
+* {
+    font-family: sans-serif;
+}
+
+.panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background: white;
+    border-right: 1px solid $borders_color;
+    & .tab_manager {
+        display: flex;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border-bottom: 1px solid lightgray;
+        & span {
+            color:gray;
+            transition: 0.25s;
+            display: inline-block;
+            flex-grow: 1;
+            height: 100%;
+            border-bottom: 2px solid $borders_color;
+            cursor: pointer;
+            &:hover, &.active{
+                border-bottom: 2px solid $accent_color;
+            }
+        }
+    }
+    & .tabs{
+        position: absolute;
+        top: 52px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        & .tab{
+            &#objects{
+                $i_w: 90%;
+                --w:$i_w;
+                $h:40px;
+                & #function_add_input, & #function_add_button{
+                    display: inline-block;
+                    padding: 0;
+                    height: $h;
+                    margin: 0;
+                    border:none;
+                    border-bottom: 1px solid $borders_color;               
+                }
+                & #function_add_input{
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    width: calc(var(--w) - 30px);
+                }
+                & #function_add_button{
+                    background:#F0F0F0;
+                    width: 100% - $i_w;
+                    cursor: pointer;            
+                }
+                & #list{
+                    position: absolute;
+                    top: $h + 1px;
+                    left: 0;
+                    right: 0;bottom: 0;
+                    padding: 25px;
+                    
+                    & .title{
+                        color: gray;
+                        font-weight: 700;
+                    }
+                    
+                    & .item{
+                        color:darken(lightgray, 10%);
+                        line-height: 25px;
+                        & span{
+                            display: inline-block;
+                            max-width: 80%;
+                            word-break:break-all;
+                        }
+                        & button{
+                            background:transparent;
+                            border:none;
+                            float: right;
+                            cursor: pointer;
+                        }
+                    }
+
+                    & #copy{
+                        text-align: center;
+                        color:lightgray;
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.drawing_area{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: calc(100vw - 301px);
+    right: 0;
+    & canvas{
+        background:rgb(250,250,250);
+        position: absolute;
+        top: 0;right: 0;left: 0;bottom: 0;
+        width: 100%;
+        height: 100%;
+        
+    }
+}
