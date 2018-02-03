@@ -40,6 +40,7 @@ $borders_color:lightgray;
         bottom: 0;
         & .tab{
             &#objects{
+                overflow: auto;
                 $i_w: 90%;
                 --w:$i_w;
                 $h:40px;
@@ -62,12 +63,12 @@ $borders_color:lightgray;
                     cursor: pointer;            
                 }
                 & #list{
+                    overflow: auto;                    
                     position: absolute;
                     top: $h + 1px;
                     left: 0;
                     right: 0;bottom: 0;
                     padding: 25px;
-                    
                     & .title{
                         color: gray;
                         font-weight: 700;

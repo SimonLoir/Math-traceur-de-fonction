@@ -30,9 +30,16 @@ document.querySelector("#function_add_button").onclick = () => {
         .appendChild(document.createElement('span'))
         .innerHTML = `
             <i style="background:${color}; width:5px;height:5px;border-radius:5px;display:inline-block;"></i>
-            ${value}
+            ${letters[letter]}<sub>${(row != 0) ? row : ""}</sub>(x) =  ${value}
             `;
     let edit = item
         .appendChild(document.createElement('button'))
         .innerHTML = "&#128393;";
+
+    if(letter+1 < letters.length){
+        letter++;
+    }else{
+        row ++;
+        letter = 0;
+    }
 }
