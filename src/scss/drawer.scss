@@ -5,7 +5,23 @@ $borders_color:lightgray;
     font-family: sans-serif;
 }
 
+#menu{
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border:1px solid gray;
+    border-radius: 3px;
+    color:gray;
+    background:white;
+    display: none;
+    @media (max-width: 600px){
+        display:block;
+    }
+}
+
 .panel {
+    z-index: 100;
     position: fixed;
     top: 0;
     left: 0;
@@ -13,6 +29,12 @@ $borders_color:lightgray;
     width: 300px;
     background: white;
     border-right: 1px solid $borders_color;
+    &.hidden{
+        display: none;
+    }
+    @media (max-width: 600px){
+        width: 100%;
+    }
     & .tab_manager {
         display: flex;
         height: 50px;
@@ -102,11 +124,15 @@ $borders_color:lightgray;
 }
 
 .drawing_area{
+    z-index: 90;
     position: fixed;
     top: 0;
     bottom: 0;
     width: calc(100vw - 301px);
     right: 0;
+    @media (max-width: 600px){
+        width: 100%;
+    }
     & canvas{
         background:rgb(250,250,250);
         position: absolute;

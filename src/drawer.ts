@@ -100,13 +100,18 @@ c.reload = function (d:any)  {
 let down = false;
 let start:any;
 
-html_canvas.addEventListener('mousedown', (e:MouseEvent) => {
+function addListenerMulti(el:any, s:any, fn:any) {
+    s.split(' ').forEach((e:any) => el.addEventListener(e, fn, false));
+}
+
+addListenerMulti(html_canvas, 'mousedown touchstart', (e:MouseEvent) => {
+    console.log(e)
     down = true;
     start = {x: e.pageX, y: e.pageY}
     html_canvas.style.cursor = "grabbing";
 });
 
-html_canvas.addEventListener('mousemove', (e:MouseEvent) => {
+addListenerMulti(html_canvas, 'mousemove touchmove', (e:MouseEvent) => {
     if(down == true){
         let old = start;
         let new_start = {x: e.pageX, y: e.pageY}
@@ -125,7 +130,16 @@ html_canvas.addEventListener('mousemove', (e:MouseEvent) => {
     }
 });
 
-html_canvas.addEventListener('mouseup', (e:MouseEvent) => {
+addListenerMulti(html_canvas, 'mouseup touchend', (e:MouseEvent) => {
     down = false;
     html_canvas.style.cursor = "grab";    
 });
+//@ts-ignore
+document.querySelector('#menu').onclick = () => {
+    let panel = document.querySelector('.panel');
+    if(panel.classList.contains('hidden')){
+        panel.classList.remove('hidden')
+    } else { 
+        panel.classList.add('hidden')
+    }   
+}
