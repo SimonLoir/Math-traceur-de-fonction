@@ -278,7 +278,7 @@ export default class parser{
         return array;
     }
 
-    private add(sub_result:any, sum_result:any) {
+    public add(sub_result:any, sum_result:any) {
         var keys = Object.keys(sub_result);
         for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
             var key = keys[ixxxx];
@@ -291,7 +291,7 @@ export default class parser{
         return sum_result;
     }
 
-    private sub (mult_result:any, sub_result:any) {
+    public sub (mult_result:any, sub_result:any) {
         var keys = Object.keys(mult_result);
         for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
             var key = keys[ixxxx];
@@ -304,7 +304,7 @@ export default class parser{
         return sub_result;
     }
 
-    multiply(mult_result:any, div_result:any) {
+    public multiply(mult_result:any, div_result:any) {
         var div_keys = Object.keys(div_result);
         var mult_keys = Object.keys(mult_result);
         var new_mult_result:any = {}

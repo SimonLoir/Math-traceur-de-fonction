@@ -1,11 +1,14 @@
 import "./scss/drawer.scss";
 import canvas from "./canvas";
 import parser from "./parser";
-import math from "./math";
+import MathObject from "./math";
 
 let html_canvas = document.querySelector('canvas');
 
 let c: canvas = new canvas(html_canvas);
+
+let math = new MathObject;
+
 
 let fdata:any = {};
 
@@ -27,6 +30,14 @@ document.querySelector("#function_add_button").onclick = () => {
         return;
     }
 
+    let initial = value;
+
+    if(value.indexOf('dérivée ') == 0){
+        value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+    }else if(value.indexOf("dérivée_seconde ") == 0){
+        value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+    }
+
     let v = parse.exec(value);
 
     let color = c.drawFromArray(v);
@@ -38,7 +49,8 @@ document.querySelector("#function_add_button").onclick = () => {
         .appendChild(document.createElement('span'))
         .innerHTML = `
             <i style="background:${color}; width:5px;height:5px;border-radius:5px;display:inline-block;"></i>
-            ${letters[letter]}<sub>${(row != 0) ? row : ""}</sub>(x) =  ${value}
+            ${letters[letter]}<sub>${(row != 0) ? row : ""}</sub>(x) =  ${initial} 
+            ${(initial != value) ? "= " + value:""}
         `;
         
     let edit = item
@@ -49,7 +61,8 @@ document.querySelector("#function_add_button").onclick = () => {
         visible:true,
         color:color,
         array: v,
-        exp : value
+        exp : value, 
+        initial:initial
     }
 
     if(letter+1 < letters.length){
