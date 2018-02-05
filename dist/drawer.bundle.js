@@ -603,7 +603,7 @@ addListenerMulti(html_canvas, 'mousemove touchmove', function (e) {
         var new_start = { x: e.pageX, y: e.pageY };
         var diff_x = old.x - new_start.x;
         var diff_y = old.y - new_start.y;
-        if (Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 25) {
+        if (Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 12) {
             c.center_x += diff_x / c.x_unit;
             c.center_y -= diff_y / c.y_unit;
             requestAnimationFrame(function () {
@@ -1365,7 +1365,7 @@ var canvas = /** @class */ (function () {
                 x: new_x,
                 y: new_y
             };
-            x += 0.01;
+            x += this.x_unit / 500;
         }
         return color;
     };

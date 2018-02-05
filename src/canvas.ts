@@ -152,7 +152,7 @@ export default class canvas{
                 x: new_x,
                 y:new_y
             }
-            x+= 0.01;
+            x+= this.x_unit /500;
         }
         return color;
     }
