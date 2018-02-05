@@ -1365,7 +1365,8 @@ var canvas = /** @class */ (function () {
                 x: new_x,
                 y: new_y
             };
-            x += this.x_unit / 500;
+            x += 0.05;
+            //x+= this.x_unit /500;
         }
         return color;
     };
