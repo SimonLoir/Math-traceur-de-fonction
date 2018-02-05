@@ -1,4 +1,34 @@
 import parser from "./parser";
+//@ts-ignore
+if (typeof Object.assign != 'function') {
+    // Must be writable: true, enumerable: false, configurable: true
+    Object.defineProperty(Object, "assign", {
+      value: function assign(target:any, varArgs:any) { // .length of function is 2
+        'use strict';
+        if (target == null) { // TypeError if undefined or null
+          throw new TypeError('Cannot convert undefined or null to object');
+        }
+  
+        var to = Object(target);
+  
+        for (var index = 1; index < arguments.length; index++) {
+          var nextSource = arguments[index];
+  
+          if (nextSource != null) { // Skip over if undefined or null
+            for (var nextKey in nextSource) {
+              // Avoid bugs when hasOwnProperty is shadowed
+              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+        }
+        return to;
+      },
+      writable: true,
+      configurable: true
+    });
+  }
 export default class MathObject{
 
     public multiply:any;
@@ -60,8 +90,34 @@ export default class MathObject{
                 return {};
             }
 
+        }else if(array["over"] != undefined){
+            let a = array;
+            let over = array["over"];
+            delete a["over"];
+
+            console.log(this.derivate(a), over, this.multiply(this.derivate(a), over))
+            console.log(this.derivate(a), over, this.multiply(this.derivate(over), a))
+
+            let narray:any = (this.multiply(this.derivate(a), over));
+            let narray2:any = (this.multiply(this.derivate(over), a));
+            
+            let sub = this.sub(narray2, narray);
+
+            console.log("sub", sub)
+
+            //@ts-ignore
+            let second_over = Object.assign({}, over)
+
+            let under = this.multiply(over, second_over);
+
+            if(!sub["over"]){
+                sub["over"] = under;
+            }else{
+                sub["over"] = this.multiply(sub["over"], under);
+            }
+
+            return sub;
         }else{
-            console.log(array)
             let a = {};
     
             keys.forEach(key => {
@@ -69,7 +125,6 @@ export default class MathObject{
                 let e:any = {};
                 e[key] = array[key];
                 a = this.add(a, this.derivate(e));
-                console.log(a)
                 
 
             });

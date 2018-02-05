@@ -38,6 +38,8 @@ document.querySelector("#function_add_button").onclick = () => {
         value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
     }
 
+    console.log(value, parse.exec(value))
+
     let v = parse.exec(value);
 
     let color = c.drawFromArray(v);

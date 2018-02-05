@@ -89,6 +89,11 @@ export default class parser{
     }
 
     exec_and_sort (expression:string) {
+
+        expression = expression.replace(/\-\-/i, "+")
+        expression = expression.replace(/\+\-/i, "-")
+
+
         if (expression.indexOf('-') == 0) {
             expression = "0" + expression;
         }
@@ -96,14 +101,14 @@ export default class parser{
         expression = expression.replace(/³/g, "^3");
         expression = expression.replace(/\^\-/g, "^m");
         expression = expression.replace(/(\d|[a-z])\$/g, function (m, $1) {
-            console.log('');
+            //log('');
             return $1 + "*$";
         });
         expression = expression.replace(/(\d|[a-z])pi/g, function (m, $1) {
-            console.log('');
+            //log('');
             return $1 + "*pi";
         })
-        console.log(expression);
+        //log(expression);
         /*
         Séparation des + 
         */
@@ -169,7 +174,7 @@ export default class parser{
 
                                 }();
                             }
-                            console.log('==>', expression, div_result["over"])
+                            //log('==>', expression, div_result["over"])
                         } else if (div >= 1) {
 
                             try {
@@ -181,15 +186,15 @@ export default class parser{
                                 var x:any = this.exec_and_sort(dive);
                                 var over2 = x["over"] || { "~": 1 };
                                 var d2 = this.del(x, "over");
-                                console.log(d1, d2, over1, over2)
+                                //log(d1, d2, over1, over2)
                                 div_result = this.multiply(d1, over2);
                                 div_result["over"] = this.multiply(d2, over1);
                             } catch (error) {
-                                console.log(error)
+                                //log(error)
                             }
                         }
 
-                        //console.log(div_result);
+                        ////log(div_result);
 
                     }
 
@@ -227,8 +232,8 @@ export default class parser{
                         sub_result = this.sub(first_term, second_term);
                         sub_result["over"] = over;
                     } catch (error) {
-                        console.log(error)
-                        console.log(error)
+                        //log(error)
+                        //log(error)
                     }
                 }
 
@@ -257,15 +262,15 @@ export default class parser{
                     sum_result = this.add(first_term, second_term);
                     sum_result["over"] = over;
                 } catch (error) {
-                    console.log(error)
-                    console.log(error)
+                    //log(error)
+                    //log(error)
                 }
             }
         }
 
         if (sum_result["over"] != undefined) {
             if (Object.keys(sum_result["over"]).length == 1 && Object.keys(sum_result["over"])[0] == "~" && sum_result["over"]["~"] == 1) {
-                console.log("over_one")
+                //log("over_one")
                 delete sum_result["over"];
             }
         }
@@ -292,15 +297,19 @@ export default class parser{
     }
 
     public sub (mult_result:any, sub_result:any) {
-        var keys = Object.keys(mult_result);
-        for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
-            var key = keys[ixxxx];
+        let used:any[] = [];
+        let mk = Object.keys(mult_result);
+        mk.forEach(key => {
+
             if (sub_result[key] != undefined) {
                 sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
             } else {
-                sub_result[key] = - parseFloat(mult_result[key]);
+                sub_result[key] = 0 - parseFloat(mult_result[key]);
             }
-        }
+
+            used.push(key);
+
+        });
         return sub_result;
     }
 
@@ -364,7 +373,7 @@ export default class parser{
         mult_result = new_mult_result;
         if (mult_result["over"] != undefined) {
             if (Object.keys(mult_result["over"]).length == 1 && Object.keys(mult_result["over"])[0] == "~" && mult_result["over"]["~"] == 1) {
-                console.log("over_one")
+                //log("over_one")
                 delete mult_result["over"];
             }
         }
@@ -395,7 +404,7 @@ export default class parser{
                     }
 
                 } else {
-                    console.log('Unknown error while parsing');
+                    //log('Unknown error while parsing');
                 }
             }
 

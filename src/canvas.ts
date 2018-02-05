@@ -115,7 +115,8 @@ export default class canvas{
               color += letters[Math.floor(Math.random() * 16)];
             }
         }
-        let x = this.center_x -50
+        let display_size = (this.canvas.width / 2) / this.x_unit
+        let x = this.center_x - display_size
         let last = undefined
         let label = (new parser).stringify(array);
 
@@ -126,7 +127,7 @@ export default class canvas{
             was_defined = false
         }
 
-        while (x < this.center_x + 50) {
+        while (x < this.center_x +  display_size) {
             
             
             let pos
