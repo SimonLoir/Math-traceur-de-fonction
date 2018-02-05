@@ -519,6 +519,7 @@ __webpack_require__(3);
 var canvas_1 = __webpack_require__(8);
 var parser_1 = __webpack_require__(0);
 var math_1 = __webpack_require__(9);
+var modal_1 = __webpack_require__(10);
 var html_canvas = document.querySelector('canvas');
 var c = new canvas_1.default(html_canvas);
 var math = new math_1.default;
@@ -544,19 +545,41 @@ document.querySelector("#function_add_button").onclick = function () {
         value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
     }
     console.log(value, parse.exec(value));
+    var addText = function (e, color, row, initial, value) {
+        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
+    };
     var v = parse.exec(value);
     var color = c.drawFromArray(v);
     var item = document
         .querySelector('#functions')
         .appendChild(document.createElement('div'));
     item.classList.add('item');
-    item
-        .appendChild(document.createElement('span'))
-        .innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
+    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
     var edit = item
-        .appendChild(document.createElement('button'))
-        .innerHTML = "&#128393;";
-    fdata[letters[letter] + "" + row] = {
+        .appendChild(document.createElement('button'));
+    edit.innerHTML = "&#128393;";
+    var fname = letters[letter] + "" + row;
+    edit.addEventListener('click', function () {
+        var p = new modal_1.default("prompt", {
+            title: "Modifier la fonction",
+            message: "Modifier l'équation de la fonction : ",
+            default: fdata[fname].initial
+        });
+        p.confirm = function (value) {
+            var initial = value;
+            if (value.indexOf('dérivée ') == 0) {
+                value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+            }
+            else if (value.indexOf("dérivée_seconde ") == 0) {
+                value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+            }
+            fdata[fname].initial = initial;
+            fdata[fname].array = parse.exec(value);
+            addText(item.querySelector('span'), color, row, initial, value);
+            c.reload(fdata);
+        };
+    });
+    fdata[fname] = {
         visible: true,
         color: color,
         array: v,
@@ -616,6 +639,19 @@ addListenerMulti(html_canvas, 'mousemove touchmove', function (e) {
 addListenerMulti(html_canvas, 'mouseup touchend', function (e) {
     down = false;
     html_canvas.style.cursor = "grab";
+});
+addListenerMulti(html_canvas, 'mousewheel DOMMouseScroll', function (e) {
+    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+    console.log(delta);
+    if (c.x_unit + delta * 10 > 10) {
+        c.x_unit += delta * 10;
+    }
+    if (c.y_unit + delta * 10 > 10) {
+        c.y_unit += delta * 10;
+    }
+    requestAnimationFrame(function () {
+        c.reload(fdata);
+    });
 });
 //@ts-ignore
 document.querySelector('#menu').onclick = function () {
@@ -688,7 +724,7 @@ exports = module.exports = __webpack_require__(5)(false);
 
 
 // module
-exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 100;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  border-radius: 3px;\n  color: gray;\n  background: white;\n  display: none; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 100;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab#objects {\n      overflow: auto;\n      --w: 90%; }\n      .panel .tabs .tab#objects #function_add_input, .panel .tabs .tab#objects #function_add_button {\n        display: inline-block;\n        padding: 0;\n        height: 40px;\n        margin: 0;\n        border: none;\n        border-bottom: 1px solid lightgray; }\n      .panel .tabs .tab#objects #function_add_input {\n        padding-left: 15px;\n        padding-right: 15px;\n        width: calc(var(--w) - 30px); }\n      .panel .tabs .tab#objects #function_add_button {\n        background: #F0F0F0;\n        width: 10%;\n        cursor: pointer; }\n      .panel .tabs .tab#objects #list {\n        overflow: auto;\n        position: absolute;\n        top: 41px;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        padding: 25px; }\n        .panel .tabs .tab#objects #list .title {\n          color: gray;\n          font-weight: 700; }\n        .panel .tabs .tab#objects #list .item {\n          color: #bababa;\n          line-height: 25px; }\n          .panel .tabs .tab#objects #list .item span {\n            display: inline-block;\n            max-width: 80%;\n            word-break: break-all; }\n          .panel .tabs .tab#objects #list .item button {\n            background: transparent;\n            border: none;\n            float: right;\n            cursor: pointer; }\n        .panel .tabs .tab#objects #list #copy {\n          text-align: center;\n          color: lightgray;\n          font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n", ""]);
+exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 98;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  border-radius: 3px;\n  color: gray;\n  background: white;\n  display: none; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 95;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab#objects {\n      overflow: auto;\n      --w: 90%; }\n      .panel .tabs .tab#objects #function_add_input, .panel .tabs .tab#objects #function_add_button {\n        display: inline-block;\n        padding: 0;\n        height: 40px;\n        margin: 0;\n        border: none;\n        border-bottom: 1px solid lightgray; }\n      .panel .tabs .tab#objects #function_add_input {\n        padding-left: 15px;\n        padding-right: 15px;\n        width: calc(var(--w) - 30px); }\n      .panel .tabs .tab#objects #function_add_button {\n        background: #F0F0F0;\n        width: 10%;\n        cursor: pointer; }\n      .panel .tabs .tab#objects #list {\n        overflow: auto;\n        position: absolute;\n        top: 41px;\n        left: 0;\n        right: 0;\n        bottom: 0;\n        padding: 25px; }\n        .panel .tabs .tab#objects #list .title {\n          color: gray;\n          font-weight: 700; }\n        .panel .tabs .tab#objects #list .item {\n          color: #bababa;\n          line-height: 25px; }\n          .panel .tabs .tab#objects #list .item span {\n            display: inline-block;\n            max-width: 80%;\n            word-break: break-all; }\n          .panel .tabs .tab#objects #list .item button {\n            background: transparent;\n            border: none;\n            float: right;\n            cursor: pointer; }\n        .panel .tabs .tab#objects #list #copy {\n          text-align: center;\n          color: lightgray;\n          font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n\n.mask {\n  z-index: 99;\n  background: rgba(0, 0, 0, 0.02);\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  bottom: 0; }\n\n.modal {\n  z-index: 100;\n  background: white;\n  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 300px;\n  max-width: calc(100% - 75px);\n  padding: 25px;\n  border-radius: 4px; }\n  .modal input {\n    width: calc(100% - 16px);\n    padding: 5px;\n    padding-left: 8px;\n    padding-right: 8px;\n    border: 1px solid lightgray; }\n  .modal .clearfix {\n    height: 25px;\n    margin-top: 25px; }\n    .modal .clearfix button {\n      float: right;\n      background: gray;\n      color: white;\n      border: none;\n      padding: 5px;\n      padding-left: 8px;\n      padding-right: 8px;\n      cursor: pointer;\n      border-radius: 4px; }\n", ""]);
 
 // exports
 
@@ -1539,6 +1575,56 @@ var MathObject = /** @class */ (function () {
     return MathObject;
 }());
 exports.default = MathObject;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var modal = /** @class */ (function () {
+    function modal(type, options) {
+        var _this = this;
+        var mask = document.createElement('div');
+        mask.classList.add('mask');
+        document.body.appendChild(mask);
+        mask.onclick = function () {
+            rm();
+        };
+        var div = document.createElement('div');
+        div.classList.add('modal');
+        document.body.appendChild(div);
+        var rm = function () {
+            mask.parentNode.removeChild(mask);
+            div.parentNode.removeChild(div);
+        };
+        if (type == "prompt") {
+            div.appendChild(document.createElement('b')).innerHTML = options.title;
+            div.appendChild(document.createElement('p')).innerHTML = options.message;
+            var input_1 = div.appendChild(document.createElement('input'));
+            input_1.value = options.default;
+            var clearfix = div.appendChild(document.createElement('div'));
+            clearfix.classList.add('clearfix');
+            var confirm_1 = clearfix.appendChild(document.createElement('button'));
+            confirm_1.innerHTML = "Confirmer";
+            confirm_1.addEventListener('click', function () {
+                _this._c(input_1.value);
+                rm();
+            });
+        }
+    }
+    Object.defineProperty(modal.prototype, "confirm", {
+        set: function (v) {
+            this._c = v;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return modal;
+}());
+exports.default = modal;
 
 
 /***/ })
