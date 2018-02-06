@@ -1,11 +1,15 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "./firebase-bot/functions/smath",
+        
         "noImplicitAny": true,
         "module": "commonjs",
         "target": "es5",
         "allowJs": true,
         "experimentalDecorators": true
-    }
+    },
+    "include": [
+        "src/**/*"
+    ]
 }
