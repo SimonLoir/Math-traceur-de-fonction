@@ -11,7 +11,7 @@ exports.app = functions.https.onRequest((request, response) => {
     }
 
     let parser = new smath();
-
+    
     let func = parser.exec(data.function);
 
     response.send(JSON.stringify(

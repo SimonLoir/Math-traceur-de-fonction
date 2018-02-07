@@ -137,17 +137,29 @@ function addListenerMulti(el:any, s:any, fn:any) {
     s.split(' ').forEach((e:any) => el.addEventListener(e, fn, false));
 }
 
-addListenerMulti(html_canvas, 'mousedown touchstart', (e:MouseEvent) => {
-    console.log(e)
+addListenerMulti(html_canvas, 'mousedown touchstart', (e:any) => {
     down = true;
-    start = {x: e.pageX, y: e.pageY}
-    html_canvas.style.cursor = "grabbing";
+    if(e.touches != undefined){
+        let te:TouchEvent = e;
+        
+        start = {x: te.touches.item(0).clientX, y: te.touches.item(0).clientY}
+    }else{
+        start = {x: e.pageX, y: e.pageY}
+        html_canvas.style.cursor = "grabbing";
+    }
+    console.log(start);
 });
 
-addListenerMulti(html_canvas, 'mousemove touchmove', (e:MouseEvent) => {
+addListenerMulti(html_canvas, 'mousemove touchmove', (e:any) => {
     if(down == true){
         let old = start;
-        let new_start = {x: e.pageX, y: e.pageY}
+        let new_start;
+        if(e.touches != undefined){
+            let te:TouchEvent = e;
+            new_start = {x: te.touches.item(0).clientX, y: te.touches.item(0).clientY}
+        }else{
+            new_start = {x: e.pageX, y: e.pageY}
+        }
         let diff_x = old.x - new_start.x;
         let diff_y = old.y - new_start.y;
 
