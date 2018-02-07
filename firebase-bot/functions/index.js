@@ -11,6 +11,13 @@ exports.app = functions.https.onRequest((request, response) => {
     }
 
     let parser = new smath();
-    
-    response.send(JSON.stringify(parser.exec(data.function)));
+
+    let func = parser.exec(data.function);
+
+    response.send(JSON.stringify(
+        {
+            processed: parser.stringify(func),
+            raw: func
+        }
+    ));
 });

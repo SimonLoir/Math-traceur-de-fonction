@@ -1,2 +1,3 @@
 node_modules/*
 firebase-bot/functions/node_modules/*
+php-bot/access_token.php
