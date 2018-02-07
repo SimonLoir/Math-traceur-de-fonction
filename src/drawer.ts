@@ -51,7 +51,7 @@ document.querySelector("#function_add_button").onclick = () => {
 
     let v = parse.exec(value);
 
-    let color = c.drawFromArray(v);
+    let color = c.drawFromArray(v, undefined);
     let item = document
         .querySelector('#functions')
         .appendChild(document.createElement('div'));

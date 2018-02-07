@@ -549,7 +549,7 @@ document.querySelector("#function_add_button").onclick = function () {
         e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
     };
     var v = parse.exec(value);
-    var color = c.drawFromArray(v);
+    var color = c.drawFromArray(v, undefined);
     var item = document
         .querySelector('#functions')
         .appendChild(document.createElement('div'));
@@ -1375,8 +1375,9 @@ var canvas = /** @class */ (function () {
     canvas.prototype.getRelativePositionY = function (point) {
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     };
-    canvas.prototype.drawFromArray = function (array, color) {
+    canvas.prototype.drawFromArray = function (array, color, isPreview) {
         if (color === void 0) { color = undefined; }
+        if (isPreview === void 0) { isPreview = false; }
         if (!color) {
             var letters = '0123456789ABCDEF';
             color = '#';
@@ -1414,7 +1415,12 @@ var canvas = /** @class */ (function () {
                 x: new_x,
                 y: new_y
             };
-            x += 0.05;
+            if (isPreview == true) {
+                x += 0.5;
+            }
+            else {
+                x += 0.05;
+            }
             //x+= this.x_unit /500;
         }
         return color;

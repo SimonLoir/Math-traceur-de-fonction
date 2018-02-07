@@ -107,7 +107,7 @@ export default class canvas{
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     }
 
-    public drawFromArray(array:any, color:any=undefined){
+    public drawFromArray(array:any, color:any=undefined, isPreview:boolean=false){
         if(!color){
             var letters = '0123456789ABCDEF';
             color = '#';
@@ -152,7 +152,13 @@ export default class canvas{
                 x: new_x,
                 y:new_y
             }
-            x += 0.05
+
+            if(isPreview == true){
+                x += 0.5
+            }else{
+                x += 0.05
+            }
+
             //x+= this.x_unit /500;
         }
         return color;

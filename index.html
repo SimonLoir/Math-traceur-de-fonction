@@ -1,1 +1,66 @@
-<script>window.location.href = "public/home.html"</script>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Smath</title>
+</head>
+
+<body>
+
+    <header>
+        <div class="real_header">
+            <h1>SMath</h1>
+            <nav>
+                <a href="public/drawer.html">Grapheur</a> //
+                <a href="public/drawer.html">Statistiques</a> //
+                <a href="public/drawer.html">progressions (suites)</a>
+            </nav>
+        </div>
+        <span class="title">
+            SMath 3.18
+        </span>
+        <p class="content-header">
+            SMath est une suite logicielle en ligne basée sur le monde des mathématiques. SMath existe sous la forme d'un site web, d'une
+            app et aussi sous la forme d'un bot messenger. Début 2018, SMath n'est disponible qu'en anglais mais la version
+            3.18.3 devrait ajouter un support pour l'Anglais.
+        </p>
+    </header>
+
+    <section>
+
+        <h2>Quoi de neuf ?</h2>
+        <p>
+            SMath 3.18 est désormais en construction. Cette troisième version de SMath est construite pour être la plus scalable possible. 
+            SMath, c'est un seul projet mais plusieurs interfaces. 
+            Que ce soit le bot messenger ou la version web, les deux déclinaisons ont le même "moteur" : smath.js.
+        </p>
+
+    </section>
+
+    <section class="graph" style="height:15vh;"> 
+
+    </section>
+
+    <section>
+
+        <h2>Grapheur SMath</h2>
+        <p>
+            Le grapheur SMath est la partie la plus complexe de smath : le grapheur utilise le canvas, un élément HTML5. 
+            Le grapheur utilise aussi la fonction requestAnimationFrame pour donner un aspect plus fluide lors du déplacement ou lors du zoom.
+        </p>
+        <a href="public/drawer.html" class="action-button">Utiliser le grapheur</a>
+
+    </section>
+
+
+    <footer>
+        Copyright &copy; 2017-2018 Simon Loir - Tous droits réservés.
+    </footer>
+
+    <script src="./dist/home.bundle.js"></script>
+</body>
+
+</html>
