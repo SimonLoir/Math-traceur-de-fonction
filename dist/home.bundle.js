@@ -60,36 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(11);
-document.querySelector('header').style.backgroundImage = "url(./images/site-header.jpg)";
-//@ts-ignore
-document.querySelector('.graph').style.backgroundImage = "url(./images/graph.jpg)";
-window.addEventListener("scroll", function (evt) {
-    if (window.scrollY > 20) {
-        document.querySelector('header').classList.add('floating');
-    }
-    else {
-        document.querySelector('header').classList.remove('floating');
-    }
-});
-
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+/* 0 */
 /***/ (function(module, exports) {
 
 /*
@@ -171,7 +146,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 6 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -237,7 +212,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(7);
+var	fixUrls = __webpack_require__(2);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -553,7 +528,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 7 */
+/* 2 */
 /***/ (function(module, exports) {
 
 
@@ -648,14 +623,33 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(5);
+document.querySelector('header').style.backgroundImage = "url(./images/site-header.jpg)";
+//@ts-ignore
+document.querySelector('.graph').style.backgroundImage = "url(./images/graph.jpg)";
+window.addEventListener("scroll", function (evt) {
+    if (window.scrollY > 20) {
+        document.querySelector('header').classList.add('floating');
+    }
+    else {
+        document.querySelector('header').classList.remove('floating');
+    }
+});
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(12);
+var content = __webpack_require__(6);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -669,7 +663,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(6)(content, options);
+var update = __webpack_require__(1)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -701,10 +695,10 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(5)(false);
+exports = module.exports = __webpack_require__(0)(false);
 // imports
 
 
