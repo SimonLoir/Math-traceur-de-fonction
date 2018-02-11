@@ -1,32 +1,32 @@
 import parser from "./parser";
 
-export default class canvas{
+export default class canvas {
     private fdata: any;
 
-    private ctx:CanvasRenderingContext2D;
+    private ctx: CanvasRenderingContext2D;
 
-    private canvas:HTMLCanvasElement;
+    private canvas: HTMLCanvasElement;
 
     public center_x: number = 0;
 
     public center_y: number = 0;
 
-    public x_unit:number = 50;
+    public x_unit: number = 50;
 
-    public y_unit:number = 50;
+    public y_unit: number = 50;
 
-    private stored:any = {};
+    private stored: any = {};
 
-    private pathes:any = {}
+    private pathes: any = {}
 
-    constructor(canvas:HTMLCanvasElement){
-        
+    constructor(canvas: HTMLCanvasElement) {
+
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
 
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        
+
         this.init();
 
         let start: any;
@@ -49,17 +49,17 @@ export default class canvas{
                 let new_start = { x: e.pageX, y: e.pageY }
                 let old = start;
                 let drawn = this.move(old, new_start);
-                if(drawn){
+                if (drawn) {
                     start = new_start;
                 }
             }
         });
         canvas.addEventListener('touchmove', (e: TouchEvent) => {
             if (down == true) {
-                let new_start = {x: e.touches.item(0).clientX, y: e.touches.item(0).clientY}
+                let new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY }
                 let old = start;
                 let drawn = this.move(old, new_start);
-                if(drawn){
+                if (drawn) {
                     start = new_start;
                 }
             }
@@ -68,77 +68,98 @@ export default class canvas{
         //When the user stops clicking on teh surface
         canvas.addEventListener('mouseup', (e: MouseEvent) => {
             down = false;
-            canvas.style.cursor = "grab"; 
+            canvas.style.cursor = "grab";
         });
         canvas.addEventListener('touchend', (e: MouseEvent) => {
             down = false;
         });
 
-        window.addEventListener('resize', (e:Event) => {
+        window.addEventListener('resize', (e: Event) => {
             this.reload();
+        });
+
+        canvas.addEventListener('mousewheel', (e:any) => {
+            let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            this.zoom(delta);            
+        });
+        canvas.addEventListener('DOMMouseScroll', (e:any) => {
+            let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            this.zoom(delta);
         });
     }
 
-    public init(){
+    public zoom(delta: number) {
+        if (this.x_unit + delta * 10 > 10) {
+            this.x_unit += delta * 10
+        }
+
+        if (this.y_unit + delta * 10 > 10) {
+            this.y_unit += delta * 10
+        }
+        
+        this.reload();
+    }
+
+    public init() {
         this.canvas.height = this.canvas.scrollHeight;
         this.canvas.width = this.canvas.scrollWidth;
         this.draw();
     }
 
-    public draw(){
+    public draw() {
         this.drawGrid();
     }
 
-    private drawGrid(){
+    private drawGrid() {
         // Clears the view
-        this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fafafa";
-        this.ctx.rect(0,0, this.canvas.width, this.canvas.height)
+        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height)
         this.ctx.fill();
         this.ctx.closePath();
-        
+
         let to = 100;
 
         let xpos = 0 - to;
 
-        while(xpos < to){
+        while (xpos < to) {
             this.drawLine(
-                this.getRelativePositionX(xpos), 
+                this.getRelativePositionX(xpos),
                 this.getRelativePositionY(this.center_y + to),
-                this.getRelativePositionX(xpos), 
+                this.getRelativePositionX(xpos),
                 this.getRelativePositionY(this.center_y - to),
-                (xpos == 0) ? "black":undefined
-                
+                (xpos == 0) ? "black" : undefined
+
             )
             xpos++;
         }
 
         let ypos = 0 - to;
 
-        while (ypos < to) {     
+        while (ypos < to) {
             this.drawLine(
-                this.getRelativePositionX(this.center_x + to), 
+                this.getRelativePositionX(this.center_x + to),
                 this.getRelativePositionY(ypos),
-                this.getRelativePositionX(this.center_x - to), 
+                this.getRelativePositionX(this.center_x - to),
                 this.getRelativePositionY(ypos),
-                (ypos == 0) ? "black":undefined
+                (ypos == 0) ? "black" : undefined
             )
             ypos++
         }
 
     }
-    
-    public move(previous: any, now:any): any {
+
+    public move(previous: any, now: any): any {
         let diff_x = previous.x - now.x;
 
         let diff_y = previous.y - now.y;
 
-        if(Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 10){
+        if (Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 10) {
             this.center_x += diff_x / this.x_unit;
-            
+
             this.center_y -= diff_y / this.y_unit;
-    
+
             this.reload();
             return true;
         }
@@ -146,7 +167,7 @@ export default class canvas{
 
     }
 
-    private drawLine(x:number, y:number, x2:number, y2:number, color?:string, width?:number){
+    private drawLine(x: number, y: number, x2: number, y2: number, color?: string, width?: number) {
         this.ctx.beginPath();
         if (color == undefined) {
             this.ctx.strokeStyle = "#eee";
@@ -163,20 +184,20 @@ export default class canvas{
         this.ctx.stroke();
     }
 
-    private getRelativePositionX(point:number){
+    private getRelativePositionX(point: number) {
         return (this.canvas.width / 2) + point * this.x_unit - this.center_x * this.x_unit;
     }
 
-    private getRelativePositionY(point:number){
+    private getRelativePositionY(point: number) {
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     }
 
-    public drawFromArray(array:any, color:any=undefined, isPreview:boolean=false){
-        if(!color){
+    public drawFromArray(array: any, color: any = undefined, isPreview: boolean = false) {
+        if (!color) {
             var letters = '0123456789ABCDEF';
             color = '#';
             for (var i = 0; i < 6; i++) {
-              color += letters[Math.floor(Math.random() * 16)];
+                color += letters[Math.floor(Math.random() * 16)];
             }
         }
         let display_size = (this.canvas.width / 2) / this.x_unit
@@ -186,40 +207,40 @@ export default class canvas{
 
         let was_defined = true;
 
-        if(this.pathes[label] == undefined){
+        if (this.pathes[label] == undefined) {
             this.pathes[label] = {};
             was_defined = false
         }
 
-        while (x < this.center_x +  display_size) {
-            
-            
+        while (x < this.center_x + display_size) {
+
+
             let pos
             let new_y
             let new_x
-            
-            if(was_defined == true && this.pathes[label][x] != undefined){
+
+            if (was_defined == true && this.pathes[label][x] != undefined) {
                 new_y = this.getRelativePositionY(this.pathes[label][x]);
                 new_x = this.getRelativePositionX(x);
-            }else{
+            } else {
                 pos = this.getFor(x, array, label);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
             }
-            
 
-            if(last != undefined){
+
+            if (last != undefined) {
                 this.drawLine(new_x, new_y, last.x, last.y, color, 2);
             }
             last = {
                 x: new_x,
-                y:new_y
+                y: new_y
             }
 
-            if(isPreview == true){
+            if (isPreview == true) {
                 x += 0.5
-            }else{
+            } else {
                 x += 0.05
             }
 
@@ -228,14 +249,14 @@ export default class canvas{
         return color;
     }
 
-    private getFor (start:number, array:any, label:string) {
-        if(this.stored[label] == undefined){
+    private getFor(start: number, array: any, label: string) {
+        if (this.stored[label] == undefined) {
             this.stored[label] = {};
         }
 
-        if(this.stored[label][start] != undefined){
+        if (this.stored[label][start] != undefined) {
             return this.stored[label][start];
-        }else{
+        } else {
             var result = 0;
             for (var i = 0; i < Object.keys(array).length; i++) {
                 var element = Object.keys(array)[i];
@@ -248,14 +269,14 @@ export default class canvas{
                 } else if (element.indexOf("^m") >= 0) {
                     result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
                 } else if (element == "over") {
-    
+
                     result = result / this.getFor(start, array[element], (new parser).stringify(array[element]));
-    
+
                 } else {
                     result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
                 }
             }
-            
+
             this.stored[label][start] = result;
 
             return result;
@@ -283,7 +304,7 @@ export default class canvas{
         });
     }
 
-    set funcs(fdata:any[]){
+    set funcs(fdata: any[]) {
         this.fdata = fdata;
     }
 }
