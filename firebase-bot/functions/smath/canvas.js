@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var parser_1 = require("./parser");
 var canvas = /** @class */ (function () {
     function canvas(canvas) {
+        var _this = this;
         this.center_x = 0;
         this.center_y = 0;
         this.x_unit = 50;
@@ -14,6 +15,50 @@ var canvas = /** @class */ (function () {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.init();
+        var start;
+        var down = false;
+        //When the user starts an action on the canvas.
+        canvas.addEventListener('mousedown', function (e) {
+            down = true;
+            start = { x: e.pageX, y: e.pageY };
+            canvas.style.cursor = "grabbing";
+        });
+        canvas.addEventListener('touchstart', function (e) {
+            down = true;
+            start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+        });
+        // When the user moves on the surface of the canvas.
+        canvas.addEventListener('mousemove', function (e) {
+            if (down == true) {
+                var new_start = { x: e.pageX, y: e.pageY };
+                var old = start;
+                var drawn = _this.move(old, new_start);
+                if (drawn) {
+                    start = new_start;
+                }
+            }
+        });
+        canvas.addEventListener('touchmove', function (e) {
+            if (down == true) {
+                var new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+                var old = start;
+                var drawn = _this.move(old, new_start);
+                if (drawn) {
+                    start = new_start;
+                }
+            }
+        });
+        //When the user stops clicking on teh surface
+        canvas.addEventListener('mouseup', function (e) {
+            down = false;
+            canvas.style.cursor = "grab";
+        });
+        canvas.addEventListener('touchend', function (e) {
+            down = false;
+        });
+        window.addEventListener('resize', function (e) {
+            _this.reload();
+        });
     }
     canvas.prototype.init = function () {
         this.canvas.height = this.canvas.scrollHeight;
@@ -43,6 +88,16 @@ var canvas = /** @class */ (function () {
             ypos++;
         }
     };
+    canvas.prototype.move = function (previous, now) {
+        var diff_x = previous.x - now.x;
+        var diff_y = previous.y - now.y;
+        if (Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 10) {
+            this.center_x += diff_x / this.x_unit;
+            this.center_y -= diff_y / this.y_unit;
+            this.reload();
+            return true;
+        }
+    };
     canvas.prototype.drawLine = function (x, y, x2, y2, color, width) {
         this.ctx.beginPath();
         if (color == undefined) {
@@ -67,8 +122,9 @@ var canvas = /** @class */ (function () {
     canvas.prototype.getRelativePositionY = function (point) {
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     };
-    canvas.prototype.drawFromArray = function (array, color) {
+    canvas.prototype.drawFromArray = function (array, color, isPreview) {
         if (color === void 0) { color = undefined; }
+        if (isPreview === void 0) { isPreview = false; }
         if (!color) {
             var letters = '0123456789ABCDEF';
             color = '#';
@@ -106,7 +162,12 @@ var canvas = /** @class */ (function () {
                 x: new_x,
                 y: new_y
             };
-            x += 0.05;
+            if (isPreview == true) {
+                x += 0.5;
+            }
+            else {
+                x += 0.05;
+            }
             //x+= this.x_unit /500;
         }
         return color;
@@ -144,12 +205,24 @@ var canvas = /** @class */ (function () {
             return result;
         }
     };
-    Object.defineProperty(canvas.prototype, "reload", {
-        get: function () {
-            return this.r;
-        },
-        set: function (d) {
-            this.r = d;
+    canvas.prototype.reload = function (fdata) {
+        var _this = this;
+        if (fdata != undefined) {
+            this.funcs = fdata;
+        }
+        this.init();
+        var data = Object.keys(this.fdata);
+        requestAnimationFrame(function () {
+            data.forEach(function (key) {
+                if (_this.fdata[key].visible == true) {
+                    _this.drawFromArray(_this.fdata[key].array, _this.fdata[key].color);
+                }
+            });
+        });
+    };
+    Object.defineProperty(canvas.prototype, "funcs", {
+        set: function (fdata) {
+            this.fdata = fdata;
         },
         enumerable: true,
         configurable: true

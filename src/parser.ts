@@ -1,8 +1,23 @@
-export default class parser{
+import MathObject from "./math";
 
+export default class parser{
+    
     private index:any = 0;
     private byIndexes:any = {};
     private byIndexes2:any = {};
+    
+    public getComputedValue(value:string){
+        
+        const math = new MathObject;
+
+        if(value.indexOf('dérivée ') == 0){
+            value = this.stringify(math.derivate(this.exec(value.replace('dérivée ', ""))));
+        }else if(value.indexOf("dérivée_seconde ") == 0){
+            value = this.stringify(math.derivate(math.derivate(this.exec(value.replace('dérivée_seconde ', "")))));
+        }
+
+        return value;
+    }
 
     /**
      * Verifies if an expression is valid or not

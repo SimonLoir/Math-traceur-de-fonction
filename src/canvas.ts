@@ -1,6 +1,7 @@
 import parser from "./parser";
 
 export default class canvas{
+    private fdata: any;
 
     private ctx:CanvasRenderingContext2D;
 
@@ -18,8 +19,6 @@ export default class canvas{
 
     private pathes:any = {}
 
-    private r: any;
-
     constructor(canvas:HTMLCanvasElement){
         
         canvas.height = canvas.scrollHeight;
@@ -30,6 +29,54 @@ export default class canvas{
         
         this.init();
 
+        let start: any;
+
+        let down: boolean = false;
+
+        //When the user starts an action on the canvas.
+        canvas.addEventListener('mousedown', (e: MouseEvent) => {
+            down = true;
+            start = { x: e.pageX, y: e.pageY }
+            canvas.style.cursor = "grabbing";
+        });
+        canvas.addEventListener('touchstart', (e: TouchEvent) => {
+            down = true;
+            start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY }
+        });
+        // When the user moves on the surface of the canvas.
+        canvas.addEventListener('mousemove', (e: MouseEvent) => {
+            if (down == true) {
+                let new_start = { x: e.pageX, y: e.pageY }
+                let old = start;
+                let drawn = this.move(old, new_start);
+                if(drawn){
+                    start = new_start;
+                }
+            }
+        });
+        canvas.addEventListener('touchmove', (e: TouchEvent) => {
+            if (down == true) {
+                let new_start = {x: e.touches.item(0).clientX, y: e.touches.item(0).clientY}
+                let old = start;
+                let drawn = this.move(old, new_start);
+                if(drawn){
+                    start = new_start;
+                }
+            }
+        });
+
+        //When the user stops clicking on teh surface
+        canvas.addEventListener('mouseup', (e: MouseEvent) => {
+            down = false;
+            canvas.style.cursor = "grab"; 
+        });
+        canvas.addEventListener('touchend', (e: MouseEvent) => {
+            down = false;
+        });
+
+        window.addEventListener('resize', (e:Event) => {
+            this.reload();
+        });
     }
 
     public init(){
@@ -82,6 +129,23 @@ export default class canvas{
 
     }
     
+    public move(previous: any, now:any): any {
+        let diff_x = previous.x - now.x;
+
+        let diff_y = previous.y - now.y;
+
+        if(Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 10){
+            this.center_x += diff_x / this.x_unit;
+            
+            this.center_y -= diff_y / this.y_unit;
+    
+            this.reload();
+            return true;
+        }
+
+
+    }
+
     private drawLine(x:number, y:number, x2:number, y2:number, color?:string, width?:number){
         this.ctx.beginPath();
         if (color == undefined) {
@@ -200,10 +264,26 @@ export default class canvas{
 
     }
 
-    set reload(d:any){
-        this.r = d;
+    public reload(fdata?: any) {
+
+        if (fdata != undefined) {
+            this.funcs = fdata;
+        }
+
+        this.init();
+
+        let data = Object.keys(this.fdata);
+
+        requestAnimationFrame(() => {
+            data.forEach(key => {
+                if (this.fdata[key].visible == true) {
+                    this.drawFromArray(this.fdata[key].array, this.fdata[key].color);
+                }
+            });
+        });
     }
-    get reload(){
-        return this.r;
+
+    set funcs(fdata:any[]){
+        this.fdata = fdata;
     }
 }
