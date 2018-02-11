@@ -59,7 +59,24 @@ var canvas = /** @class */ (function () {
         window.addEventListener('resize', function (e) {
             _this.reload();
         });
+        canvas.addEventListener('mousewheel', function (e) {
+            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            _this.zoom(delta);
+        });
+        canvas.addEventListener('DOMMouseScroll', function (e) {
+            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            _this.zoom(delta);
+        });
     }
+    canvas.prototype.zoom = function (delta) {
+        if (this.x_unit + delta * 10 > 10) {
+            this.x_unit += delta * 10;
+        }
+        if (this.y_unit + delta * 10 > 10) {
+            this.y_unit += delta * 10;
+        }
+        this.reload();
+    };
     canvas.prototype.init = function () {
         this.canvas.height = this.canvas.scrollHeight;
         this.canvas.width = this.canvas.scrollWidth;
