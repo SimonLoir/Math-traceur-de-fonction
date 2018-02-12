@@ -1,6 +1,6 @@
 {
   "name": "smath",
-  "version": "3.0.0",
+  "version": "3.18.2",
   "description": "A graphical calculator that works everywhere",
   "main": "app/main.js",
   "scripts": {
