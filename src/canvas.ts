@@ -55,6 +55,7 @@ export default class canvas {
             }
         });
         canvas.addEventListener('touchmove', (e: TouchEvent) => {
+            e.preventDefault();
             if (down == true) {
                 let new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY }
                 let old = start;

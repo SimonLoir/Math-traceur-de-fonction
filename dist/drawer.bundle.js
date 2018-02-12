@@ -1543,6 +1543,7 @@ var canvas = /** @class */ (function () {
             }
         });
         canvas.addEventListener('touchmove', function (e) {
+            e.preventDefault();
             if (down == true) {
                 var new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
                 var old = start;
