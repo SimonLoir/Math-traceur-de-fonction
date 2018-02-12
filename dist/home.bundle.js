@@ -660,7 +660,7 @@ if (typeof process !== "undefined") {
                 else {
                     document
                         .querySelector('.content-header')
-                        .innerHTML = "SMath est disponible hors connexion et mais n'est pas à jour : la version  " + JSON.parse(xhr.responseText).version + " est disponible pour remplacer la version locale : " + fcontent_1.version;
+                        .innerHTML = "SMath est disponible hors connexion mais n'est pas à jour : la version  " + JSON.parse(xhr.responseText).version + " est disponible pour remplacer la version locale : " + fcontent_1.version;
                 }
             }
             else {
