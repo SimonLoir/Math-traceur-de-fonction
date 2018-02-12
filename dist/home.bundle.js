@@ -644,11 +644,35 @@ window.addEventListener("scroll", function (evt) {
         document.querySelector('header').classList.remove('floating');
     }
 });
-/*if(typeof process !== 'undefined' && process.version != ""){
-   // Running node js
-   let header_content:HTMLParagraphElement = document.querySelector('.content-header');
-   header_content.innerHTML = "SMath est disponible en mode hors connexion sur cet appareil. "
-}*/ 
+if (typeof process !== "undefined") {
+    var fs = __webpack_require__(15);
+    var fcontent_1 = JSON.parse(fs.readFileSync('package.json', "utf-8"));
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://math.simonloir.be/package.json", true);
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                if (JSON.parse(xhr.responseText).version == fcontent_1.version) {
+                    document
+                        .querySelector('.content-header')
+                        .innerHTML = "SMath est disponible hors connexion et est à jour en version " + fcontent_1.version;
+                }
+                else {
+                    document
+                        .querySelector('.content-header')
+                        .innerHTML = "SMath est disponible hors connexion et mais n'est pas à jour : la version  " + JSON.parse(xhr.responseText).version + " est disponible pour remplacer la version locale : " + fcontent_1.version;
+                }
+            }
+            else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+    };
+    xhr.send(null);
+}
 
 
 /***/ }),
@@ -714,6 +738,18 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 
 
 // exports
 
+
+/***/ }),
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
 
 /***/ })
 /******/ ]);
