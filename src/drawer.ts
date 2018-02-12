@@ -118,7 +118,6 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
 
 // We create the menu system
-
 document.getElementById('menu').addEventListener('click', () => {
     let panel = document.querySelector('.panel');
     if(panel.classList.contains('hidden')){
@@ -127,3 +126,23 @@ document.getElementById('menu').addEventListener('click', () => {
         panel.classList.add('hidden');        
     }
 });
+
+//@ts-ignore
+let buttons:Array = document.querySelectorAll('.tab_manager span');
+//@ts-ignore
+let tabs:Array = document.querySelectorAll('.tab');
+
+buttons.forEach((e:HTMLElement) => {
+    e.addEventListener('click', () => {
+        let id = e.dataset["link"];
+        tabs.forEach((tab:HTMLDivElement) => {
+            tab.style.display = 'none';
+        });
+        buttons.forEach((btn:HTMLSpanElement) => {
+            btn.classList.remove('active');
+        });
+        e.classList.add("active");
+        document.getElementById(id).style.display = "block"
+    }); 
+});
+buttons[0].click();

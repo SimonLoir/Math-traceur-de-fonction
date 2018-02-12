@@ -705,6 +705,8 @@ var Parser = /** @class */ (function () {
         // 3) We really parse the expression
         // We transform math functions into valid js code
         expression = expression.replace(/sqrt\$([0-9]+)/i, function (e, $1) { return "Math.pow($" + $1 + ", 0.5)"; });
+        /*expression = expression.replace(/derivée\$([0-9]+)/i,
+            (e, $1) => `()`);*/
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression

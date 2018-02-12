@@ -28,6 +28,9 @@ export default class Parser {
         expression = expression.replace(/sqrt\$([0-9]+)/i, 
             (e, $1) => `Math.pow($${$1}, 0.5)`);
 
+        /*expression = expression.replace(/derivée\$([0-9]+)/i, 
+            (e, $1) => `()`);*/
+
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, 
             (e, $1, $2) => `Math.pow(${$1}, ${$2})`);
