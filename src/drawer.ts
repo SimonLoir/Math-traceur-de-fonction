@@ -58,6 +58,11 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         let asin = Math.asin;
         let atan = Math.atan;
         let acos = Math.acos;
+        let ceil = Math.ceil;
+        let floor = Math.floor;
+        let abs = Math.abs;
+        let exp = Math.exp;
+
         return ${parse.parse(value)}
     `);
     console.log(func.toString());
@@ -99,6 +104,10 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
                 let asin = Math.asin;
                 let atan = Math.atan;
                 let acos = Math.acos;
+                let ceil = Math.ceil;
+                let floor = Math.floor;
+                let abs = Math.abs;
+                let exp = Math.exp;
                 return ${parse.parse(value)}
             `);
 

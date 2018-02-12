@@ -1247,7 +1247,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
     };
     //We get an array from the parsed expression
-    var func = new Function("x", "\n        let sin = Math.sin;\n        let tan = Math.tan;\n        let cos = Math.cos;\n        let asin = Math.asin;\n        let atan = Math.atan;\n        let acos = Math.acos;\n        return " + parse.parse(value) + "\n    ");
+    var func = new Function("x", "\n        let sin = Math.sin;\n        let tan = Math.tan;\n        let cos = Math.cos;\n        let asin = Math.asin;\n        let atan = Math.atan;\n        let acos = Math.acos;\n        let ceil = Math.ceil;\n        let floor = Math.floor;\n        let abs = Math.abs;\n        let exp = Math.exp;\n\n        return " + parse.parse(value) + "\n    ");
     console.log(func.toString());
     //We draw the function for the first time and we get its color
     var color = smath.drawFromFunc(func);
@@ -1273,7 +1273,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             var initial = value;
             value = parse.getComputedValue(value);
             fdata[fname].initial = initial;
-            fdata[fname].array = new Function("x", "\n                let sin = Math.sin;\n                let tan = Math.tan;\n                let cos = Math.cos;\n                let asin = Math.asin;\n                let atan = Math.atan;\n                let acos = Math.acos;\n                return " + parse.parse(value) + "\n            ");
+            fdata[fname].array = new Function("x", "\n                let sin = Math.sin;\n                let tan = Math.tan;\n                let cos = Math.cos;\n                let asin = Math.asin;\n                let atan = Math.atan;\n                let acos = Math.acos;\n                let ceil = Math.ceil;\n                let floor = Math.floor;\n                let abs = Math.abs;\n                let exp = Math.exp;\n                return " + parse.parse(value) + "\n            ");
             addText(item.querySelector('span'), color, row, initial, value);
             smath.reload(fdata);
         };
