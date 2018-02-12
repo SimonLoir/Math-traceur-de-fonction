@@ -1,3 +1,6 @@
+import MathObject from "./math";
+import P from "./parser";
+
 export default class Parser {
 
     private partials: any = {}
@@ -14,14 +17,14 @@ export default class Parser {
             throw new InvalidExpressionError("Invalid expression given");            
         }
 
-        // 2) We convert ...(...) into ...$1 and $1 = ....
+        // 2) We convert ...(....) into ...$1 and $1 = ....
 
         expression = this.prepareExpression(expression);
 
         // 3) We really parse the expression
 
         
-        // We transform math functions into valide js code
+        // We transform math functions into valid js code
         expression = expression.replace(/sqrt\$([0-9]+)/i, 
             (e, $1) => `Math.pow($${$1}, 0.5)`);
 
@@ -94,6 +97,20 @@ export default class Parser {
             }
         }
         return processed_exp;
+    }
+
+    public getComputedValue(value:string){
+        
+        const math = new MathObject;
+        const parse = new P;
+
+        if(value.indexOf('dérivée ') == 0){
+            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+        }else if(value.indexOf("dérivée_seconde ") == 0){
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+        }
+
+        return value;
     }
 
 }

@@ -1,6 +1,6 @@
 import "./scss/drawer.scss";
 import canvas from "./canvas";
-import parser from "./parser";
+import parser from "./parser.v2";
 import MathObject from "./math";
 import modal from "./modal";
 
@@ -51,10 +51,19 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
     }
 
     //We get an array from the parsed expression
-    let parsedArray = parse.exec(value);
+    let func = new Function("x", `
+        let sin = Math.sin;
+        let tan = Math.tan;
+        let cos = Math.cos;
+        let asin = Math.asin;
+        let atan = Math.atan;
+        let acos = Math.acos;
+        return ${parse.parse(value)}
+    `);
+    console.log(func.toString());
 
     //We draw the function for the first time and we get its color
-    let color = smath.drawFromArray(parsedArray);
+    let color = smath.drawFromFunc(func);
 
     //We create a new item in the functions list
     let item = document
@@ -69,7 +78,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
     edit.innerHTML = "&#128393;";
 
     let fname = letters[letter] + "" + row;
-    
+
     //We add the ability to the user to modify the function
     edit.addEventListener('click', () => {
         let p = new modal("prompt", {
@@ -83,7 +92,15 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
             value = parse.getComputedValue(value);
 
             fdata[fname].initial = initial;
-            fdata[fname].array = parse.exec(value);
+            fdata[fname].array = new Function("x", `
+                let sin = Math.sin;
+                let tan = Math.tan;
+                let cos = Math.cos;
+                let asin = Math.asin;
+                let atan = Math.atan;
+                let acos = Math.acos;
+                return ${parse.parse(value)}
+            `);
 
             addText(item.querySelector('span'), color, row, initial, value);
 
@@ -92,17 +109,17 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
     });
 
     fdata[fname] = {
-        visible:true,
-        color:color,
-        array: parsedArray,
-        exp : value, 
-        initial:initial
+        visible: true,
+        color: color,
+        array: func,
+        exp: value,
+        initial: initial
     }
 
-    if(letter+1 < letters.length){
+    if (letter + 1 < letters.length) {
         letter++;
-    }else{
-        row ++;
+    } else {
+        row++;
         letter = 0;
     }
 

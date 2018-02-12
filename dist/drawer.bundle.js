@@ -1212,7 +1212,7 @@ exports.default = MathObject;
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(9);
 var canvas_1 = __webpack_require__(11);
-var parser_1 = __webpack_require__(3);
+var parser_v2_1 = __webpack_require__(14);
 var math_1 = __webpack_require__(4);
 var modal_1 = __webpack_require__(12);
 // We get the default canvas
@@ -1222,7 +1222,7 @@ var smath = new canvas_1.default(html_canvas_element);
 // We create a new math object
 var math = new math_1.default();
 // We create a new expression parser
-var parse = new parser_1.default();
+var parse = new parser_v2_1.default();
 //We create an object that will contain all the functions
 var fdata = {};
 smath.funcs = fdata;
@@ -1247,9 +1247,10 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
     };
     //We get an array from the parsed expression
-    var parsedArray = parse.exec(value);
+    var func = new Function("x", "\n        let sin = Math.sin;\n        let tan = Math.tan;\n        let cos = Math.cos;\n        let asin = Math.asin;\n        let atan = Math.atan;\n        let acos = Math.acos;\n        return " + parse.parse(value) + "\n    ");
+    console.log(func.toString());
     //We draw the function for the first time and we get its color
-    var color = smath.drawFromArray(parsedArray);
+    var color = smath.drawFromFunc(func);
     //We create a new item in the functions list
     var item = document
         .querySelector('#functions')
@@ -1272,7 +1273,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             var initial = value;
             value = parse.getComputedValue(value);
             fdata[fname].initial = initial;
-            fdata[fname].array = parse.exec(value);
+            fdata[fname].array = new Function("x", "\n                let sin = Math.sin;\n                let tan = Math.tan;\n                let cos = Math.cos;\n                let asin = Math.asin;\n                let atan = Math.atan;\n                let acos = Math.acos;\n                return " + parse.parse(value) + "\n            ");
             addText(item.querySelector('span'), color, row, initial, value);
             smath.reload(fdata);
         };
@@ -1280,7 +1281,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
     fdata[fname] = {
         visible: true,
         color: color,
-        array: parsedArray,
+        array: func,
         exp: value,
         initial: initial
     };
@@ -1365,7 +1366,6 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_1 = __webpack_require__(3);
 var canvas = /** @class */ (function () {
     function canvas(canvas) {
         var _this = this;
@@ -1504,7 +1504,7 @@ var canvas = /** @class */ (function () {
     canvas.prototype.getRelativePositionY = function (point) {
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     };
-    canvas.prototype.drawFromArray = function (array, color, isPreview) {
+    canvas.prototype.drawFromFunc = function (func, color, isPreview) {
         if (color === void 0) { color = undefined; }
         if (isPreview === void 0) { isPreview = false; }
         if (!color) {
@@ -1517,7 +1517,7 @@ var canvas = /** @class */ (function () {
         var display_size = (this.canvas.width / 2) / this.x_unit;
         var x = this.center_x - display_size;
         var last = undefined;
-        var label = (new parser_1.default).stringify(array);
+        var label = func;
         var was_defined = true;
         if (this.pathes[label] == undefined) {
             this.pathes[label] = {};
@@ -1532,7 +1532,7 @@ var canvas = /** @class */ (function () {
                 new_x = this.getRelativePositionX(x);
             }
             else {
-                pos = this.getFor(x, array, label);
+                pos = this.getFor(x, func, label);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
@@ -1554,7 +1554,7 @@ var canvas = /** @class */ (function () {
         }
         return color;
     };
-    canvas.prototype.getFor = function (start, array, label) {
+    canvas.prototype.getFor = function (start, func, label) {
         if (this.stored[label] == undefined) {
             this.stored[label] = {};
         }
@@ -1562,29 +1562,8 @@ var canvas = /** @class */ (function () {
             return this.stored[label][start];
         }
         else {
-            var result = 0;
-            for (var i = 0; i < Object.keys(array).length; i++) {
-                var element = Object.keys(array)[i];
-                if (element == "~") {
-                    if (array[element] != "") {
-                        result += array[element];
-                    }
-                }
-                else if (element == "x") {
-                    result += array[element] * start;
-                }
-                else if (element.indexOf("^m") >= 0) {
-                    result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-                }
-                else if (element == "over") {
-                    result = result / this.getFor(start, array[element], (new parser_1.default).stringify(array[element]));
-                }
-                else {
-                    result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
-                }
-            }
-            this.stored[label][start] = result;
-            return result;
+            this.stored[label][start] = func(start);
+            return this.stored[label][start];
         }
     };
     canvas.prototype.reload = function (fdata) {
@@ -1597,7 +1576,7 @@ var canvas = /** @class */ (function () {
         requestAnimationFrame(function () {
             data.forEach(function (key) {
                 if (_this.fdata[key].visible == true) {
-                    _this.drawFromArray(_this.fdata[key].array, _this.fdata[key].color);
+                    _this.drawFromFunc(_this.fdata[key].array, _this.fdata[key].color);
                 }
             });
         });
@@ -1662,6 +1641,136 @@ var modal = /** @class */ (function () {
     return modal;
 }());
 exports.default = modal;
+
+
+/***/ }),
+/* 13 */,
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var math_1 = __webpack_require__(4);
+var parser_1 = __webpack_require__(3);
+var Parser = /** @class */ (function () {
+    function Parser() {
+        this.partials = {};
+    }
+    /**
+     * Initialise a parsing task
+     * @param {String} expression the expression that has to be parsed
+    */
+    Parser.prototype.parse = function (expression) {
+        // 1) We have to check wheter or not the expression is valid
+        var _this = this;
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError("Invalid expression given");
+        }
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        // 3) We really parse the expression
+        // We transform math functions into valid js code
+        expression = expression.replace(/sqrt\$([0-9]+)/i, function (e, $1) { return "Math.pow($" + $1 + ", 0.5)"; });
+        // We tranform exponants into Math.pow()
+        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
+        // We rebuild the complete expression
+        expression = expression.replace(/\$([0-9]+)/ig, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        return expression;
+    };
+    /**
+     * Checks if the number of ( is equal to the number of )
+     * @param exp the expression to check
+     */
+    Parser.prototype.check = function (exp) {
+        var open_brackets_number = exp.split('(').length;
+        var close_brackets_number = exp.split(')').length;
+        if (open_brackets_number == close_brackets_number) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    /**
+     * PrepareExpression
+     */
+    Parser.prototype.prepareExpression = function (exp) {
+        exp = exp.replace(/²/ig, "^2");
+        exp = exp.replace(/³/ig, "^2");
+        exp = exp.replace(/X/g, "x");
+        exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
+            return $1 + "*x";
+        });
+        var processed_exp = "";
+        var parenthesis_level = 0;
+        var buffer = "";
+        for (var i = 0; i < exp.length; i++) {
+            var char = exp[i];
+            var e = "$" + (Object.keys(this.partials).length + 1);
+            if (parenthesis_level >= 1) {
+                if (char == ")") {
+                    parenthesis_level -= 1;
+                    if (parenthesis_level == 0) {
+                        this.partials[e] = this.parse(buffer);
+                        buffer = "";
+                    }
+                    else {
+                        buffer += char;
+                    }
+                }
+                else {
+                    if (char == "(") {
+                        parenthesis_level += 1;
+                    }
+                    buffer += char;
+                }
+            }
+            else {
+                if (char == "(") {
+                    parenthesis_level += 1;
+                    processed_exp += e;
+                }
+                else {
+                    processed_exp += char;
+                }
+            }
+        }
+        return processed_exp;
+    };
+    Parser.prototype.getComputedValue = function (value) {
+        var math = new math_1.default;
+        var parse = new parser_1.default;
+        if (value.indexOf('dérivée ') == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+        }
+        else if (value.indexOf("dérivée_seconde ") == 0) {
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+        }
+        return value;
+    };
+    return Parser;
+}());
+exports.default = Parser;
+var InvalidExpressionError = /** @class */ (function (_super) {
+    __extends(InvalidExpressionError, _super);
+    function InvalidExpressionError() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.type = "IE";
+        return _this;
+    }
+    return InvalidExpressionError;
+}(Error));
 
 
 /***/ })

@@ -192,7 +192,7 @@ export default class canvas {
         return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
     }
 
-    public drawFromArray(array: any, color: any = undefined, isPreview: boolean = false) {
+    public drawFromFunc(func: any, color: any = undefined, isPreview: boolean = false) {
         if (!color) {
             var letters = '0123456789ABCDEF';
             color = '#';
@@ -203,7 +203,7 @@ export default class canvas {
         let display_size = (this.canvas.width / 2) / this.x_unit
         let x = this.center_x - display_size
         let last = undefined
-        let label = (new parser).stringify(array);
+        let label = func;
 
         let was_defined = true;
 
@@ -223,7 +223,7 @@ export default class canvas {
                 new_y = this.getRelativePositionY(this.pathes[label][x]);
                 new_x = this.getRelativePositionX(x);
             } else {
-                pos = this.getFor(x, array, label);
+                pos = this.getFor(x, func, label);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
@@ -249,7 +249,7 @@ export default class canvas {
         return color;
     }
 
-    private getFor(start: number, array: any, label: string) {
+    private getFor(start: number, func: any, label: string) {
         if (this.stored[label] == undefined) {
             this.stored[label] = {};
         }
@@ -257,29 +257,8 @@ export default class canvas {
         if (this.stored[label][start] != undefined) {
             return this.stored[label][start];
         } else {
-            var result = 0;
-            for (var i = 0; i < Object.keys(array).length; i++) {
-                var element = Object.keys(array)[i];
-                if (element == "~") {
-                    if (array[element] != "") {
-                        result += array[element];
-                    }
-                } else if (element == "x") {
-                    result += array[element] * start;
-                } else if (element.indexOf("^m") >= 0) {
-                    result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-                } else if (element == "over") {
-
-                    result = result / this.getFor(start, array[element], (new parser).stringify(array[element]));
-
-                } else {
-                    result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
-                }
-            }
-
-            this.stored[label][start] = result;
-
-            return result;
+            this.stored[label][start] = func(start);
+            return this.stored[label][start];
         }
 
 
@@ -298,7 +277,7 @@ export default class canvas {
         requestAnimationFrame(() => {
             data.forEach(key => {
                 if (this.fdata[key].visible == true) {
-                    this.drawFromArray(this.fdata[key].array, this.fdata[key].color);
+                    this.drawFromFunc(this.fdata[key].array, this.fdata[key].color);
                 }
             });
         });
