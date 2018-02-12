@@ -1367,6 +1367,14 @@ var letter = 0;
 var letters = "fghpqrst";
 // We add an event listener on the (+) button so that it can add teh function
 document.querySelector("#function_add_button").addEventListener('click', function () {
+    var update = function (fdata) {
+        var keys = Object.keys(fdata);
+        var funcs = [];
+        keys.forEach(function (key) {
+            funcs.push(fdata[key].exp);
+        });
+        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
+    };
     //@ts-ignore
     var value = document.querySelector('#function_add_input').value.trim();
     //If it's empty, we don't do anything
@@ -1383,7 +1391,6 @@ document.querySelector("#function_add_button").addEventListener('click', functio
     };
     //We get an array from the parsed expression
     var func = new Function("x", "\n        " + flist + "\n        return " + parse.parse(value) + "\n    ");
-    console.log(func.toString());
     //We draw the function for the first time and we get its color
     var color = smath.drawFromFunc(func);
     //We create a new item in the functions list
@@ -1408,9 +1415,11 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             var initial = value;
             value = parse.getComputedValue(value);
             fdata[fname].initial = initial;
+            fdata[fname].exp = value;
             fdata[fname].array = new Function("x", "\n                " + flist + "\n                return " + parse.parse(value) + "\n            ");
             addText(item.querySelector('span'), color, row, initial, value);
             smath.reload(fdata);
+            update(fdata);
         };
     });
     fdata[fname] = {
@@ -1420,6 +1429,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         exp: value,
         initial: initial
     };
+    update(fdata);
     if (letter + 1 < letters.length) {
         letter++;
     }
@@ -1456,6 +1466,19 @@ buttons.forEach(function (e) {
     });
 });
 buttons[0].click();
+var hash = window.location.hash.replace('#', "");
+try {
+    var a = JSON.parse(decodeURIComponent(hash));
+    a.forEach(function (element) {
+        //@ts-ignore
+        document.querySelector("#function_add_input").value = element;
+        //@ts-ignore
+        document.querySelector("#function_add_button").click();
+    });
+}
+catch (error) {
+    console.log(error);
+}
 
 
 /***/ }),

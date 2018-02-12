@@ -3,6 +3,7 @@ import canvas from "./canvas";
 import parser from "./parser.v2";
 import MathObject from "./math";
 import modal from "./modal";
+import { join } from "path";
 
 // We get the default canvas
 let html_canvas_element = document.querySelector("canvas");
@@ -28,6 +29,20 @@ let letters = "fghpqrst";
 
 // We add an event listener on the (+) button so that it can add teh function
 document.querySelector("#function_add_button").addEventListener('click', () => {
+
+    const update = (fdata:any) => {
+        let keys = Object.keys(fdata);
+
+        let funcs:Array<String> = [];
+
+        keys.forEach(key => {
+            funcs.push(fdata[key].exp);
+        });
+
+        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
+
+    }
+
     //@ts-ignore
     let value: string = document.querySelector('#function_add_input').value.trim();
 
@@ -56,7 +71,6 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         ${flist}
         return ${parse.parse(value)}
     `);
-    console.log(func.toString());
 
     //We draw the function for the first time and we get its color
     let color = smath.drawFromFunc(func);
@@ -88,6 +102,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
             value = parse.getComputedValue(value);
 
             fdata[fname].initial = initial;
+            fdata[fname].exp = value;
             fdata[fname].array = new Function("x", `
                 ${flist}
                 return ${parse.parse(value)}
@@ -96,6 +111,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
             addText(item.querySelector('span'), color, row, initial, value);
 
             smath.reload(fdata);
+            update(fdata);    
         }
     });
 
@@ -106,6 +122,8 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         exp: value,
         initial: initial
     }
+
+    update(fdata);
 
     if (letter + 1 < letters.length) {
         letter++;
@@ -146,3 +164,18 @@ buttons.forEach((e:HTMLElement) => {
     }); 
 });
 buttons[0].click();
+
+let hash = window.location.hash.replace('#', "");
+try {
+    let a:Array<string> = JSON.parse(decodeURIComponent(hash));
+
+    a.forEach(element => {
+        //@ts-ignore
+        document.querySelector("#function_add_input").value = element;        
+        //@ts-ignore
+        document.querySelector("#function_add_button").click();
+    });
+
+} catch (error) {
+    console.log(error)
+}
