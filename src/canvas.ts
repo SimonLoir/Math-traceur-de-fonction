@@ -120,29 +120,31 @@ export default class canvas {
         this.ctx.fill();
         this.ctx.closePath();
 
-        let to = 100;
+        let to = Math.floor(this.center_x) + 100;
 
-        let xpos = 0 - to;
-
+        let xpos = Math.floor(this.center_x) - 100;
+        
         while (xpos < to) {
             this.drawLine(
                 this.getRelativePositionX(xpos),
-                this.getRelativePositionY(this.center_y + to),
+                this.getRelativePositionY(Math.floor(this.center_y) + 100),
                 this.getRelativePositionX(xpos),
-                this.getRelativePositionY(this.center_y - to),
+                this.getRelativePositionY(Math.floor(this.center_y) - 100),
                 (xpos == 0) ? "black" : undefined
 
             )
             xpos++;
         }
 
+        to = Math.floor(this.center_y) + 100;
+
         let ypos = 0 - to;
 
         while (ypos < to) {
             this.drawLine(
-                this.getRelativePositionX(this.center_x + to),
+                this.getRelativePositionX(Math.floor(this.center_x) + to),
                 this.getRelativePositionY(ypos),
-                this.getRelativePositionX(this.center_x - to),
+                this.getRelativePositionX(Math.floor(this.center_x) - to),
                 this.getRelativePositionY(ypos),
                 (ypos == 0) ? "black" : undefined
             )

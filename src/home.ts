@@ -11,3 +11,9 @@ window.addEventListener("scroll", (evt:Event) => {
         document.querySelector('header').classList.remove('floating')
     }
  });
+
+ /*if(typeof process !== 'undefined' && process.version != ""){
+    // Running node js
+    let header_content:HTMLParagraphElement = document.querySelector('.content-header');
+    header_content.innerHTML = "SMath est disponible en mode hors connexion sur cet appareil. "
+ }*/

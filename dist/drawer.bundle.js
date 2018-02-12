@@ -1598,15 +1598,16 @@ var canvas = /** @class */ (function () {
         this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fill();
         this.ctx.closePath();
-        var to = 100;
-        var xpos = 0 - to;
+        var to = Math.floor(this.center_x) + 100;
+        var xpos = Math.floor(this.center_x) - 100;
         while (xpos < to) {
-            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(this.center_y + to), this.getRelativePositionX(xpos), this.getRelativePositionY(this.center_y - to), (xpos == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y) + 100), this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y) - 100), (xpos == 0) ? "black" : undefined);
             xpos++;
         }
+        to = Math.floor(this.center_y) + 100;
         var ypos = 0 - to;
         while (ypos < to) {
-            this.drawLine(this.getRelativePositionX(this.center_x + to), this.getRelativePositionY(ypos), this.getRelativePositionX(this.center_x - to), this.getRelativePositionY(ypos), (ypos == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(Math.floor(this.center_x) + to), this.getRelativePositionY(ypos), this.getRelativePositionX(Math.floor(this.center_x) - to), this.getRelativePositionY(ypos), (ypos == 0) ? "black" : undefined);
             ypos++;
         }
     };
