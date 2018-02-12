@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         home: './src/home.ts',
         drawer: './src/drawer.ts',
+        parser: './src/parser.ui.ts'
     },
     module: {
         rules: [
