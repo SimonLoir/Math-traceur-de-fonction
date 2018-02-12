@@ -112,6 +112,8 @@ export default class canvas {
     }
 
     private drawGrid() {
+        let max = Math.max(this.canvas.height, this.canvas.width);
+        max = max / Math.min(this.x_unit, this.y_unit);
         // Clears the view
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.beginPath();
@@ -120,34 +122,44 @@ export default class canvas {
         this.ctx.fill();
         this.ctx.closePath();
 
-        let to = Math.floor(this.center_x) + 100;
+        let to = Math.floor(this.center_x+ max);
 
-        let xpos = Math.floor(this.center_x) - 100;
+        let xpos = Math.floor(this.center_x - max);
         
         while (xpos < to) {
             this.drawLine(
                 this.getRelativePositionX(xpos),
-                this.getRelativePositionY(Math.floor(this.center_y) + 100),
+                this.getRelativePositionY(Math.floor(this.center_y + max)),
                 this.getRelativePositionX(xpos),
-                this.getRelativePositionY(Math.floor(this.center_y) - 100),
-                (xpos == 0) ? "black" : undefined
+                this.getRelativePositionY(Math.floor(this.center_y - max)),
+                (Math.floor(xpos) == 0) ? "black" : undefined
 
             )
+            this.ctx.beginPath();
+            this.ctx.font = "15px Sans Serif";
+            this.ctx.fillStyle = "gray";
+            this.ctx.fillText(xpos.toString(), this.getRelativePositionX(xpos), this.getRelativePositionY(0) + 15)
+            this.ctx.closePath();            
             xpos++;
         }
 
-        to = Math.floor(this.center_y) + 100;
+        to = Math.floor(this.center_y + max);
 
-        let ypos = 0 - to;
+        let ypos =Math.floor(this.center_y - max);
 
         while (ypos < to) {
             this.drawLine(
-                this.getRelativePositionX(Math.floor(this.center_x) + to),
+                this.getRelativePositionX(Math.floor(this.center_x+ max) ),
                 this.getRelativePositionY(ypos),
-                this.getRelativePositionX(Math.floor(this.center_x) - to),
+                this.getRelativePositionX(Math.floor(this.center_x - max)),
                 this.getRelativePositionY(ypos),
-                (ypos == 0) ? "black" : undefined
+                (Math.floor(ypos) == 0) ? "black" : undefined
             )
+            this.ctx.beginPath();
+            this.ctx.font = "15px Sans Serif";
+            this.ctx.fillStyle = "gray";
+            this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) - ypos.toString().length * 15/2 - 5, this.getRelativePositionY(ypos))
+            this.ctx.closePath();  
             ypos++
         }
 
