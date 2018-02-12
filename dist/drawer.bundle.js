@@ -1399,6 +1399,9 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         .appendChild(document.createElement('div'));
     item.classList.add('item');
     addText(item.appendChild(document.createElement('span')), color, row, initial, value);
+    var remove = item
+        .appendChild(document.createElement('button'));
+    remove.innerHTML = "×";
     //We add the edit button
     var edit = item
         .appendChild(document.createElement('button'));
@@ -1420,6 +1423,19 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             addText(item.querySelector('span'), color, row, initial, value);
             smath.reload(fdata);
             update(fdata);
+        };
+    });
+    remove.addEventListener('click', function () {
+        var p = new modal_1.default("ask", {
+            title: "Supprimer",
+            message: "Supprimer la fonction ?",
+            default: fdata[fname].initial
+        });
+        p.confirm = function (value) {
+            delete fdata[fname];
+            smath.reload(fdata);
+            update(fdata);
+            item.parentElement.removeChild(item);
         };
     });
     fdata[fname] = {
@@ -1827,6 +1843,24 @@ var modal = /** @class */ (function () {
             confirm_1.innerHTML = "Confirmer";
             confirm_1.addEventListener('click', function () {
                 _this._c(input_1.value);
+                rm();
+            });
+        }
+        else if (type == "ask") {
+            div.appendChild(document.createElement('b')).innerHTML = options.title;
+            div.appendChild(document.createElement('p')).innerHTML = options.message;
+            var clearfix = div.appendChild(document.createElement('div'));
+            clearfix.classList.add('clearfix');
+            var confirm_2 = clearfix.appendChild(document.createElement('button'));
+            confirm_2.innerHTML = "Confirmer";
+            confirm_2.addEventListener('click', function () {
+                _this._c("");
+                rm();
+            });
+            var cancel = clearfix.appendChild(document.createElement('button'));
+            cancel.innerHTML = "Annuler";
+            cancel.style.marginRight = "5px";
+            cancel.addEventListener('click', function () {
                 rm();
             });
         }

@@ -81,11 +81,16 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         .appendChild(document.createElement('div'));
     item.classList.add('item');
     addText(item.appendChild(document.createElement('span')), color, row, initial, value);
+    
+    let remove: HTMLElement = item
+        .appendChild(document.createElement('button'))
+    remove.innerHTML = "×";
 
     //We add the edit button
     let edit: HTMLElement = item
         .appendChild(document.createElement('button'))
     edit.innerHTML = "&#128393;";
+
 
     let fname = letters[letter] + "" + row;
 
@@ -112,6 +117,20 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
             smath.reload(fdata);
             update(fdata);    
+        }
+    });
+
+    remove.addEventListener('click', () => {
+        let p = new modal("ask", {
+            title: "Supprimer",
+            message: "Supprimer la fonction ?",
+            default: fdata[fname].initial
+        });
+        p.confirm = (value: string) => {
+            delete fdata[fname];
+            smath.reload(fdata);
+            update(fdata);
+            item.parentElement.removeChild(item);
         }
     });
 

@@ -41,6 +41,26 @@ export default class modal{
             });
 
 
+        }else if(type == "ask"){
+            div.appendChild(document.createElement('b')).innerHTML = options.title
+            div.appendChild(document.createElement('p')).innerHTML = options.message
+
+            let clearfix = div.appendChild(document.createElement('div'));
+            clearfix.classList.add('clearfix')
+            
+            let confirm = clearfix.appendChild(document.createElement('button'))
+            confirm.innerHTML = "Confirmer"
+            confirm.addEventListener('click', () => {
+                this._c("");
+                rm();
+            });
+
+            let cancel = clearfix.appendChild(document.createElement('button'))
+            cancel.innerHTML = "Annuler"
+            cancel.style.marginRight = "5px"
+            cancel.addEventListener('click', () => {
+                rm();
+            });
         }
     }
     
