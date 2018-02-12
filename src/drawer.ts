@@ -52,16 +52,29 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
     //We get an array from the parsed expression
     let func = new Function("x", `
+        
         let sin = Math.sin;
         let tan = Math.tan;
         let cos = Math.cos;
         let asin = Math.asin;
         let atan = Math.atan;
         let acos = Math.acos;
+        
+        let sinh = Math.sinh;
+        let tanh = Math.tanh;
+        let cosh = Math.cosh;
+        let asinh = Math.asinh;
+        let atanh = Math.atanh;
+        let acosh = Math.acosh;
+
         let ceil = Math.ceil;
         let floor = Math.floor;
         let abs = Math.abs;
         let exp = Math.exp;
+        let log = Math.log
+
+        let e = Math.E;
+        let pi = Math.PI
 
         return ${parse.parse(value)}
     `);
@@ -104,10 +117,19 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
                 let asin = Math.asin;
                 let atan = Math.atan;
                 let acos = Math.acos;
+
+                let sinh = Math.sinh;
+                let tanh = Math.tanh;
+                let cosh = Math.cosh;
+                let asinh = Math.asinh;
+                let atanh = Math.atanh;
+                let acosh = Math.acosh;
+            
                 let ceil = Math.ceil;
                 let floor = Math.floor;
                 let abs = Math.abs;
                 let exp = Math.exp;
+
                 return ${parse.parse(value)}
             `);
 
