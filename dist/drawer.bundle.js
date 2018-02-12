@@ -1591,7 +1591,7 @@ var canvas = /** @class */ (function () {
         this.drawGrid();
     };
     canvas.prototype.drawGrid = function () {
-        var max = Math.max(this.canvas.height, this.canvas.width);
+        var max = Math.max(this.canvas.height / 2, this.canvas.width / 2);
         max = max / Math.min(this.x_unit, this.y_unit);
         // Clears the view
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
