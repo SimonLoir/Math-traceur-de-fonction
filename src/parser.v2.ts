@@ -47,7 +47,7 @@ export default class Parser {
      * Checks if the number of ( is equal to the number of )
      * @param exp the expression to check
      */
-    private check(exp: string) {
+    protected check(exp: string) {
         let open_brackets_number = exp.split('(').length;
         let close_brackets_number = exp.split(')').length;
         if (open_brackets_number == close_brackets_number) {
@@ -60,13 +60,13 @@ export default class Parser {
     /**
      * PrepareExpression
      */
-    private prepareExpression(exp: string) {
+    protected prepareExpression(exp: string) {
 
         exp = exp.replace(/²/ig, "^2")
         exp = exp.replace(/³/ig, "^2")
         exp = exp.replace(/X/g, "x");
         exp = exp.replace(/([0-9]+)x/ig, (exp, $1) => {
-            return `${$1}*x`;
+            return `(${$1}*x)`;
         });
 
         let processed_exp = "";
@@ -115,9 +115,9 @@ export default class Parser {
 
         return value;
     }
-
+    
 }
 
-class InvalidExpressionError extends Error {
+export class InvalidExpressionError extends Error {
     public type = "IE";
 }

@@ -1,11 +1,18 @@
 import Parser from "./parser.v2";
+import MathObject from "./math.v2";
 
 let parser = new Parser();
+let math = new MathObject();
 
-console.log(parser.parse("x²+6x+3"))
-console.log(parser.parse("x²"))
-console.log(parser.parse("x²+6"))
-console.log(parser.parse("x^(2^2)+6x"))
+console.log("=> ", math.derivative("x²"));
+console.log("=> ", math.derivative("x²+6x+3"));
+console.log("=> ", math.derivative("sqrt(x²)"));
+console.log("=> ", math.derivative("x²+6x+3"));
+console.log("=> ", math.derivative("x²-6x"));
+console.log("=> ", math.derivative("(x²)/x"));
+console.log("=> ", math.derivative("x²/x/2"));
+console.log("=> ", math.derivative("x²"));
+console.log("=> ", math.derivative("x²"));
 
 //http://jsben.ch/D2xTG
 console.log(

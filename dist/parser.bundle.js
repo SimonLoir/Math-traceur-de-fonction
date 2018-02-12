@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -648,18 +648,25 @@ exports.default = parser;
 
 /***/ }),
 
-/***/ 14:
+/***/ 15:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_v2_1 = __webpack_require__(5);
+var parser_v2_1 = __webpack_require__(2);
+var math_v2_1 = __webpack_require__(16);
 var parser = new parser_v2_1.default();
-console.log(parser.parse("x²+6x+3"));
-console.log(parser.parse("x²"));
-console.log(parser.parse("x²+6"));
-console.log(parser.parse("x^(2^2)+6x"));
+var math = new math_v2_1.default();
+console.log("=> ", math.derivative("x²"));
+console.log("=> ", math.derivative("x²+6x+3"));
+console.log("=> ", math.derivative("sqrt(x²)"));
+console.log("=> ", math.derivative("x²+6x+3"));
+console.log("=> ", math.derivative("x²-6x"));
+console.log("=> ", math.derivative("(x²)/x"));
+console.log("=> ", math.derivative("x²/x/2"));
+console.log("=> ", math.derivative("x²"));
+console.log("=> ", math.derivative("x²"));
 //http://jsben.ch/D2xTG
 console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), (new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0)));
 console.log(">", parser.parse("x²+(x²-6x)*x"));
@@ -668,7 +675,45 @@ console.log(parser.parse("x²+(x²-6x*x"));
 
 /***/ }),
 
-/***/ 5:
+/***/ 16:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var parser_v2_1 = __webpack_require__(2);
+var MathObject = /** @class */ (function (_super) {
+    __extends(MathObject, _super);
+    function MathObject() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MathObject.prototype.derivative = function (expression) {
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new parser_v2_1.InvalidExpressionError("Invalid expression given");
+        }
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        return expression;
+    };
+    return MathObject;
+}(parser_v2_1.default));
+exports.default = MathObject;
+
+
+/***/ }),
+
+/***/ 2:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -735,7 +780,7 @@ var Parser = /** @class */ (function () {
         exp = exp.replace(/³/ig, "^2");
         exp = exp.replace(/X/g, "x");
         exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
-            return $1 + "*x";
+            return "(" + $1 + "*x)";
         });
         var processed_exp = "";
         var parenthesis_level = 0;
@@ -796,6 +841,7 @@ var InvalidExpressionError = /** @class */ (function (_super) {
     }
     return InvalidExpressionError;
 }(Error));
+exports.InvalidExpressionError = InvalidExpressionError;
 
 
 /***/ })

@@ -14,7 +14,7 @@ window.addEventListener("scroll", (evt: Event) => {
 
 if (typeof process !== "undefined") {
     let fs = require('fs');
-    let fcontent = JSON.parse(fs.readFileSync('package.json', "utf-8"));
+    let fcontent = JSON.parse(fs.readFileSync(__dirname + '/package.json', "utf-8"));
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "https://math.simonloir.be/package.json", true);
     xhr.onload = function (e) {

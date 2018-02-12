@@ -71,6 +71,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         ${flist}
         return ${parse.parse(value)}
     `);
+    console.log(func.toString())
 
     //We draw the function for the first time and we get its color
     let color = smath.drawFromFunc(func);
