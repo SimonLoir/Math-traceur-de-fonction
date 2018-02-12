@@ -41,6 +41,33 @@ export default class MathObject{
         this.sub = (new parser).sub;
     }
 
+    public getFunctions() {
+        return `
+            let sin = Math.sin;
+            let tan = Math.tan;
+            let cos = Math.cos;
+            let asin = Math.asin;
+            let atan = Math.atan;
+            let acos = Math.acos;
+
+            let sinh = Math.sinh;
+            let tanh = Math.tanh;
+            let cosh = Math.cosh;
+            let asinh = Math.asinh;
+            let atanh = Math.atanh;
+            let acosh = Math.acosh;
+
+            let ceil = Math.ceil;
+            let floor = Math.floor;
+            let abs = Math.abs;
+            let exp = Math.exp;
+            let log = Math.log
+            
+            let e = Math.E;
+            let pi = Math.PI
+        `;
+    }
+
     public static getFor (start:number, array:any) {
             var result = 0;
             for (var i = 0; i < Object.keys(array).length; i++) {

@@ -104,6 +104,9 @@ var MathObject = /** @class */ (function () {
         this.add = (new parser_1.default).add;
         this.sub = (new parser_1.default).sub;
     }
+    MathObject.prototype.getFunctions = function () {
+        return "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log\n            \n            let e = Math.E;\n            let pi = Math.PI\n        ";
+    };
     MathObject.getFor = function (start, array) {
         var result = 0;
         for (var i = 0; i < Object.keys(array).length; i++) {
@@ -1350,6 +1353,7 @@ var html_canvas_element = document.querySelector("canvas");
 var smath = new canvas_1.default(html_canvas_element);
 // We create a new math object
 var math = new math_1.default();
+var flist = math.getFunctions();
 // We create a new expression parser
 var parse = new parser_v2_1.default();
 //We create an object that will contain all the functions
@@ -1376,7 +1380,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
     };
     //We get an array from the parsed expression
-    var func = new Function("x", "\n        \n        let sin = Math.sin;\n        let tan = Math.tan;\n        let cos = Math.cos;\n        let asin = Math.asin;\n        let atan = Math.atan;\n        let acos = Math.acos;\n        \n        let sinh = Math.sinh;\n        let tanh = Math.tanh;\n        let cosh = Math.cosh;\n        let asinh = Math.asinh;\n        let atanh = Math.atanh;\n        let acosh = Math.acosh;\n\n        let ceil = Math.ceil;\n        let floor = Math.floor;\n        let abs = Math.abs;\n        let exp = Math.exp;\n        let log = Math.log\n\n        let e = Math.E;\n        let pi = Math.PI\n\n        return " + parse.parse(value) + "\n    ");
+    var func = new Function("x", "\n        " + flist + "\n        return " + parse.parse(value) + "\n    ");
     console.log(func.toString());
     //We draw the function for the first time and we get its color
     var color = smath.drawFromFunc(func);
@@ -1402,7 +1406,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             var initial = value;
             value = parse.getComputedValue(value);
             fdata[fname].initial = initial;
-            fdata[fname].array = new Function("x", "\n                let sin = Math.sin;\n                let tan = Math.tan;\n                let cos = Math.cos;\n                let asin = Math.asin;\n                let atan = Math.atan;\n                let acos = Math.acos;\n\n                let sinh = Math.sinh;\n                let tanh = Math.tanh;\n                let cosh = Math.cosh;\n                let asinh = Math.asinh;\n                let atanh = Math.atanh;\n                let acosh = Math.acosh;\n            \n                let ceil = Math.ceil;\n                let floor = Math.floor;\n                let abs = Math.abs;\n                let exp = Math.exp;\n\n                return " + parse.parse(value) + "\n            ");
+            fdata[fname].array = new Function("x", "\n                " + flist + "\n                return " + parse.parse(value) + "\n            ");
             addText(item.querySelector('span'), color, row, initial, value);
             smath.reload(fdata);
         };

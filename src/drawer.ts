@@ -12,6 +12,7 @@ let smath = new canvas(html_canvas_element);
 
 // We create a new math object
 let math = new MathObject();
+let flist = math.getFunctions();
 
 // We create a new expression parser
 let parse = new parser();
@@ -52,30 +53,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
     //We get an array from the parsed expression
     let func = new Function("x", `
-        
-        let sin = Math.sin;
-        let tan = Math.tan;
-        let cos = Math.cos;
-        let asin = Math.asin;
-        let atan = Math.atan;
-        let acos = Math.acos;
-        
-        let sinh = Math.sinh;
-        let tanh = Math.tanh;
-        let cosh = Math.cosh;
-        let asinh = Math.asinh;
-        let atanh = Math.atanh;
-        let acosh = Math.acosh;
-
-        let ceil = Math.ceil;
-        let floor = Math.floor;
-        let abs = Math.abs;
-        let exp = Math.exp;
-        let log = Math.log
-
-        let e = Math.E;
-        let pi = Math.PI
-
+        ${flist}
         return ${parse.parse(value)}
     `);
     console.log(func.toString());
@@ -111,25 +89,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
             fdata[fname].initial = initial;
             fdata[fname].array = new Function("x", `
-                let sin = Math.sin;
-                let tan = Math.tan;
-                let cos = Math.cos;
-                let asin = Math.asin;
-                let atan = Math.atan;
-                let acos = Math.acos;
-
-                let sinh = Math.sinh;
-                let tanh = Math.tanh;
-                let cosh = Math.cosh;
-                let asinh = Math.asinh;
-                let atanh = Math.atanh;
-                let acosh = Math.acosh;
-            
-                let ceil = Math.ceil;
-                let floor = Math.floor;
-                let abs = Math.abs;
-                let exp = Math.exp;
-
+                ${flist}
                 return ${parse.parse(value)}
             `);
 

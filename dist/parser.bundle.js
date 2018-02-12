@@ -105,6 +105,9 @@ var MathObject = /** @class */ (function () {
         this.add = (new parser_1.default).add;
         this.sub = (new parser_1.default).sub;
     }
+    MathObject.prototype.getFunctions = function () {
+        return "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log\n            \n            let e = Math.E;\n            let pi = Math.PI\n        ";
+    };
     MathObject.getFor = function (start, array) {
         var result = 0;
         for (var i = 0; i < Object.keys(array).length; i++) {
