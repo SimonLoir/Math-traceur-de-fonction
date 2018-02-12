@@ -133,3 +133,15 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
     }
 
 });
+
+
+// We create the menu system
+
+document.getElementById('menu').addEventListener('click', () => {
+    let panel = document.querySelector('.panel');
+    if(panel.classList.contains('hidden')){
+        panel.classList.remove('hidden');
+    }else{
+        panel.classList.add('hidden');        
+    }
+});

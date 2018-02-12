@@ -60,168 +60,142 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 13);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 13:
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_v2_1 = __webpack_require__(14);
-var parser = new parser_v2_1.default();
-console.log(parser.parse("x²+6x+3"));
-console.log(parser.parse("x²"));
-console.log(parser.parse("x²+6"));
-console.log(parser.parse("x^(2^2)+6x"));
-//http://jsben.ch/D2xTG
-console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), (new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0)));
-console.log(">", parser.parse("x²+(x²-6x)*x"));
-console.log(parser.parse("x²+(x²-6x*x"));
-
-
-/***/ }),
-
-/***/ 14:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(4);
-var parser_1 = __webpack_require__(3);
-var Parser = /** @class */ (function () {
-    function Parser() {
-        this.partials = {};
+var parser_1 = __webpack_require__(1);
+//@ts-ignore
+if (typeof Object.assign != 'function') {
+    // Must be writable: true, enumerable: false, configurable: true
+    Object.defineProperty(Object, "assign", {
+        value: function assign(target, varArgs) {
+            'use strict';
+            if (target == null) {
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+            var to = Object(target);
+            for (var index = 1; index < arguments.length; index++) {
+                var nextSource = arguments[index];
+                if (nextSource != null) {
+                    for (var nextKey in nextSource) {
+                        // Avoid bugs when hasOwnProperty is shadowed
+                        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+            }
+            return to;
+        },
+        writable: true,
+        configurable: true
+    });
+}
+var MathObject = /** @class */ (function () {
+    function MathObject() {
+        this.multiply = (new parser_1.default).multiply;
+        this.add = (new parser_1.default).add;
+        this.sub = (new parser_1.default).sub;
     }
-    /**
-     * Initialise a parsing task
-     * @param {String} expression the expression that has to be parsed
-    */
-    Parser.prototype.parse = function (expression) {
-        // 1) We have to check wheter or not the expression is valid
-        var _this = this;
-        if (this.check(expression) == false) {
-            throw new InvalidExpressionError("Invalid expression given");
-        }
-        // 2) We convert ...(....) into ...$1 and $1 = ....
-        expression = this.prepareExpression(expression);
-        // 3) We really parse the expression
-        // We transform math functions into valid js code
-        expression = expression.replace(/sqrt\$([0-9]+)/i, function (e, $1) { return "Math.pow($" + $1 + ", 0.5)"; });
-        // We tranform exponants into Math.pow()
-        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
-        // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/ig, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
-        return expression;
-    };
-    /**
-     * Checks if the number of ( is equal to the number of )
-     * @param exp the expression to check
-     */
-    Parser.prototype.check = function (exp) {
-        var open_brackets_number = exp.split('(').length;
-        var close_brackets_number = exp.split(')').length;
-        if (open_brackets_number == close_brackets_number) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-    /**
-     * PrepareExpression
-     */
-    Parser.prototype.prepareExpression = function (exp) {
-        exp = exp.replace(/²/ig, "^2");
-        exp = exp.replace(/³/ig, "^2");
-        exp = exp.replace(/X/g, "x");
-        exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
-            return $1 + "*x";
-        });
-        var processed_exp = "";
-        var parenthesis_level = 0;
-        var buffer = "";
-        for (var i = 0; i < exp.length; i++) {
-            var char = exp[i];
-            var e = "$" + (Object.keys(this.partials).length + 1);
-            if (parenthesis_level >= 1) {
-                if (char == ")") {
-                    parenthesis_level -= 1;
-                    if (parenthesis_level == 0) {
-                        this.partials[e] = this.parse(buffer);
-                        buffer = "";
-                    }
-                    else {
-                        buffer += char;
-                    }
+    MathObject.getFor = function (start, array) {
+        var result = 0;
+        for (var i = 0; i < Object.keys(array).length; i++) {
+            var element = Object.keys(array)[i];
+            if (element == "~") {
+                if (array[element] != "") {
+                    result += array[element];
                 }
-                else {
-                    if (char == "(") {
-                        parenthesis_level += 1;
-                    }
-                    buffer += char;
-                }
+            }
+            else if (element == "x") {
+                result += array[element] * start;
+            }
+            else if (element.indexOf("^m") >= 0) {
+                result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+            }
+            else if (element == "over") {
+                result = result / this.getFor(start, array[element]);
             }
             else {
-                if (char == "(") {
-                    parenthesis_level += 1;
-                    processed_exp += e;
-                }
-                else {
-                    processed_exp += char;
-                }
+                result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
             }
         }
-        return processed_exp;
+        return result;
     };
-    Parser.prototype.getComputedValue = function (value) {
-        var math = new math_1.default;
-        var parse = new parser_1.default;
-        if (value.indexOf('dérivée ') == 0) {
-            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+    MathObject.prototype.derivate = function (array) {
+        var _this = this;
+        console.log('=>', array);
+        var keys = Object.keys(array);
+        if (keys.length == 1) {
+            if (keys[0] == "~") {
+                return { "~": 0 };
+            }
+            else if (keys[0] == "x") {
+                return { "~": array[keys[0]] };
+            }
+            else if (keys[0].indexOf("x^") == 0) {
+                var exp = parseFloat(keys[0].replace('x^', ""));
+                var a = {};
+                a["x" + ((exp - 1 != 1) ? "^" + (exp - 1) : "")] = exp * array[keys[0]];
+                console.log(a);
+                return a;
+            }
+            else {
+                return {};
+            }
         }
-        else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+        else if (array["over"] != undefined) {
+            var a = array;
+            var over = array["over"];
+            delete a["over"];
+            console.log(this.derivate(a), over, this.multiply(this.derivate(a), over));
+            console.log(this.derivate(a), over, this.multiply(this.derivate(over), a));
+            var narray = (this.multiply(this.derivate(a), over));
+            var narray2 = (this.multiply(this.derivate(over), a));
+            var sub = this.sub(narray2, narray);
+            console.log("sub", sub);
+            //@ts-ignore
+            var second_over = Object.assign({}, over);
+            var under = this.multiply(over, second_over);
+            if (!sub["over"]) {
+                sub["over"] = under;
+            }
+            else {
+                sub["over"] = this.multiply(sub["over"], under);
+            }
+            return sub;
         }
-        return value;
+        else {
+            var a_1 = {};
+            keys.forEach(function (key) {
+                var e = {};
+                e[key] = array[key];
+                a_1 = _this.add(a_1, _this.derivate(e));
+            });
+            return a_1;
+        }
     };
-    return Parser;
+    return MathObject;
 }());
-exports.default = Parser;
-var InvalidExpressionError = /** @class */ (function (_super) {
-    __extends(InvalidExpressionError, _super);
-    function InvalidExpressionError() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.type = "IE";
-        return _this;
-    }
-    return InvalidExpressionError;
-}(Error));
+exports.default = MathObject;
 
 
 /***/ }),
 
-/***/ 3:
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var math_1 = __webpack_require__(4);
+var math_1 = __webpack_require__(0);
 var parser = /** @class */ (function () {
     function parser() {
         this.index = 0;
@@ -671,126 +645,152 @@ exports.default = parser;
 
 /***/ }),
 
-/***/ 4:
+/***/ 14:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_1 = __webpack_require__(3);
-//@ts-ignore
-if (typeof Object.assign != 'function') {
-    // Must be writable: true, enumerable: false, configurable: true
-    Object.defineProperty(Object, "assign", {
-        value: function assign(target, varArgs) {
-            'use strict';
-            if (target == null) {
-                throw new TypeError('Cannot convert undefined or null to object');
-            }
-            var to = Object(target);
-            for (var index = 1; index < arguments.length; index++) {
-                var nextSource = arguments[index];
-                if (nextSource != null) {
-                    for (var nextKey in nextSource) {
-                        // Avoid bugs when hasOwnProperty is shadowed
-                        if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                            to[nextKey] = nextSource[nextKey];
-                        }
-                    }
-                }
-            }
-            return to;
-        },
-        writable: true,
-        configurable: true
-    });
-}
-var MathObject = /** @class */ (function () {
-    function MathObject() {
-        this.multiply = (new parser_1.default).multiply;
-        this.add = (new parser_1.default).add;
-        this.sub = (new parser_1.default).sub;
-    }
-    MathObject.getFor = function (start, array) {
-        var result = 0;
-        for (var i = 0; i < Object.keys(array).length; i++) {
-            var element = Object.keys(array)[i];
-            if (element == "~") {
-                if (array[element] != "") {
-                    result += array[element];
-                }
-            }
-            else if (element == "x") {
-                result += array[element] * start;
-            }
-            else if (element.indexOf("^m") >= 0) {
-                result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-            }
-            else if (element == "over") {
-                result = result / this.getFor(start, array[element]);
-            }
-            else {
-                result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
-            }
-        }
-        return result;
+var parser_v2_1 = __webpack_require__(5);
+var parser = new parser_v2_1.default();
+console.log(parser.parse("x²+6x+3"));
+console.log(parser.parse("x²"));
+console.log(parser.parse("x²+6"));
+console.log(parser.parse("x^(2^2)+6x"));
+//http://jsben.ch/D2xTG
+console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), (new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0)));
+console.log(">", parser.parse("x²+(x²-6x)*x"));
+console.log(parser.parse("x²+(x²-6x*x"));
+
+
+/***/ }),
+
+/***/ 5:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    MathObject.prototype.derivate = function (array) {
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var math_1 = __webpack_require__(0);
+var parser_1 = __webpack_require__(1);
+var Parser = /** @class */ (function () {
+    function Parser() {
+        this.partials = {};
+    }
+    /**
+     * Initialise a parsing task
+     * @param {String} expression the expression that has to be parsed
+    */
+    Parser.prototype.parse = function (expression) {
+        // 1) We have to check wheter or not the expression is valid
         var _this = this;
-        console.log('=>', array);
-        var keys = Object.keys(array);
-        if (keys.length == 1) {
-            if (keys[0] == "~") {
-                return { "~": 0 };
-            }
-            else if (keys[0] == "x") {
-                return { "~": array[keys[0]] };
-            }
-            else if (keys[0].indexOf("x^") == 0) {
-                var exp = parseFloat(keys[0].replace('x^', ""));
-                var a = {};
-                a["x" + ((exp - 1 != 1) ? "^" + (exp - 1) : "")] = exp * array[keys[0]];
-                console.log(a);
-                return a;
-            }
-            else {
-                return {};
-            }
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError("Invalid expression given");
         }
-        else if (array["over"] != undefined) {
-            var a = array;
-            var over = array["over"];
-            delete a["over"];
-            console.log(this.derivate(a), over, this.multiply(this.derivate(a), over));
-            console.log(this.derivate(a), over, this.multiply(this.derivate(over), a));
-            var narray = (this.multiply(this.derivate(a), over));
-            var narray2 = (this.multiply(this.derivate(over), a));
-            var sub = this.sub(narray2, narray);
-            console.log("sub", sub);
-            //@ts-ignore
-            var second_over = Object.assign({}, over);
-            var under = this.multiply(over, second_over);
-            if (!sub["over"]) {
-                sub["over"] = under;
-            }
-            else {
-                sub["over"] = this.multiply(sub["over"], under);
-            }
-            return sub;
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        // 3) We really parse the expression
+        // We transform math functions into valid js code
+        expression = expression.replace(/sqrt\$([0-9]+)/i, function (e, $1) { return "Math.pow($" + $1 + ", 0.5)"; });
+        // We tranform exponants into Math.pow()
+        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
+        // We rebuild the complete expression
+        expression = expression.replace(/\$([0-9]+)/ig, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        return expression;
+    };
+    /**
+     * Checks if the number of ( is equal to the number of )
+     * @param exp the expression to check
+     */
+    Parser.prototype.check = function (exp) {
+        var open_brackets_number = exp.split('(').length;
+        var close_brackets_number = exp.split(')').length;
+        if (open_brackets_number == close_brackets_number) {
+            return true;
         }
         else {
-            var a_1 = {};
-            keys.forEach(function (key) {
-                var e = {};
-                e[key] = array[key];
-                a_1 = _this.add(a_1, _this.derivate(e));
-            });
-            return a_1;
+            return false;
         }
     };
-    return MathObject;
+    /**
+     * PrepareExpression
+     */
+    Parser.prototype.prepareExpression = function (exp) {
+        exp = exp.replace(/²/ig, "^2");
+        exp = exp.replace(/³/ig, "^2");
+        exp = exp.replace(/X/g, "x");
+        exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
+            return $1 + "*x";
+        });
+        var processed_exp = "";
+        var parenthesis_level = 0;
+        var buffer = "";
+        for (var i = 0; i < exp.length; i++) {
+            var char = exp[i];
+            var e = "$" + (Object.keys(this.partials).length + 1);
+            if (parenthesis_level >= 1) {
+                if (char == ")") {
+                    parenthesis_level -= 1;
+                    if (parenthesis_level == 0) {
+                        this.partials[e] = this.parse(buffer);
+                        buffer = "";
+                    }
+                    else {
+                        buffer += char;
+                    }
+                }
+                else {
+                    if (char == "(") {
+                        parenthesis_level += 1;
+                    }
+                    buffer += char;
+                }
+            }
+            else {
+                if (char == "(") {
+                    parenthesis_level += 1;
+                    processed_exp += e;
+                }
+                else {
+                    processed_exp += char;
+                }
+            }
+        }
+        return processed_exp;
+    };
+    Parser.prototype.getComputedValue = function (value) {
+        var math = new math_1.default;
+        var parse = new parser_1.default;
+        if (value.indexOf('dérivée ') == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+        }
+        else if (value.indexOf("dérivée_seconde ") == 0) {
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+        }
+        return value;
+    };
+    return Parser;
 }());
-exports.default = MathObject;
+exports.default = Parser;
+var InvalidExpressionError = /** @class */ (function (_super) {
+    __extends(InvalidExpressionError, _super);
+    function InvalidExpressionError() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.type = "IE";
+        return _this;
+    }
+    return InvalidExpressionError;
+}(Error));
 
 
 /***/ })
