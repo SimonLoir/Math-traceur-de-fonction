@@ -41,7 +41,7 @@ export default class Parser {
         // We rebuild the complete expression
         expression = expression.replace(
             /\$([0-9]+)/gi,
-            (e, $1) => '(' + this.partials['$' + $1] + ')'
+            (e, $1) => '(' + this.parse(this.partials['$' + $1]) + ')'
         );
 
         return expression;
@@ -82,7 +82,7 @@ export default class Parser {
                 if (char == ')') {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        this.partials[e] = this.parse(buffer);
+                        this.partials[e] = buffer;
                         buffer = '';
                     } else {
                         buffer += char;
@@ -173,7 +173,6 @@ export class MathObject extends Parser {
 
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
-
         // 3) Wa have to split the expression into small pieces and check step by step
 
         if (expression.indexOf('+') >= 0) {
@@ -255,7 +254,7 @@ export class MathObject extends Parser {
 
             return '0';
         } else if (expression == 'x') {
-            // Derivative of x is alwais equal to 1
+            // Derivative of x is always equal to 1
 
             return 1;
         } else if (expression.indexOf('^') >= 1) {
@@ -273,7 +272,13 @@ export class MathObject extends Parser {
             // This replaces $.. into the expression
 
             return `(${this.derivative(this.partials[expression])})`;
+        } else if (/^sin\$([0-9]+)$/.test(expression) == true) {
+            let partial = expression.replace('sin', '');
+            return `cos(${this.partials[partial]})*(${this.derivative(
+                this.partials[partial]
+            )})`;
         } else {
+            console.log(expression);
             throw new Error('Something went wrong');
         }
     }

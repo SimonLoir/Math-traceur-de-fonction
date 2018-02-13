@@ -670,7 +670,7 @@ var Parser = /** @class */ (function () {
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.partials['$' + $1] + ')'; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.parse(_this.partials['$' + $1]) + ')'; });
         return expression;
     };
     /**
@@ -707,7 +707,7 @@ var Parser = /** @class */ (function () {
                 if (char == ')') {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        this.partials[e] = this.parse(buffer);
+                        this.partials[e] = buffer;
                         buffer = '';
                     }
                     else {
@@ -835,7 +835,7 @@ var MathObject = /** @class */ (function (_super) {
             return '0';
         }
         else if (expression == 'x') {
-            // Derivative of x is alwais equal to 1
+            // Derivative of x is always equal to 1
             return 1;
         }
         else if (expression.indexOf('^') >= 1) {
@@ -849,7 +849,12 @@ var MathObject = /** @class */ (function (_super) {
             // This replaces $.. into the expression
             return "(" + this.derivative(this.partials[expression]) + ")";
         }
+        else if (/^sin\$([0-9]+)$/.test(expression) == true) {
+            var partial = expression.replace('sin', '');
+            return "cos(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
+        }
         else {
+            console.log(expression);
             throw new Error('Something went wrong');
         }
     };
