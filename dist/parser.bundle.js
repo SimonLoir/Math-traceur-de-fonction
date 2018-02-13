@@ -788,16 +788,6 @@ var MathObject = /** @class */ (function (_super) {
         }
     };
     /**
-     * Creates a function to run the expression
-     */
-    MathObject.prototype.Functionize = function (exp, parse) {
-        if (parse === void 0) { parse = true; }
-        if (parse == true) {
-            exp = this.parse(exp);
-        }
-        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n\n            return " + exp + ";\n\n        ");
-    };
-    /**
      * CleanUp
      */
     MathObject.prototype.clean = function (expression) {
@@ -942,6 +932,16 @@ var Parser = /** @class */ (function () {
             value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', '')))));
         }
         return value;
+    };
+    /**
+     * Creates a function to run the expression
+     */
+    Parser.prototype.Functionize = function (exp, parse) {
+        if (parse === void 0) { parse = true; }
+        if (parse == true) {
+            exp = this.parse(exp);
+        }
+        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n\n            return " + exp + ";\n\n        ");
     };
     return Parser;
 }());
