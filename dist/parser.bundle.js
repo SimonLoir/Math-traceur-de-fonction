@@ -684,13 +684,11 @@ var parser_v2_1 = __webpack_require__(2);
 var math_v2_1 = __webpack_require__(16);
 var parser = new parser_v2_1.default();
 var math = new math_v2_1.default();
-['1', 'x', '2x', 'x²', 'x^3', '2*x²', '(2x)^2'].forEach(function (e) {
+['1', 'x', '2x', 'x²', 'x^3', '2*x²', '(2x)^2', '1/x'].forEach(function (e) {
     console.log('=> ' + e, math.derivative(e));
 });
 //http://jsben.ch/D2xTG
 console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));
-console.log('>', parser.parse('x²+(x²-6x)*x'));
-console.log(parser.parse('x²+(x²-6x*x'));
 
 
 /***/ }),
@@ -758,6 +756,18 @@ var MathObject = /** @class */ (function (_super) {
             });
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+            expression = this.clean(expression);
+            return expression;
+        }
+        if (expression.indexOf('/') >= 0) {
+            var spl = expression.split('/');
+            var spl_copy = spl.slice();
+            spl_copy.shift();
+            var bottom = "(" + spl_copy.join(')*(') + ")";
+            var top_1 = "(" + this.derivative(spl[0]) + ")*" + bottom + "-" + this.derivative(bottom) + "*(" + spl[0] + ")";
+            expression = top_1 + "/((" + bottom + ")^2)";
             if (!isNaN(this.Functionize(expression)(NaN)))
                 return this.Functionize(expression)(NaN);
             expression = this.clean(expression);

@@ -64,6 +64,28 @@ export default class MathObject extends Parser {
             return expression;
         }
 
+        if (expression.indexOf('/') >= 0) {
+            let spl = expression.split('/');
+            let spl_copy = [...spl];
+
+            spl_copy.shift();
+
+            let bottom = `(${spl_copy.join(')*(')})`;
+
+            let top = `(${this.derivative(spl[0])})*${bottom}-${this.derivative(
+                bottom
+            )}*(${spl[0]})`;
+
+            expression = `${top}/((${bottom})^2)`;
+
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+
+            expression = this.clean(expression);
+
+            return expression;
+        }
+
         //@ts-ignore
         if (!isNaN(expression)) {
             // Derivative of a number is always equal to 0
