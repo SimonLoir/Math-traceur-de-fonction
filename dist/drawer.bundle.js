@@ -692,7 +692,7 @@ var parser_1 = __webpack_require__(1);
 var Parser = /** @class */ (function () {
     function Parser() {
         this.partials = {};
-        this.type = "parser";
+        this.type = 'parser';
     }
     /**
      * Initialise a parsing task
@@ -702,7 +702,7 @@ var Parser = /** @class */ (function () {
         // 1) We have to check wheter or not the expression is valid
         var _this = this;
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError("Invalid expression given");
+            throw new InvalidExpressionError('Invalid expression given');
         }
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
@@ -714,7 +714,7 @@ var Parser = /** @class */ (function () {
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.partials['$' + $1] + ')'; });
         return expression;
     };
     /**
@@ -722,8 +722,8 @@ var Parser = /** @class */ (function () {
      * @param exp the expression to check
      */
     Parser.prototype.check = function (exp) {
-        var open_brackets_number = exp.split("(").length;
-        var close_brackets_number = exp.split(")").length;
+        var open_brackets_number = exp.split('(').length;
+        var close_brackets_number = exp.split(')').length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         }
@@ -735,44 +735,38 @@ var Parser = /** @class */ (function () {
      * PrepareExpression
      */
     Parser.prototype.prepareExpression = function (exp) {
-        exp = exp.replace(/²/gi, "^2");
-        exp = exp.replace(/³/gi, "^2");
-        exp = exp.replace(/X/g, "x");
+        exp = exp.replace(/²/gi, '^2');
+        exp = exp.replace(/³/gi, '^2');
+        exp = exp.replace(/X/g, 'x');
         exp = exp.replace(/([0-9]+)x/gi, function (exp, $1) {
             return "(" + $1 + "*x)";
         });
-        var processed_exp = "";
+        var processed_exp = '';
         var parenthesis_level = 0;
-        var buffer = "";
+        var buffer = '';
         for (var i = 0; i < exp.length; i++) {
             var char = exp[i];
-            var e = "$" + (Object.keys(this.partials).length + 1);
+            var e = '$' + (Object.keys(this.partials).length + 1);
             if (parenthesis_level >= 1) {
-                if (char == ")") {
+                if (char == ')') {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        if (this.type == "parser") {
-                            this.partials[e] = this.parse(buffer);
-                        }
-                        else {
-                            //@ts-ignore
-                            this.partials[e] = this.derivative(buffer);
-                        }
-                        buffer = "";
+                        this.partials[e] = this.parse(buffer);
+                        buffer = '';
                     }
                     else {
                         buffer += char;
                     }
                 }
                 else {
-                    if (char == "(") {
+                    if (char == '(') {
                         parenthesis_level += 1;
                     }
                     buffer += char;
                 }
             }
             else {
-                if (char == "(") {
+                if (char == '(') {
                     parenthesis_level += 1;
                     processed_exp += e;
                 }
@@ -786,11 +780,11 @@ var Parser = /** @class */ (function () {
     Parser.prototype.getComputedValue = function (value) {
         var math = new math_1.default();
         var parse = new parser_1.default();
-        if (value.indexOf("dérivée ") == 0) {
-            value = parse.stringify(math.derivate(parse.exec(value.replace("dérivée ", ""))));
+        if (value.indexOf('dérivée ') == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ''))));
         }
-        else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace("dérivée_seconde ", "")))));
+        else if (value.indexOf('dérivée_seconde ') == 0) {
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', '')))));
         }
         return value;
     };
@@ -801,7 +795,7 @@ var InvalidExpressionError = /** @class */ (function (_super) {
     __extends(InvalidExpressionError, _super);
     function InvalidExpressionError() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.type = "IE";
+        _this.type = 'IE';
         return _this;
     }
     return InvalidExpressionError;

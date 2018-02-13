@@ -1,9 +1,9 @@
-import MathObject from "./math";
-import P from "./parser";
+import MathObject from './math';
+import P from './parser';
 
 export default class Parser {
     protected partials: any = {};
-    public type = "parser";
+    public type = 'parser';
 
     /**
      * Initialise a parsing task
@@ -13,7 +13,7 @@ export default class Parser {
         // 1) We have to check wheter or not the expression is valid
 
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError("Invalid expression given");
+            throw new InvalidExpressionError('Invalid expression given');
         }
 
         // 2) We convert ...(....) into ...$1 and $1 = ....
@@ -40,7 +40,7 @@ export default class Parser {
         // We rebuild the complete expression
         expression = expression.replace(
             /\$([0-9]+)/gi,
-            (e, $1) => "(" + this.partials["$" + $1] + ")"
+            (e, $1) => '(' + this.partials['$' + $1] + ')'
         );
 
         return expression;
@@ -51,8 +51,8 @@ export default class Parser {
      * @param exp the expression to check
      */
     protected check(exp: string) {
-        let open_brackets_number = exp.split("(").length;
-        let close_brackets_number = exp.split(")").length;
+        let open_brackets_number = exp.split('(').length;
+        let close_brackets_number = exp.split(')').length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         } else {
@@ -64,41 +64,36 @@ export default class Parser {
      * PrepareExpression
      */
     protected prepareExpression(exp: string) {
-        exp = exp.replace(/²/gi, "^2");
-        exp = exp.replace(/³/gi, "^2");
-        exp = exp.replace(/X/g, "x");
+        exp = exp.replace(/²/gi, '^2');
+        exp = exp.replace(/³/gi, '^2');
+        exp = exp.replace(/X/g, 'x');
         exp = exp.replace(/([0-9]+)x/gi, (exp, $1) => {
             return `(${$1}*x)`;
         });
 
-        let processed_exp = "";
+        let processed_exp = '';
         let parenthesis_level = 0;
-        let buffer = "";
+        let buffer = '';
         for (let i = 0; i < exp.length; i++) {
             const char = exp[i];
-            let e = "$" + (Object.keys(this.partials).length + 1);
+            let e = '$' + (Object.keys(this.partials).length + 1);
             if (parenthesis_level >= 1) {
-                if (char == ")") {
+                if (char == ')') {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        if (this.type == "parser") {
-                            this.partials[e] = this.parse(buffer);
-                        } else {
-                            //@ts-ignore
-                            this.partials[e] = this.derivative(buffer);
-                        }
-                        buffer = "";
+                        this.partials[e] = this.parse(buffer);
+                        buffer = '';
                     } else {
                         buffer += char;
                     }
                 } else {
-                    if (char == "(") {
+                    if (char == '(') {
                         parenthesis_level += 1;
                     }
                     buffer += char;
                 }
             } else {
-                if (char == "(") {
+                if (char == '(') {
                     parenthesis_level += 1;
                     processed_exp += e;
                 } else {
@@ -113,15 +108,15 @@ export default class Parser {
         const math = new MathObject();
         const parse = new P();
 
-        if (value.indexOf("dérivée ") == 0) {
+        if (value.indexOf('dérivée ') == 0) {
             value = parse.stringify(
-                math.derivate(parse.exec(value.replace("dérivée ", "")))
+                math.derivate(parse.exec(value.replace('dérivée ', '')))
             );
-        } else if (value.indexOf("dérivée_seconde ") == 0) {
+        } else if (value.indexOf('dérivée_seconde ') == 0) {
             value = parse.stringify(
                 math.derivate(
                     math.derivate(
-                        parse.exec(value.replace("dérivée_seconde ", ""))
+                        parse.exec(value.replace('dérivée_seconde ', ''))
                     )
                 )
             );
@@ -132,5 +127,5 @@ export default class Parser {
 }
 
 export class InvalidExpressionError extends Error {
-    public type = "IE";
+    public type = 'IE';
 }

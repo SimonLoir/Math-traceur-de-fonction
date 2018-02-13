@@ -684,20 +684,18 @@ var parser_v2_1 = __webpack_require__(2);
 var math_v2_1 = __webpack_require__(16);
 var parser = new parser_v2_1.default();
 var math = new math_v2_1.default();
-console.log("=> ", math.derivative("5"));
-console.log("=> ", math.derivative("x"));
-console.log("=> ", math.derivative("4x"));
-console.log("=> ", math.derivative("x²"));
-console.log("=> ", math.derivative("x²+6x+3"));
-console.log("=> ", math.derivative("sqrt(x²)"));
-console.log("=> ", math.derivative("x²+6x+3"));
-console.log("=> ", math.derivative("x²-6x"));
-console.log("=> ", math.derivative("(x²)/x"));
-console.log("=> ", math.derivative("x²/x/2"));
+console.log('=> ', math.derivative('5'));
+console.log('=> ', math.derivative('x'));
+console.log('=> ', math.derivative('4+x'));
+console.log('=> ', math.derivative('4-x'));
+console.log('=> ', math.derivative('2x'));
+console.log('=> ', math.derivative('2x^2'));
+console.log('=> ', math.derivative('(2x)^2'));
+console.log('=> ', math.derivative('2*x^2'));
 //http://jsben.ch/D2xTG
-console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0));
-console.log(">", parser.parse("x²+(x²-6x)*x"));
-console.log(parser.parse("x²+(x²-6x*x"));
+console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));
+console.log('>', parser.parse('x²+(x²-6x)*x'));
+console.log(parser.parse('x²+(x²-6x*x'));
 
 
 /***/ }),
@@ -723,57 +721,76 @@ var MathObject = /** @class */ (function (_super) {
     __extends(MathObject, _super);
     function MathObject() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.type = "MathObject";
+        _this.type = 'MathObject';
         return _this;
     }
     MathObject.prototype.derivative = function (expression) {
         var _this = this;
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
-            throw new parser_v2_1.InvalidExpressionError("Invalid expression given");
+            throw new parser_v2_1.InvalidExpressionError('Invalid expression given');
         }
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
         // 3) Wa have to split the expression into small pieces
-        /**
-         * First of all is the derivative of a sum because the
-         * derivative of a sum is the sum of the derivative of the terms
-         */
-        var sum_terms = expression.split("+");
-        if (sum_terms.length == 1) {
-            //@ts-ignore
-            if (!isNaN(sum_terms[0])) {
-                return 0;
-            }
-            else if (sum_terms[0] == "x") {
-                return 1;
-            }
-            else if (sum_terms[0].indexOf("$") == 0) {
-                var spl = sum_terms[0].split("^");
-                if (spl.length == 1) {
-                    return "(" + this.partials[sum_terms[0]] + ")";
-                }
-                else {
-                    return "(" + this.partials[sum_terms[0]] + ")";
-                }
-            }
-            else if (sum_terms[0].indexOf("x^") == 0) {
-                var replaced = sum_terms[0].replace("x^", "");
-                return replaced + "x^(" + replaced + "-1)";
-            }
-            else {
-                return "e";
-            }
-        }
-        expression = "";
+        var sum_terms = expression.split('+');
+        expression = '';
         sum_terms.forEach(function (sum_term) {
-            /**
-             * Second of all we have to work with the substraction
-             * which is basically the same as the addition
-             */
-            expression += _this.derivative(sum_term) + "+";
+            var sub_terms = sum_term.split('-');
+            sum_term = '';
+            sub_terms.forEach(function (sub_term) { return (sum_term += _this.derivativeItem(sub_term) + "-"); });
+            if (sum_term[sum_term.length - 1] == '-')
+                sum_term = sum_term.slice(0, -1);
+            expression += sum_term + "+";
+        });
+        if (expression[expression.length - 1] == '+')
+            expression = expression.slice(0, -1);
+        expression = expression.replace(/\$([0-9]+)/g, function (e) {
+            return "(" + _this.derivative(_this.partials[e]) + ")";
         });
         return expression;
+    };
+    /**
+     * Gets the derivative for a single item
+     */
+    MathObject.prototype.derivativeItem = function (item) {
+        var _this = this;
+        if (!isNaN(item)) {
+            return '0';
+        }
+        else if (item == 'x') {
+            return 1;
+        }
+        else if (item.indexOf('*') >= 0) {
+            var result_1 = '';
+            var spl_1 = item.split('*');
+            spl_1.forEach(function (element, index) {
+                result_1 += _this.derivativeItem(element) + "*" + _this.getAllExpect(spl_1, index).join('*') + "+";
+            });
+            if (result_1[result_1.length - 1] == '+')
+                result_1 = result_1.slice(0, -1);
+            return result_1;
+        }
+        else if (item.indexOf('^') >= 1) {
+            var parts = item.split('^');
+            console.log(parts);
+            return parts[1] + "*" + parts[0] + "^(" + parts[1] + " - 1)*(" + this.derivative(parts[0]) + ")";
+        }
+        else if (/^\$([0-9]+)$/.test(item) == true) {
+            return "(" + this.partials[item] + ")";
+        }
+        else {
+            return 'e';
+        }
+    };
+    MathObject.prototype.getAllExpect = function (array, i) {
+        var res = [];
+        array.forEach(function (e, index) {
+            if (index != i) {
+                res.push(e);
+            }
+        });
+        return res;
     };
     return MathObject;
 }(parser_v2_1.default));
@@ -803,7 +820,7 @@ var parser_1 = __webpack_require__(1);
 var Parser = /** @class */ (function () {
     function Parser() {
         this.partials = {};
-        this.type = "parser";
+        this.type = 'parser';
     }
     /**
      * Initialise a parsing task
@@ -813,7 +830,7 @@ var Parser = /** @class */ (function () {
         // 1) We have to check wheter or not the expression is valid
         var _this = this;
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError("Invalid expression given");
+            throw new InvalidExpressionError('Invalid expression given');
         }
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
@@ -825,7 +842,7 @@ var Parser = /** @class */ (function () {
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.partials['$' + $1] + ')'; });
         return expression;
     };
     /**
@@ -833,8 +850,8 @@ var Parser = /** @class */ (function () {
      * @param exp the expression to check
      */
     Parser.prototype.check = function (exp) {
-        var open_brackets_number = exp.split("(").length;
-        var close_brackets_number = exp.split(")").length;
+        var open_brackets_number = exp.split('(').length;
+        var close_brackets_number = exp.split(')').length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         }
@@ -846,44 +863,38 @@ var Parser = /** @class */ (function () {
      * PrepareExpression
      */
     Parser.prototype.prepareExpression = function (exp) {
-        exp = exp.replace(/²/gi, "^2");
-        exp = exp.replace(/³/gi, "^2");
-        exp = exp.replace(/X/g, "x");
+        exp = exp.replace(/²/gi, '^2');
+        exp = exp.replace(/³/gi, '^2');
+        exp = exp.replace(/X/g, 'x');
         exp = exp.replace(/([0-9]+)x/gi, function (exp, $1) {
             return "(" + $1 + "*x)";
         });
-        var processed_exp = "";
+        var processed_exp = '';
         var parenthesis_level = 0;
-        var buffer = "";
+        var buffer = '';
         for (var i = 0; i < exp.length; i++) {
             var char = exp[i];
-            var e = "$" + (Object.keys(this.partials).length + 1);
+            var e = '$' + (Object.keys(this.partials).length + 1);
             if (parenthesis_level >= 1) {
-                if (char == ")") {
+                if (char == ')') {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        if (this.type == "parser") {
-                            this.partials[e] = this.parse(buffer);
-                        }
-                        else {
-                            //@ts-ignore
-                            this.partials[e] = this.derivative(buffer);
-                        }
-                        buffer = "";
+                        this.partials[e] = this.parse(buffer);
+                        buffer = '';
                     }
                     else {
                         buffer += char;
                     }
                 }
                 else {
-                    if (char == "(") {
+                    if (char == '(') {
                         parenthesis_level += 1;
                     }
                     buffer += char;
                 }
             }
             else {
-                if (char == "(") {
+                if (char == '(') {
                     parenthesis_level += 1;
                     processed_exp += e;
                 }
@@ -897,11 +908,11 @@ var Parser = /** @class */ (function () {
     Parser.prototype.getComputedValue = function (value) {
         var math = new math_1.default();
         var parse = new parser_1.default();
-        if (value.indexOf("dérivée ") == 0) {
-            value = parse.stringify(math.derivate(parse.exec(value.replace("dérivée ", ""))));
+        if (value.indexOf('dérivée ') == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ''))));
         }
-        else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace("dérivée_seconde ", "")))));
+        else if (value.indexOf('dérivée_seconde ') == 0) {
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', '')))));
         }
         return value;
     };
@@ -912,7 +923,7 @@ var InvalidExpressionError = /** @class */ (function (_super) {
     __extends(InvalidExpressionError, _super);
     function InvalidExpressionError() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.type = "IE";
+        _this.type = 'IE';
         return _this;
     }
     return InvalidExpressionError;
