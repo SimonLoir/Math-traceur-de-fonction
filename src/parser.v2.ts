@@ -1,5 +1,3 @@
-import P from './parser';
-
 export default class Parser {
     protected partials: any = {};
     public type = 'parser';
@@ -109,7 +107,6 @@ export default class Parser {
 
     public getComputedValue(value: string) {
         const math = new MathObject();
-        const parse = new P();
 
         if (value.indexOf('dérivée ') == 0) {
             value = math.derivative(value.replace('dérivée ', ''));

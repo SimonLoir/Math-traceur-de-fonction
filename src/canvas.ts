@@ -1,5 +1,3 @@
-import parser from "./parser";
-
 export default class canvas {
     private fdata: any;
 
@@ -24,7 +22,7 @@ export default class canvas {
         canvas.width = canvas.scrollWidth;
 
         this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
+        this.ctx = canvas.getContext('2d');
 
         this.init();
 
@@ -33,12 +31,12 @@ export default class canvas {
         let down: boolean = false;
 
         //When the user starts an action on the canvas.
-        canvas.addEventListener("mousedown", (e: MouseEvent) => {
+        canvas.addEventListener('mousedown', (e: MouseEvent) => {
             down = true;
             start = { x: e.pageX, y: e.pageY };
-            canvas.style.cursor = "grabbing";
+            canvas.style.cursor = 'grabbing';
         });
-        canvas.addEventListener("touchstart", (e: TouchEvent) => {
+        canvas.addEventListener('touchstart', (e: TouchEvent) => {
             down = true;
             start = {
                 x: e.touches.item(0).clientX,
@@ -46,7 +44,7 @@ export default class canvas {
             };
         });
         // When the user moves on the surface of the canvas.
-        canvas.addEventListener("mousemove", (e: MouseEvent) => {
+        canvas.addEventListener('mousemove', (e: MouseEvent) => {
             if (down == true) {
                 let new_start = { x: e.pageX, y: e.pageY };
                 let old = start;
@@ -56,7 +54,7 @@ export default class canvas {
                 }
             }
         });
-        canvas.addEventListener("touchmove", (e: TouchEvent) => {
+        canvas.addEventListener('touchmove', (e: TouchEvent) => {
             e.preventDefault();
             if (down == true) {
                 let new_start = {
@@ -72,23 +70,23 @@ export default class canvas {
         });
 
         //When the user stops clicking on teh surface
-        canvas.addEventListener("mouseup", (e: MouseEvent) => {
+        canvas.addEventListener('mouseup', (e: MouseEvent) => {
             down = false;
-            canvas.style.cursor = "grab";
+            canvas.style.cursor = 'grab';
         });
-        canvas.addEventListener("touchend", (e: MouseEvent) => {
+        canvas.addEventListener('touchend', (e: MouseEvent) => {
             down = false;
         });
 
-        window.addEventListener("resize", (e: Event) => {
+        window.addEventListener('resize', (e: Event) => {
             this.reload();
         });
 
-        canvas.addEventListener("mousewheel", (e: any) => {
+        canvas.addEventListener('mousewheel', (e: any) => {
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
         });
-        canvas.addEventListener("DOMMouseScroll", (e: any) => {
+        canvas.addEventListener('DOMMouseScroll', (e: any) => {
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
         });
@@ -122,7 +120,7 @@ export default class canvas {
         // Clears the view
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.beginPath();
-        this.ctx.fillStyle = "#fafafa";
+        this.ctx.fillStyle = '#fafafa';
         this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fill();
         this.ctx.closePath();
@@ -137,11 +135,11 @@ export default class canvas {
                 this.getRelativePositionY(Math.floor(this.center_y + max)),
                 this.getRelativePositionX(xpos),
                 this.getRelativePositionY(Math.floor(this.center_y - max)),
-                Math.floor(xpos) == 0 ? "black" : undefined
+                Math.floor(xpos) == 0 ? 'black' : undefined
             );
             this.ctx.beginPath();
-            this.ctx.font = "15px Sans Serif";
-            this.ctx.fillStyle = "gray";
+            this.ctx.font = '15px Sans Serif';
+            this.ctx.fillStyle = 'gray';
             this.ctx.fillText(
                 xpos.toString(),
                 this.getRelativePositionX(xpos),
@@ -161,11 +159,11 @@ export default class canvas {
                 this.getRelativePositionY(ypos),
                 this.getRelativePositionX(Math.floor(this.center_x - max)),
                 this.getRelativePositionY(ypos),
-                Math.floor(ypos) == 0 ? "black" : undefined
+                Math.floor(ypos) == 0 ? 'black' : undefined
             );
             this.ctx.beginPath();
-            this.ctx.font = "15px Sans Serif";
-            this.ctx.fillStyle = "gray";
+            this.ctx.font = '15px Sans Serif';
+            this.ctx.fillStyle = 'gray';
             this.ctx.fillText(
                 ypos.toString(),
                 this.getRelativePositionX(0) -
@@ -176,6 +174,9 @@ export default class canvas {
             this.ctx.closePath();
             ypos++;
         }
+
+        // The program will be able to trace points
+        // this.point(this.getRelativePositionX(0), this.getRelativePositionY(0));
     }
 
     public move(previous: any, now: any): any {
@@ -203,7 +204,7 @@ export default class canvas {
     ) {
         this.ctx.beginPath();
         if (color == undefined) {
-            this.ctx.strokeStyle = "#eee";
+            this.ctx.strokeStyle = '#eee';
         } else {
             this.ctx.strokeStyle = color;
         }
@@ -239,8 +240,8 @@ export default class canvas {
         isPreview: boolean = false
     ) {
         if (!color) {
-            var letters = "0123456789ABCDEF";
-            color = "#";
+            var letters = '0123456789ABCDEF';
+            color = '#';
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
@@ -323,6 +324,14 @@ export default class canvas {
                 }
             });
         });
+    }
+
+    public point(x: number, y: number) {
+        x = this.getRelativePositionX(x);
+        y = this.getRelativePositionX(y);
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
+        this.ctx.fill();
     }
 
     set funcs(fdata: any[]) {

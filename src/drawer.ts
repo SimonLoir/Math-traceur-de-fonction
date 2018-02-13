@@ -1,7 +1,6 @@
 import './scss/drawer.scss';
 import canvas from './canvas';
 import parser from './parser.v2';
-import MathObject from './math';
 import modal from './modal';
 
 // We get the default canvas
@@ -9,10 +8,6 @@ let html_canvas_element = document.querySelector('canvas');
 
 //We create a new smath canvas
 let smath = new canvas(html_canvas_element);
-
-// We create a new math object
-let math = new MathObject();
-let flist = math.getFunctions();
 
 // We create a new expression parser
 let parse = new parser();

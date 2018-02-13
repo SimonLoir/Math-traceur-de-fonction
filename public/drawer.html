@@ -11,16 +11,19 @@
 <body>
     <div class="panel">
         <div class="tab_manager">
-            <span  data-link="objects">Objets</span>
-            <span  data-link="tools">Outils</span>
+            <span data-link="objects">Objets</span>
+            <span data-link="tools">Outils</span>
         </div>
         <div class="tabs">
             <div id="objects" class="tab">
-                <input type="text" id="function_add_input"><button id="function_add_button">+</button>
+                <span>
+                    <input type="text" id="function_add_input">
+                    <button id="function_add_button">+</button>
+                </span>
                 <div id="list">
                     <p class="title">Fonctions</p>
                     <div id="functions">
-                        
+
                     </div>
                     <p class="title">Objets</p>
                     <div id="objs">
@@ -38,7 +41,7 @@
                 </div>
             </div>
             <div id="tools" class="tab">
-                
+
             </div>
         </div>
 
@@ -47,6 +50,9 @@
         <canvas style="cursor:grab;">
 
         </canvas>
+        <button class="point">
+
+        </button>
     </div>
     <button id="menu">
         Menu on/off
