@@ -684,14 +684,9 @@ var parser_v2_1 = __webpack_require__(2);
 var math_v2_1 = __webpack_require__(16);
 var parser = new parser_v2_1.default();
 var math = new math_v2_1.default();
-console.log('=> ', math.derivative('5'));
-console.log('=> ', math.derivative('x'));
-console.log('=> ', math.derivative('4+x'));
-console.log('=> ', math.derivative('4-x'));
-console.log('=> ', math.derivative('2x'));
-console.log('=> ', math.derivative('2x^2'));
-console.log('=> ', math.derivative('(2x)^2'));
-console.log('=> ', math.derivative('2*x^2'));
+['1', 'x', '2x', 'x²', 'x^3', '2*x²', '(2x)^2'].forEach(function (e) {
+    console.log('=> ' + e, math.derivative(e));
+});
 //http://jsben.ch/D2xTG
 console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));
 console.log('>', parser.parse('x²+(x²-6x)*x'));
@@ -732,56 +727,92 @@ var MathObject = /** @class */ (function (_super) {
         }
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
-        // 3) Wa have to split the expression into small pieces
-        var sum_terms = expression.split('+');
-        expression = '';
-        sum_terms.forEach(function (sum_term) {
-            var sub_terms = sum_term.split('-');
-            sum_term = '';
-            sub_terms.forEach(function (sub_term) { return (sum_term += _this.derivativeItem(sub_term) + "-"); });
-            if (sum_term[sum_term.length - 1] == '-')
-                sum_term = sum_term.slice(0, -1);
-            expression += sum_term + "+";
-        });
-        if (expression[expression.length - 1] == '+')
-            expression = expression.slice(0, -1);
-        expression = expression.replace(/\$([0-9]+)/g, function (e) {
-            return "(" + _this.derivative(_this.partials[e]) + ")";
-        });
-        return expression;
-    };
-    /**
-     * Gets the derivative for a single item
-     */
-    MathObject.prototype.derivativeItem = function (item) {
-        var _this = this;
-        if (!isNaN(item)) {
+        // 3) Wa have to split the expression into small pieces and check step by step
+        if (expression.indexOf('+') >= 0) {
+            var spl = expression.split('+');
+            expression = '';
+            spl.forEach(function (s) {
+                expression += _this.derivative(s) + "+";
+            });
+            if (expression[expression.length - 1] == '+')
+                expression = expression.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+            expression = this.clean(expression);
+            return expression;
+        }
+        if (expression.indexOf('-') >= 0) {
+            var spl = expression.split('-');
+            expression = '';
+            spl.forEach(function (s) {
+                expression += _this.derivative(s) + "-";
+            });
+            if (expression[expression.length - 1] == '-')
+                expression = expression.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+            expression = this.clean(expression);
+            return expression;
+        }
+        if (expression.indexOf('*') >= 0) {
+            var spl_1 = expression.split('*');
+            expression = '';
+            spl_1.forEach(function (s, i) {
+                expression += _this.derivative(s) + "*" + _this.getAllExpect(spl_1, i).join('*') + "+";
+            });
+            if (expression[expression.length - 1] == '+')
+                expression = expression.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+            expression = this.clean(expression);
+            return expression;
+        }
+        //@ts-ignore
+        if (!isNaN(expression)) {
+            // Derivative of a number is always equal to 0
             return '0';
         }
-        else if (item == 'x') {
+        else if (expression == 'x') {
+            // Derivative of x is alwais equal to 1
             return 1;
         }
-        else if (item.indexOf('*') >= 0) {
-            var result_1 = '';
-            var spl_1 = item.split('*');
-            spl_1.forEach(function (element, index) {
-                result_1 += _this.derivativeItem(element) + "*" + _this.getAllExpect(spl_1, index).join('*') + "+";
-            });
-            if (result_1[result_1.length - 1] == '+')
-                result_1 = result_1.slice(0, -1);
-            return result_1;
+        else if (expression.indexOf('^') >= 1) {
+            // Derivative of x^n is equal to n(x)^(n-1) * (x)'
+            var parts = expression.split('^');
+            return this.clean(parts[1] + "*" + parts[0] + "^(" + (!isNaN(this.Functionize(parts[1] + '-1')(NaN))
+                ? this.Functionize(parts[1] + '-1')(NaN)
+                : parts[1] + '-1') + ")*(" + this.derivative(parts[0]) + ")");
         }
-        else if (item.indexOf('^') >= 1) {
-            var parts = item.split('^');
-            console.log(parts);
-            return parts[1] + "*" + parts[0] + "^(" + parts[1] + " - 1)*(" + this.derivative(parts[0]) + ")";
-        }
-        else if (/^\$([0-9]+)$/.test(item) == true) {
-            return "(" + this.partials[item] + ")";
+        else if (/^\$([0-9]+)$/.test(expression) == true) {
+            // This replaces $.. into the expression
+            return "(" + this.derivative(this.partials[expression]) + ")";
         }
         else {
-            return 'e';
+            throw new Error('Something went wrong');
         }
+    };
+    /**
+     * Creates a function to run the expression
+     */
+    MathObject.prototype.Functionize = function (exp, parse) {
+        if (parse === void 0) { parse = true; }
+        if (parse == true) {
+            exp = this.parse(exp);
+        }
+        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n\n            return " + exp + ";\n\n        ");
+    };
+    /**
+     * CleanUp
+     */
+    MathObject.prototype.clean = function (expression) {
+        var _this = this;
+        expression = expression.replace(/\(([0-9]+)\)/gi, function (e, $1) { return $1; });
+        expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
+        expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
+        expression = expression.replace(/\$([0-9]+)/g, function (e) {
+            return "(" + _this.partials[e] + ")";
+        });
+        return expression;
     };
     MathObject.prototype.getAllExpect = function (array, i) {
         var res = [];

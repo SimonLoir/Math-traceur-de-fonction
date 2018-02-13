@@ -4,14 +4,9 @@ import MathObject from './math.v2';
 let parser = new Parser();
 let math = new MathObject();
 
-console.log('=> ', math.derivative('5'));
-console.log('=> ', math.derivative('x'));
-console.log('=> ', math.derivative('4+x'));
-console.log('=> ', math.derivative('4-x'));
-console.log('=> ', math.derivative('2x'));
-console.log('=> ', math.derivative('2x^2'));
-console.log('=> ', math.derivative('(2x)^2'));
-console.log('=> ', math.derivative('2*x^2'));
+['1', 'x', '2x', 'x²', 'x^3', '2*x²', '(2x)^2'].forEach(e => {
+    console.log('=> ' + e, math.derivative(e));
+});
 
 //http://jsben.ch/D2xTG
 console.log(

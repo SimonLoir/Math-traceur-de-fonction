@@ -2,7 +2,7 @@ import Parser, { InvalidExpressionError } from './parser.v2';
 
 export default class MathObject extends Parser {
     public type = 'MathObject';
-    public derivative(expression: string) {
+    public derivative(expression: string): any {
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
             throw new InvalidExpressionError('Invalid expression given');
@@ -11,70 +11,146 @@ export default class MathObject extends Parser {
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
 
-        // 3) Wa have to split the expression into small pieces
+        // 3) Wa have to split the expression into small pieces and check step by step
 
-        let sum_terms = expression.split('+');
+        if (expression.indexOf('+') >= 0) {
+            let spl = expression.split('+');
+            expression = '';
+            spl.forEach(s => {
+                expression += `${this.derivative(s)}+`;
+            });
+            if (expression[expression.length - 1] == '+')
+                expression = expression.slice(0, -1);
 
-        expression = '';
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
 
-        sum_terms.forEach(sum_term => {
-            let sub_terms = sum_term.split('-');
+            expression = this.clean(expression);
 
-            sum_term = '';
+            return expression;
+        }
 
-            sub_terms.forEach(
-                sub_term => (sum_term += `${this.derivativeItem(sub_term)}-`)
-            );
+        if (expression.indexOf('-') >= 0) {
+            let spl = expression.split('-');
+            expression = '';
+            spl.forEach(s => {
+                expression += `${this.derivative(s)}-`;
+            });
+            if (expression[expression.length - 1] == '-')
+                expression = expression.slice(0, -1);
 
-            if (sum_term[sum_term.length - 1] == '-')
-                sum_term = sum_term.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
 
-            expression += `${sum_term}+`;
-        });
+            expression = this.clean(expression);
 
-        if (expression[expression.length - 1] == '+')
-            expression = expression.slice(0, -1);
+            return expression;
+        }
 
-        expression = expression.replace(/\$([0-9]+)/g, e => {
-            return `(${this.derivative(this.partials[e])})`;
-        });
-
-        return expression;
-    }
-    /**
-     * Gets the derivative for a single item
-     */
-    private derivativeItem(item: any) {
-        if (!isNaN(item)) {
-            return '0';
-        } else if (item == 'x') {
-            return 1;
-        } else if (item.indexOf('*') >= 0) {
-            let result = '';
-
-            let spl: string[] = item.split('*');
-
-            spl.forEach((element, index) => {
-                result += `${this.derivativeItem(element)}*${this.getAllExpect(
+        if (expression.indexOf('*') >= 0) {
+            let spl = expression.split('*');
+            expression = '';
+            spl.forEach((s, i) => {
+                expression += `${this.derivative(s)}*${this.getAllExpect(
                     spl,
-                    index
+                    i
                 ).join('*')}+`;
             });
+            if (expression[expression.length - 1] == '+')
+                expression = expression.slice(0, -1);
 
-            if (result[result.length - 1] == '+') result = result.slice(0, -1);
+            if (!isNaN(this.Functionize(expression)(NaN)))
+                return this.Functionize(expression)(NaN);
+            expression = this.clean(expression);
 
-            return result;
-        } else if (item.indexOf('^') >= 1) {
-            let parts: string[] = item.split('^');
-            console.log(parts);
-            return `${parts[1]}*${parts[0]}^(${
-                parts[1]
-            } - 1)*(${this.derivative(parts[0])})`;
-        } else if (/^\$([0-9]+)$/.test(item) == true) {
-            return `(${this.partials[item]})`;
-        } else {
-            return 'e';
+            return expression;
         }
+
+        //@ts-ignore
+        if (!isNaN(expression)) {
+            // Derivative of a number is always equal to 0
+
+            return '0';
+        } else if (expression == 'x') {
+            // Derivative of x is alwais equal to 1
+
+            return 1;
+        } else if (expression.indexOf('^') >= 1) {
+            // Derivative of x^n is equal to n(x)^(n-1) * (x)'
+
+            let parts: string[] = expression.split('^');
+            return this.clean(
+                `${parts[1]}*${parts[0]}^(${
+                    !isNaN(this.Functionize(parts[1] + '-1')(NaN))
+                        ? this.Functionize(parts[1] + '-1')(NaN)
+                        : parts[1] + '-1'
+                })*(${this.derivative(parts[0])})`
+            );
+        } else if (/^\$([0-9]+)$/.test(expression) == true) {
+            // This replaces $.. into the expression
+
+            return `(${this.derivative(this.partials[expression])})`;
+        } else {
+            throw new Error('Something went wrong');
+        }
+    }
+
+    /**
+     * Creates a function to run the expression
+     */
+    public Functionize(exp: string, parse = true) {
+        if (parse == true) {
+            exp = this.parse(exp);
+        }
+        return new Function(
+            'x',
+            `
+            let sin = Math.sin;
+            let tan = Math.tan;
+            let cos = Math.cos;
+            let asin = Math.asin;
+            let atan = Math.atan;
+            let acos = Math.acos;
+
+            let sinh = Math.sinh;
+            let tanh = Math.tanh;
+            let cosh = Math.cosh;
+            let asinh = Math.asinh;
+            let atanh = Math.atanh;
+            let acosh = Math.acosh;
+
+            let ceil = Math.ceil;
+            let floor = Math.floor;
+            let abs = Math.abs;
+            let exp = Math.exp;
+            let log = Math.log;
+            
+            let e = Math.E;
+            let pi = Math.PI;
+
+            return ${exp};
+
+        `
+        );
+    }
+
+    /**
+     * CleanUp
+     */
+    public clean(expression: string) {
+        expression = expression.replace(/\(([0-9]+)\)/gi, (e, $1) => $1);
+        expression = expression.replace(
+            /\*([0-9])/gi,
+            (e, $1) => ($1 == 1 ? '' : e)
+        );
+        expression = expression.replace(
+            /\^([0-9])/gi,
+            (e, $1) => ($1 == 1 ? '' : e)
+        );
+        expression = expression.replace(/\$([0-9]+)/g, e => {
+            return `(${this.partials[e]})`;
+        });
+        return expression;
     }
 
     private getAllExpect(array: Array<any>, i: number) {
