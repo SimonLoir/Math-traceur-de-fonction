@@ -731,9 +731,7 @@ var MathObject = /** @class */ (function (_super) {
         if (expression.indexOf('+') >= 0) {
             var spl = expression.split('+');
             expression = '';
-            spl.forEach(function (s) {
-                expression += _this.derivative(s) + "+";
-            });
+            spl.forEach(function (s) { return (expression += _this.derivative(s) + "+"); });
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
             if (!isNaN(this.Functionize(expression)(NaN)))
@@ -744,9 +742,7 @@ var MathObject = /** @class */ (function (_super) {
         if (expression.indexOf('-') >= 0) {
             var spl = expression.split('-');
             expression = '';
-            spl.forEach(function (s) {
-                expression += _this.derivative(s) + "-";
-            });
+            spl.forEach(function (s) { return (expression += _this.derivative(s) + "-"); });
             if (expression[expression.length - 1] == '-')
                 expression = expression.slice(0, -1);
             if (!isNaN(this.Functionize(expression)(NaN)))
@@ -758,7 +754,7 @@ var MathObject = /** @class */ (function (_super) {
             var spl_1 = expression.split('*');
             expression = '';
             spl_1.forEach(function (s, i) {
-                expression += _this.derivative(s) + "*" + _this.getAllExpect(spl_1, i).join('*') + "+";
+                return (expression += _this.derivative(s) + "*" + _this.getAllExpect(spl_1, i).join('*') + "+");
             });
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);

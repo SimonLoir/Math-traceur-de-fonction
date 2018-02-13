@@ -16,9 +16,7 @@ export default class MathObject extends Parser {
         if (expression.indexOf('+') >= 0) {
             let spl = expression.split('+');
             expression = '';
-            spl.forEach(s => {
-                expression += `${this.derivative(s)}+`;
-            });
+            spl.forEach(s => (expression += `${this.derivative(s)}+`));
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
 
@@ -33,9 +31,7 @@ export default class MathObject extends Parser {
         if (expression.indexOf('-') >= 0) {
             let spl = expression.split('-');
             expression = '';
-            spl.forEach(s => {
-                expression += `${this.derivative(s)}-`;
-            });
+            spl.forEach(s => (expression += `${this.derivative(s)}-`));
             if (expression[expression.length - 1] == '-')
                 expression = expression.slice(0, -1);
 
@@ -50,17 +46,19 @@ export default class MathObject extends Parser {
         if (expression.indexOf('*') >= 0) {
             let spl = expression.split('*');
             expression = '';
-            spl.forEach((s, i) => {
-                expression += `${this.derivative(s)}*${this.getAllExpect(
-                    spl,
-                    i
-                ).join('*')}+`;
-            });
+            spl.forEach(
+                (s, i) =>
+                    (expression += `${this.derivative(s)}*${this.getAllExpect(
+                        spl,
+                        i
+                    ).join('*')}+`)
+            );
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
 
             if (!isNaN(this.Functionize(expression)(NaN)))
                 return this.Functionize(expression)(NaN);
+
             expression = this.clean(expression);
 
             return expression;
