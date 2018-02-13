@@ -17,15 +17,14 @@ export default class canvas {
 
     private stored: any = {};
 
-    private pathes: any = {}
+    private pathes: any = {};
 
     constructor(canvas: HTMLCanvasElement) {
-
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
 
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = canvas.getContext("2d");
 
         this.init();
 
@@ -34,19 +33,22 @@ export default class canvas {
         let down: boolean = false;
 
         //When the user starts an action on the canvas.
-        canvas.addEventListener('mousedown', (e: MouseEvent) => {
+        canvas.addEventListener("mousedown", (e: MouseEvent) => {
             down = true;
-            start = { x: e.pageX, y: e.pageY }
+            start = { x: e.pageX, y: e.pageY };
             canvas.style.cursor = "grabbing";
         });
-        canvas.addEventListener('touchstart', (e: TouchEvent) => {
+        canvas.addEventListener("touchstart", (e: TouchEvent) => {
             down = true;
-            start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY }
+            start = {
+                x: e.touches.item(0).clientX,
+                y: e.touches.item(0).clientY
+            };
         });
         // When the user moves on the surface of the canvas.
-        canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        canvas.addEventListener("mousemove", (e: MouseEvent) => {
             if (down == true) {
-                let new_start = { x: e.pageX, y: e.pageY }
+                let new_start = { x: e.pageX, y: e.pageY };
                 let old = start;
                 let drawn = this.move(old, new_start);
                 if (drawn) {
@@ -54,10 +56,13 @@ export default class canvas {
                 }
             }
         });
-        canvas.addEventListener('touchmove', (e: TouchEvent) => {
+        canvas.addEventListener("touchmove", (e: TouchEvent) => {
             e.preventDefault();
             if (down == true) {
-                let new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY }
+                let new_start = {
+                    x: e.touches.item(0).clientX,
+                    y: e.touches.item(0).clientY
+                };
                 let old = start;
                 let drawn = this.move(old, new_start);
                 if (drawn) {
@@ -67,37 +72,37 @@ export default class canvas {
         });
 
         //When the user stops clicking on teh surface
-        canvas.addEventListener('mouseup', (e: MouseEvent) => {
+        canvas.addEventListener("mouseup", (e: MouseEvent) => {
             down = false;
             canvas.style.cursor = "grab";
         });
-        canvas.addEventListener('touchend', (e: MouseEvent) => {
+        canvas.addEventListener("touchend", (e: MouseEvent) => {
             down = false;
         });
 
-        window.addEventListener('resize', (e: Event) => {
+        window.addEventListener("resize", (e: Event) => {
             this.reload();
         });
 
-        canvas.addEventListener('mousewheel', (e:any) => {
-            let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-            this.zoom(delta);            
+        canvas.addEventListener("mousewheel", (e: any) => {
+            let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+            this.zoom(delta);
         });
-        canvas.addEventListener('DOMMouseScroll', (e:any) => {
-            let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        canvas.addEventListener("DOMMouseScroll", (e: any) => {
+            let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
         });
     }
 
     public zoom(delta: number) {
         if (this.x_unit + delta * 10 > 10) {
-            this.x_unit += delta * 10
+            this.x_unit += delta * 10;
         }
 
         if (this.y_unit + delta * 10 > 10) {
-            this.y_unit += delta * 10
+            this.y_unit += delta * 10;
         }
-        
+
         this.reload();
     }
 
@@ -118,51 +123,59 @@ export default class canvas {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fafafa";
-        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height)
+        this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fill();
         this.ctx.closePath();
 
-        let to = Math.floor(this.center_x+ max);
+        let to = Math.floor(this.center_x + max);
 
         let xpos = Math.floor(this.center_x - max);
-        
+
         while (xpos < to) {
             this.drawLine(
                 this.getRelativePositionX(xpos),
                 this.getRelativePositionY(Math.floor(this.center_y + max)),
                 this.getRelativePositionX(xpos),
                 this.getRelativePositionY(Math.floor(this.center_y - max)),
-                (Math.floor(xpos) == 0) ? "black" : undefined
-
-            )
+                Math.floor(xpos) == 0 ? "black" : undefined
+            );
             this.ctx.beginPath();
             this.ctx.font = "15px Sans Serif";
             this.ctx.fillStyle = "gray";
-            this.ctx.fillText(xpos.toString(), this.getRelativePositionX(xpos), this.getRelativePositionY(0) + 15)
-            this.ctx.closePath();            
+            this.ctx.fillText(
+                xpos.toString(),
+                this.getRelativePositionX(xpos),
+                this.getRelativePositionY(0) + 15
+            );
+            this.ctx.closePath();
             xpos++;
         }
 
         to = Math.floor(this.center_y + max);
 
-        let ypos =Math.floor(this.center_y - max);
+        let ypos = Math.floor(this.center_y - max);
 
         while (ypos < to) {
             this.drawLine(
-                this.getRelativePositionX(Math.floor(this.center_x+ max) ),
+                this.getRelativePositionX(Math.floor(this.center_x + max)),
                 this.getRelativePositionY(ypos),
                 this.getRelativePositionX(Math.floor(this.center_x - max)),
                 this.getRelativePositionY(ypos),
-                (Math.floor(ypos) == 0) ? "black" : undefined
-            )
+                Math.floor(ypos) == 0 ? "black" : undefined
+            );
             this.ctx.beginPath();
             this.ctx.font = "15px Sans Serif";
             this.ctx.fillStyle = "gray";
-            this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) - ypos.toString().length * 15/2 - 5, this.getRelativePositionY(ypos))
-            this.ctx.closePath();  
-            ypos++
+            this.ctx.fillText(
+                ypos.toString(),
+                this.getRelativePositionX(0) -
+                    ypos.toString().length * 15 / 2 -
+                    5,
+                this.getRelativePositionY(ypos)
+            );
+            this.ctx.closePath();
+            ypos++;
         }
-
     }
 
     public move(previous: any, now: any): any {
@@ -178,11 +191,16 @@ export default class canvas {
             this.reload();
             return true;
         }
-
-
     }
 
-    private drawLine(x: number, y: number, x2: number, y2: number, color?: string, width?: number) {
+    private drawLine(
+        x: number,
+        y: number,
+        x2: number,
+        y2: number,
+        color?: string,
+        width?: number
+    ) {
         this.ctx.beginPath();
         if (color == undefined) {
             this.ctx.strokeStyle = "#eee";
@@ -200,39 +218,49 @@ export default class canvas {
     }
 
     private getRelativePositionX(point: number) {
-        return (this.canvas.width / 2) + point * this.x_unit - this.center_x * this.x_unit;
+        return (
+            this.canvas.width / 2 +
+            point * this.x_unit -
+            this.center_x * this.x_unit
+        );
     }
 
     private getRelativePositionY(point: number) {
-        return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
+        return (
+            this.canvas.height / 2 -
+            point * this.y_unit +
+            this.center_y * this.y_unit
+        );
     }
 
-    public drawFromFunc(func: any, color: any = undefined, isPreview: boolean = false) {
+    public drawFromFunc(
+        func: any,
+        color: any = undefined,
+        isPreview: boolean = false
+    ) {
         if (!color) {
-            var letters = '0123456789ABCDEF';
-            color = '#';
+            var letters = "0123456789ABCDEF";
+            color = "#";
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
         }
-        let display_size = (this.canvas.width / 2) / this.x_unit
-        let x = this.center_x - display_size
-        let last = undefined
+        let display_size = this.canvas.width / 2 / this.x_unit;
+        let x = this.center_x - display_size;
+        let last = undefined;
         let label = func;
 
         let was_defined = true;
 
         if (this.pathes[label] == undefined) {
             this.pathes[label] = {};
-            was_defined = false
+            was_defined = false;
         }
 
         while (x < this.center_x + display_size) {
-
-
-            let pos
-            let new_y
-            let new_x
+            let pos;
+            let new_y;
+            let new_x;
 
             if (was_defined == true && this.pathes[label][x] != undefined) {
                 new_y = this.getRelativePositionY(this.pathes[label][x]);
@@ -244,19 +272,18 @@ export default class canvas {
                 new_x = this.getRelativePositionX(x);
             }
 
-
             if (last != undefined) {
                 this.drawLine(new_x, new_y, last.x, last.y, color, 2);
             }
             last = {
                 x: new_x,
                 y: new_y
-            }
+            };
 
             if (isPreview == true) {
-                x += 0.5
+                x += 0.5;
             } else {
-                x += 0.05
+                x += 0.05;
             }
 
             //x+= this.x_unit /500;
@@ -275,12 +302,9 @@ export default class canvas {
             this.stored[label][start] = func(start);
             return this.stored[label][start];
         }
-
-
     }
 
     public reload(fdata?: any) {
-
         if (fdata != undefined) {
             this.funcs = fdata;
         }
@@ -292,7 +316,10 @@ export default class canvas {
         requestAnimationFrame(() => {
             data.forEach(key => {
                 if (this.fdata[key].visible == true) {
-                    this.drawFromFunc(this.fdata[key].array, this.fdata[key].color);
+                    this.drawFromFunc(
+                        this.fdata[key].array,
+                        this.fdata[key].color
+                    );
                 }
             });
         });

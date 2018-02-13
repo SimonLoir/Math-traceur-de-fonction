@@ -72,18 +72,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var parser_1 = __webpack_require__(1);
 //@ts-ignore
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign != "function") {
     // Must be writable: true, enumerable: false, configurable: true
     Object.defineProperty(Object, "assign", {
         value: function assign(target, varArgs) {
-            'use strict';
+            // .length of function is 2
+            "use strict";
             if (target == null) {
-                throw new TypeError('Cannot convert undefined or null to object');
+                // TypeError if undefined or null
+                throw new TypeError("Cannot convert undefined or null to object");
             }
             var to = Object(target);
             for (var index = 1; index < arguments.length; index++) {
                 var nextSource = arguments[index];
                 if (nextSource != null) {
+                    // Skip over if undefined or null
                     for (var nextKey in nextSource) {
                         // Avoid bugs when hasOwnProperty is shadowed
                         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
@@ -100,9 +103,9 @@ if (typeof Object.assign != 'function') {
 }
 var MathObject = /** @class */ (function () {
     function MathObject() {
-        this.multiply = (new parser_1.default).multiply;
-        this.add = (new parser_1.default).add;
-        this.sub = (new parser_1.default).sub;
+        this.multiply = new parser_1.default().multiply;
+        this.add = new parser_1.default().add;
+        this.sub = new parser_1.default().sub;
     }
     MathObject.prototype.getFunctions = function () {
         return "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log\n            \n            let e = Math.E;\n            let pi = Math.PI\n        ";
@@ -120,20 +123,24 @@ var MathObject = /** @class */ (function () {
                 result += array[element] * start;
             }
             else if (element.indexOf("^m") >= 0) {
-                result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+                result +=
+                    array[element] *
+                        (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
             }
             else if (element == "over") {
                 result = result / this.getFor(start, array[element]);
             }
             else {
-                result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                result +=
+                    array[element] *
+                        Math.pow(start, parseFloat(element.split("^")[1]));
             }
         }
         return result;
     };
     MathObject.prototype.derivate = function (array) {
         var _this = this;
-        console.log('=>', array);
+        console.log("=>", array);
         var keys = Object.keys(array);
         if (keys.length == 1) {
             if (keys[0] == "~") {
@@ -143,9 +150,10 @@ var MathObject = /** @class */ (function () {
                 return { "~": array[keys[0]] };
             }
             else if (keys[0].indexOf("x^") == 0) {
-                var exp = parseFloat(keys[0].replace('x^', ""));
+                var exp = parseFloat(keys[0].replace("x^", ""));
                 var a = {};
-                a["x" + ((exp - 1 != 1) ? "^" + (exp - 1) : "")] = exp * array[keys[0]];
+                a["x" + (exp - 1 != 1 ? "^" + (exp - 1) : "")] =
+                    exp * array[keys[0]];
                 console.log(a);
                 return a;
             }
@@ -159,8 +167,8 @@ var MathObject = /** @class */ (function () {
             delete a["over"];
             console.log(this.derivate(a), over, this.multiply(this.derivate(a), over));
             console.log(this.derivate(a), over, this.multiply(this.derivate(over), a));
-            var narray = (this.multiply(this.derivate(a), over));
-            var narray2 = (this.multiply(this.derivate(over), a));
+            var narray = this.multiply(this.derivate(a), over);
+            var narray2 = this.multiply(this.derivate(over), a);
             var sub = this.sub(narray2, narray);
             console.log("sub", sub);
             //@ts-ignore
@@ -229,7 +237,7 @@ var parser = /** @class */ (function () {
                         var index = this.index;
                         this.byIndexes["$" + index] = this.exec(inside);
                         this.byIndexes2["$" + index] = this.stringify(this.exec(inside));
-                        exp = exp.replace('(' + inside + ')', "$" + index);
+                        exp = exp.replace("(" + inside + ")", "$" + index);
                     }
                     else {
                         inside += ")";
@@ -250,12 +258,12 @@ var parser = /** @class */ (function () {
                 if (element == "~") {
                 }
                 else {
-                    if (element.indexOf('x') == 0) {
+                    if (element.indexOf("x") == 0) {
                         if (element == "x") {
                             new_keys.push("1");
                         }
                         else {
-                            new_keys.push(element.replace('x^', ""));
+                            new_keys.push(element.replace("x^", ""));
                         }
                     }
                     else {
@@ -271,7 +279,7 @@ var parser = /** @class */ (function () {
                     keys.push("x");
                 }
                 else {
-                    keys.push('x^' + key);
+                    keys.push("x^" + key);
                 }
             }
             for (var i = 0; i < keys.length; i++) {
@@ -291,13 +299,13 @@ var parser = /** @class */ (function () {
             if (array["~"] != undefined) {
                 text += array["~"];
             }
-            text = text.replace('x^2+', "x²+");
-            text = text.replace('x^3+', "x³+");
-            text = text.replace('+-', "-");
-            text = text.replace('--', "+");
+            text = text.replace("x^2+", "x²+");
+            text = text.replace("x^3+", "x³+");
+            text = text.replace("+-", "-");
+            text = text.replace("--", "+");
             if (text[text.length - 1] == "+") {
                 text += "end";
-                text = text.replace('+end', "");
+                text = text.replace("+end", "");
             }
             if (text == "x^2") {
                 text = "x²";
@@ -312,12 +320,12 @@ var parser = /** @class */ (function () {
         };
     }
     parser.prototype.getComputedValue = function (value) {
-        var math = new math_1.default;
-        if (value.indexOf('dérivée ') == 0) {
-            value = this.stringify(math.derivate(this.exec(value.replace('dérivée ', ""))));
+        var math = new math_1.default();
+        if (value.indexOf("dérivée ") == 0) {
+            value = this.stringify(math.derivate(this.exec(value.replace("dérivée ", ""))));
         }
         else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = this.stringify(math.derivate(math.derivate(this.exec(value.replace('dérivée_seconde ', "")))));
+            value = this.stringify(math.derivate(math.derivate(this.exec(value.replace("dérivée_seconde ", "")))));
         }
         return value;
     };
@@ -348,7 +356,7 @@ var parser = /** @class */ (function () {
      * @param expression
      */
     parser.prototype.exec = function (expression) {
-        if (expression.indexOf('(') < 0) {
+        if (expression.indexOf("(") < 0) {
             return this.exec_and_sort(expression);
         }
         else {
@@ -357,14 +365,14 @@ var parser = /** @class */ (function () {
                 return this.parseExp(expression);
             }
             else {
-                return 'Cette expression n\'est pas correcte : ' + ver;
+                return "Cette expression n'est pas correcte : " + ver;
             }
         }
     };
     parser.prototype.exec_and_sort = function (expression) {
         expression = expression.replace(/\-\-/i, "+");
         expression = expression.replace(/\+\-/i, "-");
-        if (expression.indexOf('-') == 0) {
+        if (expression.indexOf("-") == 0) {
             expression = "0" + expression;
         }
         expression = expression.replace(/²/g, "^2");
@@ -382,7 +390,7 @@ var parser = /** @class */ (function () {
         /*
         Séparation des +
         */
-        var sum_of = expression.split('+');
+        var sum_of = expression.split("+");
         var sum_result = {};
         for (var i = 0; i < sum_of.length; i++) {
             var element = sum_of[i];
@@ -410,7 +418,7 @@ var parser = /** @class */ (function () {
                          */
                         if (div == 0) {
                             if (dive.indexOf("x") < 0) {
-                                if (dive.indexOf('$') == 0) {
+                                if (dive.indexOf("$") == 0) {
                                     div_result = this.byIndexes[dive];
                                 }
                                 else if (dive == "pi") {
@@ -421,21 +429,21 @@ var parser = /** @class */ (function () {
                                 }
                             }
                             else {
-                                div_result[function () {
-                                    if (dive.split('x')[1] != "") {
-                                        return "x" + dive.split('x')[1];
+                                div_result[(function () {
+                                    if (dive.split("x")[1] != "") {
+                                        return "x" + dive.split("x")[1];
                                     }
                                     else {
                                         return "x";
                                     }
-                                }()] = function () {
-                                    if (dive.split('x')[0] != "") {
-                                        return parseFloat(dive.split('x')[0]);
+                                })()] = (function () {
+                                    if (dive.split("x")[0] != "") {
+                                        return parseFloat(dive.split("x")[0]);
                                     }
                                     else {
                                         return 1;
                                     }
-                                }();
+                                })();
                             }
                             //log('==>', expression, div_result["over"])
                         }
@@ -528,7 +536,9 @@ var parser = /** @class */ (function () {
             }
         }
         if (sum_result["over"] != undefined) {
-            if (Object.keys(sum_result["over"]).length == 1 && Object.keys(sum_result["over"])[0] == "~" && sum_result["over"]["~"] == 1) {
+            if (Object.keys(sum_result["over"]).length == 1 &&
+                Object.keys(sum_result["over"])[0] == "~" &&
+                sum_result["over"]["~"] == 1) {
                 //log("over_one")
                 delete sum_result["over"];
             }
@@ -544,7 +554,8 @@ var parser = /** @class */ (function () {
         for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
             var key = keys[ixxxx];
             if (sum_result[key] != undefined) {
-                sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
+                sum_result[key] =
+                    parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
             }
             else {
                 sum_result[key] = parseFloat(sub_result[key]);
@@ -557,7 +568,8 @@ var parser = /** @class */ (function () {
         var mk = Object.keys(mult_result);
         mk.forEach(function (key) {
             if (sub_result[key] != undefined) {
-                sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
+                sub_result[key] =
+                    parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
             }
             else {
                 sub_result[key] = 0 - parseFloat(mult_result[key]);
@@ -601,26 +613,38 @@ var parser = /** @class */ (function () {
                         else if (e_mult == "x" && e_div == e_mult) {
                             var e_end_power = "x^2";
                         }
-                        else if (e_mult == "~" && e_div.indexOf('x') == 0) {
+                        else if (e_mult == "~" && e_div.indexOf("x") == 0) {
                             var e_end_power = e_div;
                         }
-                        else if (e_div == "~" && e_mult.indexOf('x') == 0) {
+                        else if (e_div == "~" && e_mult.indexOf("x") == 0) {
                             var e_end_power = e_mult;
                         }
-                        else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
-                            var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
+                        else if (e_div == "x" &&
+                            "~" &&
+                            e_mult.indexOf("x^") == 0) {
+                            var e_end_power = "x^" +
+                                (parseFloat(e_mult.replace("x^", "")) + 1);
                         }
-                        else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
-                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
+                        else if (e_mult == "x" &&
+                            "~" &&
+                            e_div.indexOf("x^") == 0) {
+                            var e_end_power = "x^" +
+                                (parseFloat(e_div.replace("x^", "")) + 1);
                         }
                         else {
-                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
+                            var e_end_power = "x^" +
+                                (parseFloat(e_div.replace("x^", "")) +
+                                    parseFloat(e_mult.replace("x^", "")));
                         }
                         if (new_mult_result[e_end_power] != undefined) {
-                            new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                            new_mult_result[e_end_power] +=
+                                parseFloat(number_of_e_mult) *
+                                    parseFloat(number_of_e_div);
                         }
                         else {
-                            new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                            new_mult_result[e_end_power] =
+                                parseFloat(number_of_e_mult) *
+                                    parseFloat(number_of_e_div);
                         }
                     }
                 }
@@ -629,7 +653,9 @@ var parser = /** @class */ (function () {
         new_mult_result["over"] = over;
         mult_result = new_mult_result;
         if (mult_result["over"] != undefined) {
-            if (Object.keys(mult_result["over"]).length == 1 && Object.keys(mult_result["over"])[0] == "~" && mult_result["over"]["~"] == 1) {
+            if (Object.keys(mult_result["over"]).length == 1 &&
+                Object.keys(mult_result["over"])[0] == "~" &&
+                mult_result["over"]["~"] == 1) {
                 //log("over_one")
                 delete mult_result["over"];
             }
@@ -666,11 +692,12 @@ var parser_1 = __webpack_require__(1);
 var Parser = /** @class */ (function () {
     function Parser() {
         this.partials = {};
+        this.type = "parser";
     }
     /**
      * Initialise a parsing task
      * @param {String} expression the expression that has to be parsed
-    */
+     */
     Parser.prototype.parse = function (expression) {
         // 1) We have to check wheter or not the expression is valid
         var _this = this;
@@ -685,9 +712,9 @@ var Parser = /** @class */ (function () {
         /*expression = expression.replace(/derivée\$([0-9]+)/i,
             (e, $1) => `()`);*/
         // We tranform exponants into Math.pow()
-        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
+        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/ig, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
         return expression;
     };
     /**
@@ -695,8 +722,8 @@ var Parser = /** @class */ (function () {
      * @param exp the expression to check
      */
     Parser.prototype.check = function (exp) {
-        var open_brackets_number = exp.split('(').length;
-        var close_brackets_number = exp.split(')').length;
+        var open_brackets_number = exp.split("(").length;
+        var close_brackets_number = exp.split(")").length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         }
@@ -708,10 +735,10 @@ var Parser = /** @class */ (function () {
      * PrepareExpression
      */
     Parser.prototype.prepareExpression = function (exp) {
-        exp = exp.replace(/²/ig, "^2");
-        exp = exp.replace(/³/ig, "^2");
+        exp = exp.replace(/²/gi, "^2");
+        exp = exp.replace(/³/gi, "^2");
         exp = exp.replace(/X/g, "x");
-        exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
+        exp = exp.replace(/([0-9]+)x/gi, function (exp, $1) {
             return "(" + $1 + "*x)";
         });
         var processed_exp = "";
@@ -724,7 +751,13 @@ var Parser = /** @class */ (function () {
                 if (char == ")") {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        this.partials[e] = this.parse(buffer);
+                        if (this.type == "parser") {
+                            this.partials[e] = this.parse(buffer);
+                        }
+                        else {
+                            //@ts-ignore
+                            this.partials[e] = this.derivative(buffer);
+                        }
                         buffer = "";
                     }
                     else {
@@ -751,13 +784,13 @@ var Parser = /** @class */ (function () {
         return processed_exp;
     };
     Parser.prototype.getComputedValue = function (value) {
-        var math = new math_1.default;
-        var parse = new parser_1.default;
-        if (value.indexOf('dérivée ') == 0) {
-            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+        var math = new math_1.default();
+        var parse = new parser_1.default();
+        if (value.indexOf("dérivée ") == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace("dérivée ", ""))));
         }
         else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace("dérivée_seconde ", "")))));
         }
         return value;
     };
@@ -1368,7 +1401,7 @@ var row = 0;
 var letter = 0;
 var letters = "fghpqrst";
 // We add an event listener on the (+) button so that it can add teh function
-document.querySelector("#function_add_button").addEventListener('click', function () {
+document.querySelector("#function_add_button").addEventListener("click", function () {
     var update = function (fdata) {
         var keys = Object.keys(fdata);
         var funcs = [];
@@ -1377,8 +1410,9 @@ document.querySelector("#function_add_button").addEventListener('click', functio
         });
         window.location.hash = encodeURIComponent(JSON.stringify(funcs));
     };
-    //@ts-ignore
-    var value = document.querySelector('#function_add_input').value.trim();
+    var value = document
+        .querySelector("#function_add_input")
+        .value.trim();
     //If it's empty, we don't do anything
     if (value == "") {
         return;
@@ -1389,7 +1423,7 @@ document.querySelector("#function_add_button").addEventListener('click', functio
     value = parse.getComputedValue(value);
     //Adds a text to an element
     var addText = function (e, color, row, initial, value) {
-        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + ((row != 0) ? row : "") + "</sub>(x) =  " + initial + " \n            " + ((initial != value) ? "= " + value : "") + "\n        ";
+        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + (row != 0 ? row : "") + "</sub>(x) =  " + initial + " \n            " + (initial != value ? "= " + value : "") + "\n        ";
     };
     //We get an array from the parsed expression
     var func = new Function("x", "\n        " + flist + "\n        return " + parse.parse(value) + "\n    ");
@@ -1398,20 +1432,18 @@ document.querySelector("#function_add_button").addEventListener('click', functio
     var color = smath.drawFromFunc(func);
     //We create a new item in the functions list
     var item = document
-        .querySelector('#functions')
-        .appendChild(document.createElement('div'));
-    item.classList.add('item');
-    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
-    var remove = item
-        .appendChild(document.createElement('button'));
+        .querySelector("#functions")
+        .appendChild(document.createElement("div"));
+    item.classList.add("item");
+    addText(item.appendChild(document.createElement("span")), color, row, initial, value);
+    var remove = item.appendChild(document.createElement("button"));
     remove.innerHTML = "×";
     //We add the edit button
-    var edit = item
-        .appendChild(document.createElement('button'));
+    var edit = item.appendChild(document.createElement("button"));
     edit.innerHTML = "&#128393;";
     var fname = letters[letter] + "" + row;
     //We add the ability to the user to modify the function
-    edit.addEventListener('click', function () {
+    edit.addEventListener("click", function () {
         var p = new modal_1.default("prompt", {
             title: "Modifier la fonction",
             message: "Modifier l'équation de la fonction : ",
@@ -1423,12 +1455,12 @@ document.querySelector("#function_add_button").addEventListener('click', functio
             fdata[fname].initial = initial;
             fdata[fname].exp = value;
             fdata[fname].array = new Function("x", "\n                " + flist + "\n                return " + parse.parse(value) + "\n            ");
-            addText(item.querySelector('span'), color, row, initial, value);
+            addText(item.querySelector("span"), color, row, initial, value);
             smath.reload(fdata);
             update(fdata);
         };
     });
-    remove.addEventListener('click', function () {
+    remove.addEventListener("click", function () {
         var p = new modal_1.default("ask", {
             title: "Supprimer",
             message: "Supprimer la fonction ?",
@@ -1458,34 +1490,34 @@ document.querySelector("#function_add_button").addEventListener('click', functio
     }
 });
 // We create the menu system
-document.getElementById('menu').addEventListener('click', function () {
-    var panel = document.querySelector('.panel');
-    if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
+document.getElementById("menu").addEventListener("click", function () {
+    var panel = document.querySelector(".panel");
+    if (panel.classList.contains("hidden")) {
+        panel.classList.remove("hidden");
     }
     else {
-        panel.classList.add('hidden');
+        panel.classList.add("hidden");
     }
 });
 //@ts-ignore
-var buttons = document.querySelectorAll('.tab_manager span');
+var buttons = document.querySelectorAll(".tab_manager span");
 //@ts-ignore
-var tabs = document.querySelectorAll('.tab');
+var tabs = document.querySelectorAll(".tab");
 buttons.forEach(function (e) {
-    e.addEventListener('click', function () {
+    e.addEventListener("click", function () {
         var id = e.dataset["link"];
         tabs.forEach(function (tab) {
-            tab.style.display = 'none';
+            tab.style.display = "none";
         });
         buttons.forEach(function (btn) {
-            btn.classList.remove('active');
+            btn.classList.remove("active");
         });
         e.classList.add("active");
         document.getElementById(id).style.display = "block";
     });
 });
 buttons[0].click();
-var hash = window.location.hash.replace('#', "");
+var hash = window.location.hash.replace("#", "");
 try {
     var a = JSON.parse(decodeURIComponent(hash));
     a.forEach(function (element) {
@@ -1583,22 +1615,25 @@ var canvas = /** @class */ (function () {
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = canvas.getContext("2d");
         this.init();
         var start;
         var down = false;
         //When the user starts an action on the canvas.
-        canvas.addEventListener('mousedown', function (e) {
+        canvas.addEventListener("mousedown", function (e) {
             down = true;
             start = { x: e.pageX, y: e.pageY };
             canvas.style.cursor = "grabbing";
         });
-        canvas.addEventListener('touchstart', function (e) {
+        canvas.addEventListener("touchstart", function (e) {
             down = true;
-            start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+            start = {
+                x: e.touches.item(0).clientX,
+                y: e.touches.item(0).clientY
+            };
         });
         // When the user moves on the surface of the canvas.
-        canvas.addEventListener('mousemove', function (e) {
+        canvas.addEventListener("mousemove", function (e) {
             if (down == true) {
                 var new_start = { x: e.pageX, y: e.pageY };
                 var old = start;
@@ -1608,10 +1643,13 @@ var canvas = /** @class */ (function () {
                 }
             }
         });
-        canvas.addEventListener('touchmove', function (e) {
+        canvas.addEventListener("touchmove", function (e) {
             e.preventDefault();
             if (down == true) {
-                var new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+                var new_start = {
+                    x: e.touches.item(0).clientX,
+                    y: e.touches.item(0).clientY
+                };
                 var old = start;
                 var drawn = _this.move(old, new_start);
                 if (drawn) {
@@ -1620,22 +1658,22 @@ var canvas = /** @class */ (function () {
             }
         });
         //When the user stops clicking on teh surface
-        canvas.addEventListener('mouseup', function (e) {
+        canvas.addEventListener("mouseup", function (e) {
             down = false;
             canvas.style.cursor = "grab";
         });
-        canvas.addEventListener('touchend', function (e) {
+        canvas.addEventListener("touchend", function (e) {
             down = false;
         });
-        window.addEventListener('resize', function (e) {
+        window.addEventListener("resize", function (e) {
             _this.reload();
         });
-        canvas.addEventListener('mousewheel', function (e) {
-            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        canvas.addEventListener("mousewheel", function (e) {
+            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
         });
-        canvas.addEventListener('DOMMouseScroll', function (e) {
-            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+        canvas.addEventListener("DOMMouseScroll", function (e) {
+            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
         });
     }
@@ -1669,7 +1707,7 @@ var canvas = /** @class */ (function () {
         var to = Math.floor(this.center_x + max);
         var xpos = Math.floor(this.center_x - max);
         while (xpos < to) {
-            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y + max)), this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y - max)), (Math.floor(xpos) == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y + max)), this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y - max)), Math.floor(xpos) == 0 ? "black" : undefined);
             this.ctx.beginPath();
             this.ctx.font = "15px Sans Serif";
             this.ctx.fillStyle = "gray";
@@ -1680,11 +1718,13 @@ var canvas = /** @class */ (function () {
         to = Math.floor(this.center_y + max);
         var ypos = Math.floor(this.center_y - max);
         while (ypos < to) {
-            this.drawLine(this.getRelativePositionX(Math.floor(this.center_x + max)), this.getRelativePositionY(ypos), this.getRelativePositionX(Math.floor(this.center_x - max)), this.getRelativePositionY(ypos), (Math.floor(ypos) == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(Math.floor(this.center_x + max)), this.getRelativePositionY(ypos), this.getRelativePositionX(Math.floor(this.center_x - max)), this.getRelativePositionY(ypos), Math.floor(ypos) == 0 ? "black" : undefined);
             this.ctx.beginPath();
             this.ctx.font = "15px Sans Serif";
             this.ctx.fillStyle = "gray";
-            this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) - ypos.toString().length * 15 / 2 - 5, this.getRelativePositionY(ypos));
+            this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) -
+                ypos.toString().length * 15 / 2 -
+                5, this.getRelativePositionY(ypos));
             this.ctx.closePath();
             ypos++;
         }
@@ -1718,22 +1758,26 @@ var canvas = /** @class */ (function () {
         this.ctx.stroke();
     };
     canvas.prototype.getRelativePositionX = function (point) {
-        return (this.canvas.width / 2) + point * this.x_unit - this.center_x * this.x_unit;
+        return (this.canvas.width / 2 +
+            point * this.x_unit -
+            this.center_x * this.x_unit);
     };
     canvas.prototype.getRelativePositionY = function (point) {
-        return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
+        return (this.canvas.height / 2 -
+            point * this.y_unit +
+            this.center_y * this.y_unit);
     };
     canvas.prototype.drawFromFunc = function (func, color, isPreview) {
         if (color === void 0) { color = undefined; }
         if (isPreview === void 0) { isPreview = false; }
         if (!color) {
-            var letters = '0123456789ABCDEF';
-            color = '#';
+            var letters = "0123456789ABCDEF";
+            color = "#";
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
         }
-        var display_size = (this.canvas.width / 2) / this.x_unit;
+        var display_size = this.canvas.width / 2 / this.x_unit;
         var x = this.center_x - display_size;
         var last = undefined;
         var label = func;
@@ -1822,48 +1866,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var modal = /** @class */ (function () {
     function modal(type, options) {
         var _this = this;
-        var mask = document.createElement('div');
-        mask.classList.add('mask');
+        var mask = document.createElement("div");
+        mask.classList.add("mask");
         document.body.appendChild(mask);
         mask.onclick = function () {
             rm();
         };
-        var div = document.createElement('div');
-        div.classList.add('modal');
+        var div = document.createElement("div");
+        div.classList.add("modal");
         document.body.appendChild(div);
         var rm = function () {
             mask.parentNode.removeChild(mask);
             div.parentNode.removeChild(div);
         };
         if (type == "prompt") {
-            div.appendChild(document.createElement('b')).innerHTML = options.title;
-            div.appendChild(document.createElement('p')).innerHTML = options.message;
-            var input_1 = div.appendChild(document.createElement('input'));
+            div.appendChild(document.createElement("b")).innerHTML =
+                options.title;
+            div.appendChild(document.createElement("p")).innerHTML =
+                options.message;
+            var input_1 = div.appendChild(document.createElement("input"));
             input_1.value = options.default;
-            var clearfix = div.appendChild(document.createElement('div'));
-            clearfix.classList.add('clearfix');
-            var confirm_1 = clearfix.appendChild(document.createElement('button'));
+            var clearfix = div.appendChild(document.createElement("div"));
+            clearfix.classList.add("clearfix");
+            var confirm_1 = clearfix.appendChild(document.createElement("button"));
             confirm_1.innerHTML = "Confirmer";
-            confirm_1.addEventListener('click', function () {
+            confirm_1.addEventListener("click", function () {
                 _this._c(input_1.value);
                 rm();
             });
         }
         else if (type == "ask") {
-            div.appendChild(document.createElement('b')).innerHTML = options.title;
-            div.appendChild(document.createElement('p')).innerHTML = options.message;
-            var clearfix = div.appendChild(document.createElement('div'));
-            clearfix.classList.add('clearfix');
-            var confirm_2 = clearfix.appendChild(document.createElement('button'));
+            div.appendChild(document.createElement("b")).innerHTML =
+                options.title;
+            div.appendChild(document.createElement("p")).innerHTML =
+                options.message;
+            var clearfix = div.appendChild(document.createElement("div"));
+            clearfix.classList.add("clearfix");
+            var confirm_2 = clearfix.appendChild(document.createElement("button"));
             confirm_2.innerHTML = "Confirmer";
-            confirm_2.addEventListener('click', function () {
+            confirm_2.addEventListener("click", function () {
                 _this._c("");
                 rm();
             });
-            var cancel = clearfix.appendChild(document.createElement('button'));
+            var cancel = clearfix.appendChild(document.createElement("button"));
             cancel.innerHTML = "Annuler";
             cancel.style.marginRight = "5px";
-            cancel.addEventListener('click', function () {
+            cancel.addEventListener("click", function () {
                 rm();
             });
         }

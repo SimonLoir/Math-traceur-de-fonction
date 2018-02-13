@@ -3,7 +3,6 @@ import canvas from "./canvas";
 import parser from "./parser.v2";
 import MathObject from "./math";
 import modal from "./modal";
-import { join } from "path";
 
 // We get the default canvas
 let html_canvas_element = document.querySelector("canvas");
@@ -28,23 +27,23 @@ let letter = 0;
 let letters = "fghpqrst";
 
 // We add an event listener on the (+) button so that it can add teh function
-document.querySelector("#function_add_button").addEventListener('click', () => {
-
-    const update = (fdata:any) => {
+document.querySelector("#function_add_button").addEventListener("click", () => {
+    const update = (fdata: any) => {
         let keys = Object.keys(fdata);
 
-        let funcs:Array<String> = [];
+        let funcs: Array<String> = [];
 
         keys.forEach(key => {
             funcs.push(fdata[key].exp);
         });
 
         window.location.hash = encodeURIComponent(JSON.stringify(funcs));
+    };
 
-    }
-
-    //@ts-ignore
-    let value: string = document.querySelector('#function_add_input').value.trim();
+    let value: string = document
+        .querySelector("#function_add_input")
+        //@ts-ignore
+        .value.trim();
 
     //If it's empty, we don't do anything
     if (value == "") {
@@ -58,45 +57,61 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
     value = parse.getComputedValue(value);
 
     //Adds a text to an element
-    const addText = (e: any, color: any, row: any, initial: any, value: any) => {
+    const addText = (
+        e: any,
+        color: any,
+        row: any,
+        initial: any,
+        value: any
+    ) => {
         e.innerHTML = `
             <i style="background:${color}; width:5px;height:5px;border-radius:5px;display:inline-block;"></i>
-            ${letters[letter]}<sub>${(row != 0) ? row : ""}</sub>(x) =  ${initial} 
-            ${(initial != value) ? "= " + value : ""}
+            ${letters[letter]}<sub>${
+            row != 0 ? row : ""
+        }</sub>(x) =  ${initial} 
+            ${initial != value ? "= " + value : ""}
         `;
-    }
+    };
 
     //We get an array from the parsed expression
-    let func = new Function("x", `
+    let func = new Function(
+        "x",
+        `
         ${flist}
         return ${parse.parse(value)}
-    `);
-    console.log(func.toString())
+    `
+    );
+    console.log(func.toString());
 
     //We draw the function for the first time and we get its color
     let color = smath.drawFromFunc(func);
 
     //We create a new item in the functions list
     let item = document
-        .querySelector('#functions')
-        .appendChild(document.createElement('div'));
-    item.classList.add('item');
-    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
-    
-    let remove: HTMLElement = item
-        .appendChild(document.createElement('button'))
+        .querySelector("#functions")
+        .appendChild(document.createElement("div"));
+    item.classList.add("item");
+    addText(
+        item.appendChild(document.createElement("span")),
+        color,
+        row,
+        initial,
+        value
+    );
+
+    let remove: HTMLElement = item.appendChild(
+        document.createElement("button")
+    );
     remove.innerHTML = "×";
 
     //We add the edit button
-    let edit: HTMLElement = item
-        .appendChild(document.createElement('button'))
+    let edit: HTMLElement = item.appendChild(document.createElement("button"));
     edit.innerHTML = "&#128393;";
-
 
     let fname = letters[letter] + "" + row;
 
     //We add the ability to the user to modify the function
-    edit.addEventListener('click', () => {
+    edit.addEventListener("click", () => {
         let p = new modal("prompt", {
             title: "Modifier la fonction",
             message: "Modifier l'équation de la fonction : ",
@@ -109,19 +124,22 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
 
             fdata[fname].initial = initial;
             fdata[fname].exp = value;
-            fdata[fname].array = new Function("x", `
+            fdata[fname].array = new Function(
+                "x",
+                `
                 ${flist}
                 return ${parse.parse(value)}
-            `);
+            `
+            );
 
-            addText(item.querySelector('span'), color, row, initial, value);
+            addText(item.querySelector("span"), color, row, initial, value);
 
             smath.reload(fdata);
-            update(fdata);    
-        }
+            update(fdata);
+        };
     });
 
-    remove.addEventListener('click', () => {
+    remove.addEventListener("click", () => {
         let p = new modal("ask", {
             title: "Supprimer",
             message: "Supprimer la fonction ?",
@@ -132,7 +150,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
             smath.reload(fdata);
             update(fdata);
             item.parentElement.removeChild(item);
-        }
+        };
     });
 
     fdata[fname] = {
@@ -141,7 +159,7 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         array: func,
         exp: value,
         initial: initial
-    }
+    };
 
     update(fdata);
 
@@ -151,51 +169,48 @@ document.querySelector("#function_add_button").addEventListener('click', () => {
         row++;
         letter = 0;
     }
-
 });
 
-
 // We create the menu system
-document.getElementById('menu').addEventListener('click', () => {
-    let panel = document.querySelector('.panel');
-    if(panel.classList.contains('hidden')){
-        panel.classList.remove('hidden');
-    }else{
-        panel.classList.add('hidden');        
+document.getElementById("menu").addEventListener("click", () => {
+    let panel = document.querySelector(".panel");
+    if (panel.classList.contains("hidden")) {
+        panel.classList.remove("hidden");
+    } else {
+        panel.classList.add("hidden");
     }
 });
 
 //@ts-ignore
-let buttons:Array = document.querySelectorAll('.tab_manager span');
+let buttons: Array = document.querySelectorAll(".tab_manager span");
 //@ts-ignore
-let tabs:Array = document.querySelectorAll('.tab');
+let tabs: Array = document.querySelectorAll(".tab");
 
-buttons.forEach((e:HTMLElement) => {
-    e.addEventListener('click', () => {
+buttons.forEach((e: HTMLElement) => {
+    e.addEventListener("click", () => {
         let id = e.dataset["link"];
-        tabs.forEach((tab:HTMLDivElement) => {
-            tab.style.display = 'none';
+        tabs.forEach((tab: HTMLDivElement) => {
+            tab.style.display = "none";
         });
-        buttons.forEach((btn:HTMLSpanElement) => {
-            btn.classList.remove('active');
+        buttons.forEach((btn: HTMLSpanElement) => {
+            btn.classList.remove("active");
         });
         e.classList.add("active");
-        document.getElementById(id).style.display = "block"
-    }); 
+        document.getElementById(id).style.display = "block";
+    });
 });
 buttons[0].click();
 
-let hash = window.location.hash.replace('#', "");
+let hash = window.location.hash.replace("#", "");
 try {
-    let a:Array<string> = JSON.parse(decodeURIComponent(hash));
+    let a: Array<string> = JSON.parse(decodeURIComponent(hash));
 
     a.forEach(element => {
         //@ts-ignore
-        document.querySelector("#function_add_input").value = element;        
+        document.querySelector("#function_add_input").value = element;
         //@ts-ignore
         document.querySelector("#function_add_button").click();
     });
-
 } catch (error) {
-    console.log(error)
+    console.log(error);
 }

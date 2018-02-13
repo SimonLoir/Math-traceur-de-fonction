@@ -73,18 +73,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var parser_1 = __webpack_require__(1);
 //@ts-ignore
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign != "function") {
     // Must be writable: true, enumerable: false, configurable: true
     Object.defineProperty(Object, "assign", {
         value: function assign(target, varArgs) {
-            'use strict';
+            // .length of function is 2
+            "use strict";
             if (target == null) {
-                throw new TypeError('Cannot convert undefined or null to object');
+                // TypeError if undefined or null
+                throw new TypeError("Cannot convert undefined or null to object");
             }
             var to = Object(target);
             for (var index = 1; index < arguments.length; index++) {
                 var nextSource = arguments[index];
                 if (nextSource != null) {
+                    // Skip over if undefined or null
                     for (var nextKey in nextSource) {
                         // Avoid bugs when hasOwnProperty is shadowed
                         if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
@@ -101,9 +104,9 @@ if (typeof Object.assign != 'function') {
 }
 var MathObject = /** @class */ (function () {
     function MathObject() {
-        this.multiply = (new parser_1.default).multiply;
-        this.add = (new parser_1.default).add;
-        this.sub = (new parser_1.default).sub;
+        this.multiply = new parser_1.default().multiply;
+        this.add = new parser_1.default().add;
+        this.sub = new parser_1.default().sub;
     }
     MathObject.prototype.getFunctions = function () {
         return "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log\n            \n            let e = Math.E;\n            let pi = Math.PI\n        ";
@@ -121,20 +124,24 @@ var MathObject = /** @class */ (function () {
                 result += array[element] * start;
             }
             else if (element.indexOf("^m") >= 0) {
-                result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
+                result +=
+                    array[element] *
+                        (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
             }
             else if (element == "over") {
                 result = result / this.getFor(start, array[element]);
             }
             else {
-                result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
+                result +=
+                    array[element] *
+                        Math.pow(start, parseFloat(element.split("^")[1]));
             }
         }
         return result;
     };
     MathObject.prototype.derivate = function (array) {
         var _this = this;
-        console.log('=>', array);
+        console.log("=>", array);
         var keys = Object.keys(array);
         if (keys.length == 1) {
             if (keys[0] == "~") {
@@ -144,9 +151,10 @@ var MathObject = /** @class */ (function () {
                 return { "~": array[keys[0]] };
             }
             else if (keys[0].indexOf("x^") == 0) {
-                var exp = parseFloat(keys[0].replace('x^', ""));
+                var exp = parseFloat(keys[0].replace("x^", ""));
                 var a = {};
-                a["x" + ((exp - 1 != 1) ? "^" + (exp - 1) : "")] = exp * array[keys[0]];
+                a["x" + (exp - 1 != 1 ? "^" + (exp - 1) : "")] =
+                    exp * array[keys[0]];
                 console.log(a);
                 return a;
             }
@@ -160,8 +168,8 @@ var MathObject = /** @class */ (function () {
             delete a["over"];
             console.log(this.derivate(a), over, this.multiply(this.derivate(a), over));
             console.log(this.derivate(a), over, this.multiply(this.derivate(over), a));
-            var narray = (this.multiply(this.derivate(a), over));
-            var narray2 = (this.multiply(this.derivate(over), a));
+            var narray = this.multiply(this.derivate(a), over);
+            var narray2 = this.multiply(this.derivate(over), a);
             var sub = this.sub(narray2, narray);
             console.log("sub", sub);
             //@ts-ignore
@@ -231,7 +239,7 @@ var parser = /** @class */ (function () {
                         var index = this.index;
                         this.byIndexes["$" + index] = this.exec(inside);
                         this.byIndexes2["$" + index] = this.stringify(this.exec(inside));
-                        exp = exp.replace('(' + inside + ')', "$" + index);
+                        exp = exp.replace("(" + inside + ")", "$" + index);
                     }
                     else {
                         inside += ")";
@@ -252,12 +260,12 @@ var parser = /** @class */ (function () {
                 if (element == "~") {
                 }
                 else {
-                    if (element.indexOf('x') == 0) {
+                    if (element.indexOf("x") == 0) {
                         if (element == "x") {
                             new_keys.push("1");
                         }
                         else {
-                            new_keys.push(element.replace('x^', ""));
+                            new_keys.push(element.replace("x^", ""));
                         }
                     }
                     else {
@@ -273,7 +281,7 @@ var parser = /** @class */ (function () {
                     keys.push("x");
                 }
                 else {
-                    keys.push('x^' + key);
+                    keys.push("x^" + key);
                 }
             }
             for (var i = 0; i < keys.length; i++) {
@@ -293,13 +301,13 @@ var parser = /** @class */ (function () {
             if (array["~"] != undefined) {
                 text += array["~"];
             }
-            text = text.replace('x^2+', "x²+");
-            text = text.replace('x^3+', "x³+");
-            text = text.replace('+-', "-");
-            text = text.replace('--', "+");
+            text = text.replace("x^2+", "x²+");
+            text = text.replace("x^3+", "x³+");
+            text = text.replace("+-", "-");
+            text = text.replace("--", "+");
             if (text[text.length - 1] == "+") {
                 text += "end";
-                text = text.replace('+end', "");
+                text = text.replace("+end", "");
             }
             if (text == "x^2") {
                 text = "x²";
@@ -314,12 +322,12 @@ var parser = /** @class */ (function () {
         };
     }
     parser.prototype.getComputedValue = function (value) {
-        var math = new math_1.default;
-        if (value.indexOf('dérivée ') == 0) {
-            value = this.stringify(math.derivate(this.exec(value.replace('dérivée ', ""))));
+        var math = new math_1.default();
+        if (value.indexOf("dérivée ") == 0) {
+            value = this.stringify(math.derivate(this.exec(value.replace("dérivée ", ""))));
         }
         else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = this.stringify(math.derivate(math.derivate(this.exec(value.replace('dérivée_seconde ', "")))));
+            value = this.stringify(math.derivate(math.derivate(this.exec(value.replace("dérivée_seconde ", "")))));
         }
         return value;
     };
@@ -350,7 +358,7 @@ var parser = /** @class */ (function () {
      * @param expression
      */
     parser.prototype.exec = function (expression) {
-        if (expression.indexOf('(') < 0) {
+        if (expression.indexOf("(") < 0) {
             return this.exec_and_sort(expression);
         }
         else {
@@ -359,14 +367,14 @@ var parser = /** @class */ (function () {
                 return this.parseExp(expression);
             }
             else {
-                return 'Cette expression n\'est pas correcte : ' + ver;
+                return "Cette expression n'est pas correcte : " + ver;
             }
         }
     };
     parser.prototype.exec_and_sort = function (expression) {
         expression = expression.replace(/\-\-/i, "+");
         expression = expression.replace(/\+\-/i, "-");
-        if (expression.indexOf('-') == 0) {
+        if (expression.indexOf("-") == 0) {
             expression = "0" + expression;
         }
         expression = expression.replace(/²/g, "^2");
@@ -384,7 +392,7 @@ var parser = /** @class */ (function () {
         /*
         Séparation des +
         */
-        var sum_of = expression.split('+');
+        var sum_of = expression.split("+");
         var sum_result = {};
         for (var i = 0; i < sum_of.length; i++) {
             var element = sum_of[i];
@@ -412,7 +420,7 @@ var parser = /** @class */ (function () {
                          */
                         if (div == 0) {
                             if (dive.indexOf("x") < 0) {
-                                if (dive.indexOf('$') == 0) {
+                                if (dive.indexOf("$") == 0) {
                                     div_result = this.byIndexes[dive];
                                 }
                                 else if (dive == "pi") {
@@ -423,21 +431,21 @@ var parser = /** @class */ (function () {
                                 }
                             }
                             else {
-                                div_result[function () {
-                                    if (dive.split('x')[1] != "") {
-                                        return "x" + dive.split('x')[1];
+                                div_result[(function () {
+                                    if (dive.split("x")[1] != "") {
+                                        return "x" + dive.split("x")[1];
                                     }
                                     else {
                                         return "x";
                                     }
-                                }()] = function () {
-                                    if (dive.split('x')[0] != "") {
-                                        return parseFloat(dive.split('x')[0]);
+                                })()] = (function () {
+                                    if (dive.split("x")[0] != "") {
+                                        return parseFloat(dive.split("x")[0]);
                                     }
                                     else {
                                         return 1;
                                     }
-                                }();
+                                })();
                             }
                             //log('==>', expression, div_result["over"])
                         }
@@ -530,7 +538,9 @@ var parser = /** @class */ (function () {
             }
         }
         if (sum_result["over"] != undefined) {
-            if (Object.keys(sum_result["over"]).length == 1 && Object.keys(sum_result["over"])[0] == "~" && sum_result["over"]["~"] == 1) {
+            if (Object.keys(sum_result["over"]).length == 1 &&
+                Object.keys(sum_result["over"])[0] == "~" &&
+                sum_result["over"]["~"] == 1) {
                 //log("over_one")
                 delete sum_result["over"];
             }
@@ -546,7 +556,8 @@ var parser = /** @class */ (function () {
         for (var ixxxx = 0; ixxxx < keys.length; ixxxx++) {
             var key = keys[ixxxx];
             if (sum_result[key] != undefined) {
-                sum_result[key] = parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
+                sum_result[key] =
+                    parseFloat(sum_result[key]) + parseFloat(sub_result[key]);
             }
             else {
                 sum_result[key] = parseFloat(sub_result[key]);
@@ -559,7 +570,8 @@ var parser = /** @class */ (function () {
         var mk = Object.keys(mult_result);
         mk.forEach(function (key) {
             if (sub_result[key] != undefined) {
-                sub_result[key] = parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
+                sub_result[key] =
+                    parseFloat(sub_result[key]) - parseFloat(mult_result[key]);
             }
             else {
                 sub_result[key] = 0 - parseFloat(mult_result[key]);
@@ -603,26 +615,38 @@ var parser = /** @class */ (function () {
                         else if (e_mult == "x" && e_div == e_mult) {
                             var e_end_power = "x^2";
                         }
-                        else if (e_mult == "~" && e_div.indexOf('x') == 0) {
+                        else if (e_mult == "~" && e_div.indexOf("x") == 0) {
                             var e_end_power = e_div;
                         }
-                        else if (e_div == "~" && e_mult.indexOf('x') == 0) {
+                        else if (e_div == "~" && e_mult.indexOf("x") == 0) {
                             var e_end_power = e_mult;
                         }
-                        else if (e_div == "x" && "~" && e_mult.indexOf('x^') == 0) {
-                            var e_end_power = "x^" + (parseFloat(e_mult.replace("x^", "")) + 1);
+                        else if (e_div == "x" &&
+                            "~" &&
+                            e_mult.indexOf("x^") == 0) {
+                            var e_end_power = "x^" +
+                                (parseFloat(e_mult.replace("x^", "")) + 1);
                         }
-                        else if (e_mult == "x" && "~" && e_div.indexOf('x^') == 0) {
-                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + 1);
+                        else if (e_mult == "x" &&
+                            "~" &&
+                            e_div.indexOf("x^") == 0) {
+                            var e_end_power = "x^" +
+                                (parseFloat(e_div.replace("x^", "")) + 1);
                         }
                         else {
-                            var e_end_power = "x^" + (parseFloat(e_div.replace("x^", "")) + parseFloat(e_mult.replace("x^", "")));
+                            var e_end_power = "x^" +
+                                (parseFloat(e_div.replace("x^", "")) +
+                                    parseFloat(e_mult.replace("x^", "")));
                         }
                         if (new_mult_result[e_end_power] != undefined) {
-                            new_mult_result[e_end_power] += parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                            new_mult_result[e_end_power] +=
+                                parseFloat(number_of_e_mult) *
+                                    parseFloat(number_of_e_div);
                         }
                         else {
-                            new_mult_result[e_end_power] = parseFloat(number_of_e_mult) * parseFloat(number_of_e_div);
+                            new_mult_result[e_end_power] =
+                                parseFloat(number_of_e_mult) *
+                                    parseFloat(number_of_e_div);
                         }
                     }
                 }
@@ -631,7 +655,9 @@ var parser = /** @class */ (function () {
         new_mult_result["over"] = over;
         mult_result = new_mult_result;
         if (mult_result["over"] != undefined) {
-            if (Object.keys(mult_result["over"]).length == 1 && Object.keys(mult_result["over"])[0] == "~" && mult_result["over"]["~"] == 1) {
+            if (Object.keys(mult_result["over"]).length == 1 &&
+                Object.keys(mult_result["over"])[0] == "~" &&
+                mult_result["over"]["~"] == 1) {
                 //log("over_one")
                 delete mult_result["over"];
             }
@@ -658,6 +684,9 @@ var parser_v2_1 = __webpack_require__(2);
 var math_v2_1 = __webpack_require__(16);
 var parser = new parser_v2_1.default();
 var math = new math_v2_1.default();
+console.log("=> ", math.derivative("5"));
+console.log("=> ", math.derivative("x"));
+console.log("=> ", math.derivative("4x"));
 console.log("=> ", math.derivative("x²"));
 console.log("=> ", math.derivative("x²+6x+3"));
 console.log("=> ", math.derivative("sqrt(x²)"));
@@ -665,10 +694,8 @@ console.log("=> ", math.derivative("x²+6x+3"));
 console.log("=> ", math.derivative("x²-6x"));
 console.log("=> ", math.derivative("(x²)/x"));
 console.log("=> ", math.derivative("x²/x/2"));
-console.log("=> ", math.derivative("x²"));
-console.log("=> ", math.derivative("x²"));
 //http://jsben.ch/D2xTG
-console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), (new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0)));
+console.log(parser.parse("(sqrt(x²+6x+3)+6x+33)/2"), new Function("x", "return " + parser.parse("(sqrt(x²+6x+3)+6x+33)/2"))(0));
 console.log(">", parser.parse("x²+(x²-6x)*x"));
 console.log(parser.parse("x²+(x²-6x*x"));
 
@@ -695,15 +722,57 @@ var parser_v2_1 = __webpack_require__(2);
 var MathObject = /** @class */ (function (_super) {
     __extends(MathObject, _super);
     function MathObject() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.type = "MathObject";
+        return _this;
     }
     MathObject.prototype.derivative = function (expression) {
+        var _this = this;
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
             throw new parser_v2_1.InvalidExpressionError("Invalid expression given");
         }
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
+        // 3) Wa have to split the expression into small pieces
+        /**
+         * First of all is the derivative of a sum because the
+         * derivative of a sum is the sum of the derivative of the terms
+         */
+        var sum_terms = expression.split("+");
+        if (sum_terms.length == 1) {
+            //@ts-ignore
+            if (!isNaN(sum_terms[0])) {
+                return 0;
+            }
+            else if (sum_terms[0] == "x") {
+                return 1;
+            }
+            else if (sum_terms[0].indexOf("$") == 0) {
+                var spl = sum_terms[0].split("^");
+                if (spl.length == 1) {
+                    return "(" + this.partials[sum_terms[0]] + ")";
+                }
+                else {
+                    return "(" + this.partials[sum_terms[0]] + ")";
+                }
+            }
+            else if (sum_terms[0].indexOf("x^") == 0) {
+                var replaced = sum_terms[0].replace("x^", "");
+                return replaced + "x^(" + replaced + "-1)";
+            }
+            else {
+                return "e";
+            }
+        }
+        expression = "";
+        sum_terms.forEach(function (sum_term) {
+            /**
+             * Second of all we have to work with the substraction
+             * which is basically the same as the addition
+             */
+            expression += _this.derivative(sum_term) + "+";
+        });
         return expression;
     };
     return MathObject;
@@ -734,11 +803,12 @@ var parser_1 = __webpack_require__(1);
 var Parser = /** @class */ (function () {
     function Parser() {
         this.partials = {};
+        this.type = "parser";
     }
     /**
      * Initialise a parsing task
      * @param {String} expression the expression that has to be parsed
-    */
+     */
     Parser.prototype.parse = function (expression) {
         // 1) We have to check wheter or not the expression is valid
         var _this = this;
@@ -753,9 +823,9 @@ var Parser = /** @class */ (function () {
         /*expression = expression.replace(/derivée\$([0-9]+)/i,
             (e, $1) => `()`);*/
         // We tranform exponants into Math.pow()
-        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/ig, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
+        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/ig, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return "(" + _this.partials["$" + $1] + ")"; });
         return expression;
     };
     /**
@@ -763,8 +833,8 @@ var Parser = /** @class */ (function () {
      * @param exp the expression to check
      */
     Parser.prototype.check = function (exp) {
-        var open_brackets_number = exp.split('(').length;
-        var close_brackets_number = exp.split(')').length;
+        var open_brackets_number = exp.split("(").length;
+        var close_brackets_number = exp.split(")").length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         }
@@ -776,10 +846,10 @@ var Parser = /** @class */ (function () {
      * PrepareExpression
      */
     Parser.prototype.prepareExpression = function (exp) {
-        exp = exp.replace(/²/ig, "^2");
-        exp = exp.replace(/³/ig, "^2");
+        exp = exp.replace(/²/gi, "^2");
+        exp = exp.replace(/³/gi, "^2");
         exp = exp.replace(/X/g, "x");
-        exp = exp.replace(/([0-9]+)x/ig, function (exp, $1) {
+        exp = exp.replace(/([0-9]+)x/gi, function (exp, $1) {
             return "(" + $1 + "*x)";
         });
         var processed_exp = "";
@@ -792,7 +862,13 @@ var Parser = /** @class */ (function () {
                 if (char == ")") {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
-                        this.partials[e] = this.parse(buffer);
+                        if (this.type == "parser") {
+                            this.partials[e] = this.parse(buffer);
+                        }
+                        else {
+                            //@ts-ignore
+                            this.partials[e] = this.derivative(buffer);
+                        }
                         buffer = "";
                     }
                     else {
@@ -819,13 +895,13 @@ var Parser = /** @class */ (function () {
         return processed_exp;
     };
     Parser.prototype.getComputedValue = function (value) {
-        var math = new math_1.default;
-        var parse = new parser_1.default;
-        if (value.indexOf('dérivée ') == 0) {
-            value = parse.stringify(math.derivate(parse.exec(value.replace('dérivée ', ""))));
+        var math = new math_1.default();
+        var parse = new parser_1.default();
+        if (value.indexOf("dérivée ") == 0) {
+            value = parse.stringify(math.derivate(parse.exec(value.replace("dérivée ", ""))));
         }
         else if (value.indexOf("dérivée_seconde ") == 0) {
-            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace('dérivée_seconde ', "")))));
+            value = parse.stringify(math.derivate(math.derivate(parse.exec(value.replace("dérivée_seconde ", "")))));
         }
         return value;
     };
