@@ -749,7 +749,7 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n\n            return " + exp + ";\n\n        ");
+        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
     };
     return Parser;
 }());
@@ -768,6 +768,7 @@ var MathObject = /** @class */ (function (_super) {
     __extends(MathObject, _super);
     function MathObject() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.ce = '';
         _this.type = 'MathObject';
         return _this;
     }
@@ -845,7 +846,11 @@ var MathObject = /** @class */ (function (_super) {
         }
         else if (/^\$([0-9]+)$/.test(expression) == true) {
             // This replaces $.. into the expression
-            return "(" + this.derivative(this.partials[expression]) + ")";
+            var part = this.partials[expression];
+            if (/^\$([0-9]+)$/.test(part))
+                return "(" + this.derivative(this.partials[part]) + ")";
+            else
+                return "(" + this.derivative(part) + ")";
         }
         else if (/^sin\$([0-9]+)$/.test(expression) == true) {
             var partial = expression.replace('sin', '');
@@ -865,7 +870,7 @@ var MathObject = /** @class */ (function (_super) {
      */
     MathObject.prototype.clean = function (expression) {
         var _this = this;
-        expression = expression.replace(/\(([0-9]+)\)/gi, function (e, $1) { return $1; });
+        expression = expression.replace(/\(([0-9x]+)\)/gi, function (e, $1) { return $1; });
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
@@ -881,6 +886,57 @@ var MathObject = /** @class */ (function (_super) {
             }
         });
         return res;
+    };
+    MathObject.prototype.getDomF = function (expression, clear) {
+        var _this = this;
+        if (clear === void 0) { clear = true; }
+        if (clear == true) {
+            this.ce = '';
+        }
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError('Invalid expression given');
+        }
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        if (expression.indexOf('+') >= 0) {
+            var spl = expression.split('+');
+            spl.forEach(function (s) { return _this.getDomF(s, false); });
+            return this.realGetDomF();
+        }
+        if (expression.indexOf('-') >= 0) {
+            var spl = expression.split('-');
+            spl.forEach(function (s) { return _this.getDomF(s, false); });
+            return this.realGetDomF();
+        }
+        if (expression.indexOf('*') >= 0) {
+            var spl = expression.split('*');
+            spl.forEach(function (s) { return _this.getDomF(s, false); });
+            return this.realGetDomF();
+        }
+        if (expression.indexOf('/') >= 0) {
+            var spl = expression.split('/');
+            var spl_copy = spl.slice();
+            spl_copy.shift();
+            var bottom = "(" + spl_copy.join(')*(') + ")";
+            this.ce += '\n' + this.clean(bottom) + ' != 0';
+            this.getDomF(bottom, false);
+            return this.realGetDomF();
+        }
+        if (/^\$([0-9]+)$/.test(expression) == true) {
+            var part = this.partials[expression];
+            this.getDomF(part, false);
+            return this.realGetDomF();
+        }
+        return this.realGetDomF();
+    };
+    MathObject.prototype.realGetDomF = function () {
+        if (this.ce.trim() == '') {
+            return 'R';
+        }
+        else {
+            return 'CE: ' + this.ce;
+        }
     };
     return MathObject;
 }(Parser));

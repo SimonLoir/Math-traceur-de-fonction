@@ -151,10 +151,10 @@ export default class Parser {
             
             let e = Math.E;
             let pi = Math.PI;
-
+            
             return ${exp};
-
-        `
+            
+            `
         );
     }
 }
@@ -164,6 +164,7 @@ export class InvalidExpressionError extends Error {
 }
 
 export class MathObject extends Parser {
+    private ce = '';
     public type = 'MathObject';
     public derivative(expression: string): any {
         // 1) We have to check wheter or not the expression is valid
@@ -271,7 +272,11 @@ export class MathObject extends Parser {
         } else if (/^\$([0-9]+)$/.test(expression) == true) {
             // This replaces $.. into the expression
 
-            return `(${this.derivative(this.partials[expression])})`;
+            let part = this.partials[expression];
+
+            if (/^\$([0-9]+)$/.test(part))
+                return `(${this.derivative(this.partials[part])})`;
+            else return `(${this.derivative(part)})`;
         } else if (/^sin\$([0-9]+)$/.test(expression) == true) {
             let partial = expression.replace('sin', '');
             return `cos(${this.partials[partial]})*(${this.derivative(
@@ -292,7 +297,7 @@ export class MathObject extends Parser {
      * CleanUp
      */
     public clean(expression: string) {
-        expression = expression.replace(/\(([0-9]+)\)/gi, (e, $1) => $1);
+        expression = expression.replace(/\(([0-9x]+)\)/gi, (e, $1) => $1);
         expression = expression.replace(
             /\*([0-9])/gi,
             (e, $1) => ($1 == 1 ? '' : e)
@@ -315,5 +320,67 @@ export class MathObject extends Parser {
             }
         });
         return res;
+    }
+
+    public getDomF(expression: string, clear = true) {
+        if (clear == true) {
+            this.ce = '';
+        }
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError('Invalid expression given');
+        }
+
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+
+        if (expression.indexOf('+') >= 0) {
+            let spl = expression.split('+');
+            spl.forEach(s => this.getDomF(s, false));
+            return this.realGetDomF();
+        }
+
+        if (expression.indexOf('-') >= 0) {
+            let spl = expression.split('-');
+            spl.forEach(s => this.getDomF(s, false));
+            return this.realGetDomF();
+        }
+
+        if (expression.indexOf('*') >= 0) {
+            let spl = expression.split('*');
+            spl.forEach(s => this.getDomF(s, false));
+            return this.realGetDomF();
+        }
+
+        if (expression.indexOf('/') >= 0) {
+            let spl = expression.split('/');
+            let spl_copy = [...spl];
+
+            spl_copy.shift();
+
+            let bottom = `(${spl_copy.join(')*(')})`;
+
+            this.ce += '\n' + this.clean(bottom) + ' != 0';
+
+            this.getDomF(bottom, false);
+
+            return this.realGetDomF();
+        }
+
+        if (/^\$([0-9]+)$/.test(expression) == true) {
+            let part = this.partials[expression];
+            this.getDomF(part, false);
+            return this.realGetDomF();
+        }
+
+        return this.realGetDomF();
+    }
+
+    public realGetDomF() {
+        if (this.ce.trim() == '') {
+            return 'R';
+        } else {
+            return 'CE: ' + this.ce;
+        }
     }
 }
