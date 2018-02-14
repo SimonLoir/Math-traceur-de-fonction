@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -624,44 +624,45 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 4 */
+/* 4 */,
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(5);
-document.querySelector("header").style.backgroundImage =
-    "url(./images/site-header.jpg)";
+__webpack_require__(6);
+document.querySelector('header').style.backgroundImage =
+    'url(./images/site-header.jpg)';
 //@ts-ignore
-document.querySelector(".graph").style.backgroundImage =
-    "url(./images/graph.jpg)";
-window.addEventListener("scroll", function (evt) {
+document.querySelector('.graph').style.backgroundImage =
+    'url(./images/graph.jpg)';
+window.addEventListener('scroll', function (evt) {
     if (window.scrollY > 20) {
-        document.querySelector("header").classList.add("floating");
+        document.querySelector('header').classList.add('floating');
     }
     else {
-        document.querySelector("header").classList.remove("floating");
+        document.querySelector('header').classList.remove('floating');
     }
 });
-if (typeof process !== "undefined") {
-    var fs = __webpack_require__(7);
-    var fcontent_1 = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf-8"));
+if (typeof process !== 'undefined') {
+    var fs = __webpack_require__(8);
+    var fcontent_1 = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf-8'));
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://math.simonloir.be/package.json", true);
+    xhr.open('GET', 'https://math.simonloir.be/package.json', true);
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 if (JSON.parse(xhr.responseText).version == fcontent_1.version) {
-                    document.querySelector(".content-header").innerHTML =
-                        "SMath est disponible hors connexion et est à jour en version " +
+                    document.querySelector('.content-header').innerHTML =
+                        'SMath est disponible hors connexion et est à jour en version ' +
                             fcontent_1.version;
                 }
                 else {
-                    document.querySelector(".content-header").innerHTML =
+                    document.querySelector('.content-header').innerHTML =
                         "SMath est disponible hors connexion mais n'est pas à jour : la version  " +
                             JSON.parse(xhr.responseText).version +
-                            " est disponible pour remplacer la version locale : " +
+                            ' est disponible pour remplacer la version locale : ' +
                             fcontent_1.version;
                 }
             }
@@ -675,15 +676,19 @@ if (typeof process !== "undefined") {
     };
     xhr.send(null);
 }
+if ('serviceWorker' in navigator)
+    navigator.serviceWorker.register('./sw.js').then(function () {
+        console.log('activated');
+    });
 
 /* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -729,7 +734,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(false);
@@ -743,7 +748,7 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");

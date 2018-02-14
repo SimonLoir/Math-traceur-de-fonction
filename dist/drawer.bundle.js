@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -965,237 +965,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(9);
-var canvas_1 = __webpack_require__(11);
-var parser_v2_1 = __webpack_require__(0);
-var modal_1 = __webpack_require__(12);
-// We get the default canvas
-var html_canvas_element = document.querySelector('canvas');
-//We create a new smath canvas
-var smath = new canvas_1.default(html_canvas_element);
-// We create a new expression parser
-var parse = new parser_v2_1.default();
-//We create an object that will contain all the functions
-var fdata = {};
-smath.funcs = fdata;
-// Function name attribution
-var row = 0;
-var letter = 0;
-var letters = 'fghpqrst';
-// We add an event listener on the (+) button so that it can add teh function
-document.querySelector('#function_add_button').addEventListener('click', function () {
-    var update = function (fdata) {
-        var keys = Object.keys(fdata);
-        var funcs = [];
-        keys.forEach(function (key) {
-            funcs.push(fdata[key].initial);
-        });
-        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
-    };
-    var value = document
-        .querySelector('#function_add_input')
-        .value.trim();
-    //If it's empty, we don't do anything
-    if (value == '') {
-        return;
-    }
-    //We keep the initial value in a variable
-    var initial = value;
-    //We get the computed value of the expression
-    value = parse.getComputedValue(value);
-    //Adds a text to an element
-    var addText = function (e, color, row, initial, value) {
-        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + (row != 0 ? row : '') + "</sub>(x) =  " + initial + " \n            " + (initial != value ? '= ' + value : '') + "\n        ";
-    };
-    //We get an array from the parsed expression
-    var func = parse.Functionize(value, true);
-    console.log(func.toString());
-    //We draw the function for the first time and we get its color
-    var color = smath.drawFromFunc(func);
-    //We create a new item in the functions list
-    var item = document
-        .querySelector('#functions')
-        .appendChild(document.createElement('div'));
-    item.classList.add('item');
-    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
-    var remove = item.appendChild(document.createElement('button'));
-    remove.innerHTML = '×';
-    //We add the edit button
-    var edit = item.appendChild(document.createElement('button'));
-    edit.innerHTML = '&#128393;';
-    var fname = letters[letter] + '' + row;
-    //We add the ability to the user to modify the function
-    edit.addEventListener('click', function () {
-        var p = new modal_1.default('prompt', {
-            title: 'Modifier la fonction',
-            message: "Modifier l'équation de la fonction : ",
-            default: fdata[fname].initial
-        });
-        p.confirm = function (value) {
-            var initial = value;
-            value = parse.getComputedValue(value);
-            fdata[fname].initial = initial;
-            fdata[fname].exp = value;
-            fdata[fname].array = parse.Functionize(value, true);
-            addText(item.querySelector('span'), color, row, initial, value);
-            smath.reload(fdata);
-            update(fdata);
-        };
-    });
-    remove.addEventListener('click', function () {
-        var p = new modal_1.default('ask', {
-            title: 'Supprimer',
-            message: 'Supprimer la fonction ?',
-            default: fdata[fname].initial
-        });
-        p.confirm = function (value) {
-            delete fdata[fname];
-            smath.reload(fdata);
-            update(fdata);
-            item.parentElement.removeChild(item);
-        };
-    });
-    fdata[fname] = {
-        visible: true,
-        color: color,
-        array: func,
-        exp: value,
-        initial: initial
-    };
-    update(fdata);
-    if (letter + 1 < letters.length) {
-        letter++;
-    }
-    else {
-        row++;
-        letter = 0;
-    }
-});
-// We create the menu system
-document.getElementById('menu').addEventListener('click', function () {
-    var panel = document.querySelector('.panel');
-    if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-    }
-    else {
-        panel.classList.add('hidden');
-    }
-});
-//@ts-ignore
-var buttons = document.querySelectorAll('.tab_manager span');
-//@ts-ignore
-var tabs = document.querySelectorAll('.tab');
-var _loop_1 = function (i) {
-    var e = buttons[i];
-    e.addEventListener('click', function () {
-        var id = e.dataset['link'];
-        for (var i2 = 0; i2 < tabs.length; i2++) {
-            var tab = tabs[i2];
-            tab.style.display = 'none';
-        }
-        for (var i2 = 0; i2 < buttons.length; i2++) {
-            var button = buttons[i2];
-            button.classList.remove('active');
-        }
-        e.classList.add('active');
-        document.getElementById(id).style.display = 'block';
-    });
-};
-for (var i = 0; i < buttons.length; i++) {
-    _loop_1(i);
-}
-buttons[0].click();
-var hash = window.location.hash.replace('#', '');
-try {
-    var a = JSON.parse(decodeURIComponent(hash));
-    a.forEach(function (element) {
-        //@ts-ignore
-        document.querySelector('#function_add_input').value = element;
-        //@ts-ignore
-        document.querySelector('#function_add_button').click();
-    });
-}
-catch (error) {
-    //console.log(error);
-}
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(10);
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(2)(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {
-	module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./drawer.scss", function() {
-		var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./drawer.scss");
-
-		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-
-		var locals = (function(a, b) {
-			var key, idx = 0;
-
-			for(key in a) {
-				if(!b || a[key] !== b[key]) return false;
-				idx++;
-			}
-
-			for(key in b) idx--;
-
-			return idx === 0;
-		}(content.locals, newContent.locals));
-
-		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
-
-		update(newContent);
-	});
-
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(false);
-// imports
-
-
-// module
-exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 98;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  color: gray;\n  background: white;\n  display: none;\n  height: 25px;\n  width: 100%; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 95;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      top: 25px;\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab {\n      background: white;\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      right: 0;\n      left: 0; }\n      .panel .tabs .tab#objects {\n        overflow: auto;\n        --w: 90%; }\n        .panel .tabs .tab#objects #function_add_input,\n        .panel .tabs .tab#objects #function_add_button {\n          display: inline-block;\n          padding: 0;\n          height: 40px;\n          margin: 0;\n          border: none;\n          border-bottom: 1px solid lightgray; }\n        .panel .tabs .tab#objects #function_add_input {\n          position: absolute;\n          top: 0;\n          left: 0;\n          padding-left: 15px;\n          padding-right: 15px;\n          width: calc(var(--w) - 30px); }\n        .panel .tabs .tab#objects #function_add_button {\n          position: absolute;\n          top: 1px;\n          right: 0;\n          background: #f0f0f0;\n          width: 10%;\n          cursor: pointer; }\n        .panel .tabs .tab#objects #list {\n          overflow: auto;\n          position: absolute;\n          top: 41px;\n          left: 0;\n          right: 0;\n          bottom: 0;\n          padding: 25px; }\n          .panel .tabs .tab#objects #list .title {\n            color: gray;\n            font-weight: 700; }\n          .panel .tabs .tab#objects #list .item {\n            color: #bababa;\n            line-height: 25px; }\n            .panel .tabs .tab#objects #list .item span {\n              display: inline-block;\n              max-width: 80%;\n              word-break: break-all; }\n            .panel .tabs .tab#objects #list .item button {\n              background: transparent;\n              border: none;\n              float: right;\n              cursor: pointer; }\n          .panel .tabs .tab#objects #list #copy {\n            text-align: center;\n            color: lightgray;\n            font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%;\n      top: 25px; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n\n.mask {\n  z-index: 99;\n  background: rgba(0, 0, 0, 0.02);\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  bottom: 0; }\n\n.modal {\n  z-index: 100;\n  background: white;\n  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 300px;\n  max-width: calc(100% - 75px);\n  padding: 25px;\n  border-radius: 4px; }\n  .modal input {\n    width: calc(100% - 16px);\n    padding: 5px;\n    padding-left: 8px;\n    padding-right: 8px;\n    border: 1px solid lightgray; }\n  .modal .clearfix {\n    height: 25px;\n    margin-top: 25px; }\n    .modal .clearfix button {\n      float: right;\n      background: gray;\n      color: white;\n      border: none;\n      padding: 5px;\n      padding-left: 8px;\n      padding-right: 8px;\n      cursor: pointer;\n      border-radius: 4px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 11 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1461,6 +1231,236 @@ var canvas = /** @class */ (function () {
     return canvas;
 }());
 exports.default = canvas;
+
+
+/***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(10);
+var canvas_1 = __webpack_require__(4);
+var parser_v2_1 = __webpack_require__(0);
+var modal_1 = __webpack_require__(12);
+// We get the default canvas
+var html_canvas_element = document.querySelector('canvas');
+//We create a new smath canvas
+var smath = new canvas_1.default(html_canvas_element);
+// We create a new expression parser
+var parse = new parser_v2_1.default();
+//We create an object that will contain all the functions
+var fdata = {};
+smath.funcs = fdata;
+// Function name attribution
+var row = 0;
+var letter = 0;
+var letters = 'fghpqrst';
+// We add an event listener on the (+) button so that it can add teh function
+document.querySelector('#function_add_button').addEventListener('click', function () {
+    var update = function (fdata) {
+        var keys = Object.keys(fdata);
+        var funcs = [];
+        keys.forEach(function (key) {
+            funcs.push(fdata[key].initial);
+        });
+        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
+    };
+    var value = document
+        .querySelector('#function_add_input')
+        .value.trim();
+    //If it's empty, we don't do anything
+    if (value == '') {
+        return;
+    }
+    //We keep the initial value in a variable
+    var initial = value;
+    //We get the computed value of the expression
+    value = parse.getComputedValue(value);
+    //Adds a text to an element
+    var addText = function (e, color, row, initial, value) {
+        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + (row != 0 ? row : '') + "</sub>(x) =  " + initial + " \n            " + (initial != value ? '= ' + value : '') + "\n        ";
+    };
+    //We get an array from the parsed expression
+    var func = parse.Functionize(value, true);
+    console.log(func.toString());
+    //We draw the function for the first time and we get its color
+    var color = smath.drawFromFunc(func);
+    //We create a new item in the functions list
+    var item = document
+        .querySelector('#functions')
+        .appendChild(document.createElement('div'));
+    item.classList.add('item');
+    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
+    var remove = item.appendChild(document.createElement('button'));
+    remove.innerHTML = '×';
+    //We add the edit button
+    var edit = item.appendChild(document.createElement('button'));
+    edit.innerHTML = '&#128393;';
+    var fname = letters[letter] + '' + row;
+    //We add the ability to the user to modify the function
+    edit.addEventListener('click', function () {
+        var p = new modal_1.default('prompt', {
+            title: 'Modifier la fonction',
+            message: "Modifier l'équation de la fonction : ",
+            default: fdata[fname].initial
+        });
+        p.confirm = function (value) {
+            var initial = value;
+            value = parse.getComputedValue(value);
+            fdata[fname].initial = initial;
+            fdata[fname].exp = value;
+            fdata[fname].array = parse.Functionize(value, true);
+            addText(item.querySelector('span'), color, row, initial, value);
+            smath.reload(fdata);
+            update(fdata);
+        };
+    });
+    remove.addEventListener('click', function () {
+        var p = new modal_1.default('ask', {
+            title: 'Supprimer',
+            message: 'Supprimer la fonction ?',
+            default: fdata[fname].initial
+        });
+        p.confirm = function (value) {
+            delete fdata[fname];
+            smath.reload(fdata);
+            update(fdata);
+            item.parentElement.removeChild(item);
+        };
+    });
+    fdata[fname] = {
+        visible: true,
+        color: color,
+        array: func,
+        exp: value,
+        initial: initial
+    };
+    update(fdata);
+    if (letter + 1 < letters.length) {
+        letter++;
+    }
+    else {
+        row++;
+        letter = 0;
+    }
+});
+// We create the menu system
+document.getElementById('menu').addEventListener('click', function () {
+    var panel = document.querySelector('.panel');
+    if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+    }
+    else {
+        panel.classList.add('hidden');
+    }
+});
+//@ts-ignore
+var buttons = document.querySelectorAll('.tab_manager span');
+//@ts-ignore
+var tabs = document.querySelectorAll('.tab');
+var _loop_1 = function (i) {
+    var e = buttons[i];
+    e.addEventListener('click', function () {
+        var id = e.dataset['link'];
+        for (var i2 = 0; i2 < tabs.length; i2++) {
+            var tab = tabs[i2];
+            tab.style.display = 'none';
+        }
+        for (var i2 = 0; i2 < buttons.length; i2++) {
+            var button = buttons[i2];
+            button.classList.remove('active');
+        }
+        e.classList.add('active');
+        document.getElementById(id).style.display = 'block';
+    });
+};
+for (var i = 0; i < buttons.length; i++) {
+    _loop_1(i);
+}
+buttons[0].click();
+var hash = window.location.hash.replace('#', '');
+try {
+    var a = JSON.parse(decodeURIComponent(hash));
+    a.forEach(function (element) {
+        //@ts-ignore
+        document.querySelector('#function_add_input').value = element;
+        //@ts-ignore
+        document.querySelector('#function_add_button').click();
+    });
+}
+catch (error) {
+    //console.log(error);
+}
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(11);
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(2)(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./drawer.scss", function() {
+		var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./drawer.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(false);
+// imports
+
+
+// module
+exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 98;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  color: gray;\n  background: white;\n  display: none;\n  height: 25px;\n  width: 100%; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 95;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      top: 25px;\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab {\n      background: white;\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      right: 0;\n      left: 0; }\n      .panel .tabs .tab#objects {\n        overflow: auto;\n        --w: 90%; }\n        .panel .tabs .tab#objects #function_add_input,\n        .panel .tabs .tab#objects #function_add_button {\n          display: inline-block;\n          padding: 0;\n          height: 40px;\n          margin: 0;\n          border: none;\n          border-bottom: 1px solid lightgray; }\n        .panel .tabs .tab#objects #function_add_input {\n          position: absolute;\n          top: 0;\n          left: 0;\n          padding-left: 15px;\n          padding-right: 15px;\n          width: calc(var(--w) - 30px); }\n        .panel .tabs .tab#objects #function_add_button {\n          position: absolute;\n          top: 1px;\n          right: 0;\n          background: #f0f0f0;\n          width: 10%;\n          cursor: pointer; }\n        .panel .tabs .tab#objects #list {\n          overflow: auto;\n          position: absolute;\n          top: 41px;\n          left: 0;\n          right: 0;\n          bottom: 0;\n          padding: 25px; }\n          .panel .tabs .tab#objects #list .title {\n            color: gray;\n            font-weight: 700; }\n          .panel .tabs .tab#objects #list .item {\n            color: #bababa;\n            line-height: 25px; }\n            .panel .tabs .tab#objects #list .item span {\n              display: inline-block;\n              max-width: 80%;\n              word-break: break-all; }\n            .panel .tabs .tab#objects #list .item button {\n              background: transparent;\n              border: none;\n              float: right;\n              cursor: pointer; }\n          .panel .tabs .tab#objects #list #copy {\n            text-align: center;\n            color: lightgray;\n            font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%;\n      top: 25px; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n\n.mask {\n  z-index: 99;\n  background: rgba(0, 0, 0, 0.02);\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  bottom: 0; }\n\n.modal {\n  z-index: 100;\n  background: white;\n  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 300px;\n  max-width: calc(100% - 75px);\n  padding: 25px;\n  border-radius: 4px; }\n  .modal input {\n    width: calc(100% - 16px);\n    padding: 5px;\n    padding-left: 8px;\n    padding-right: 8px;\n    border: 1px solid lightgray; }\n  .modal .clearfix {\n    height: 25px;\n    margin-top: 25px; }\n    .modal .clearfix button {\n      float: right;\n      background: gray;\n      color: white;\n      border: none;\n      padding: 5px;\n      padding-left: 8px;\n      padding-right: 8px;\n      cursor: pointer;\n      border-radius: 4px; }\n", ""]);
+
+// exports
 
 
 /***/ }),

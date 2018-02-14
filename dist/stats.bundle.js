@@ -965,14 +965,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1241,6 +1234,13 @@ exports.default = canvas;
 
 
 /***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
 /* 12 */,
 /* 13 */,
 /* 14 */,
@@ -1251,7 +1251,7 @@ exports.default = canvas;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(16);
-var canvas_1 = __webpack_require__(11);
+var canvas_1 = __webpack_require__(4);
 var parser_v2_1 = __webpack_require__(0);
 var canvas = new canvas_1.default(document.querySelector('canvas'));
 var parser = new parser_v2_1.default();
