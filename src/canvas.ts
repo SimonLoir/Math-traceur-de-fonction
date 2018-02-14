@@ -334,7 +334,7 @@ export default class canvas {
         this.ctx.fill();
     }
 
-    set funcs(fdata: any[]) {
+    set funcs(fdata: any) {
         this.fdata = fdata;
     }
 }

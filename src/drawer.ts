@@ -199,5 +199,5 @@ try {
         document.querySelector('#function_add_button').click();
     });
 } catch (error) {
-    console.log(error);
+    //console.log(error);
 }
