@@ -29,7 +29,7 @@ document.querySelector('#function_add_button').addEventListener('click', () => {
         let funcs: Array<String> = [];
 
         keys.forEach(key => {
-            funcs.push(fdata[key].exp);
+            funcs.push(fdata[key].initial);
         });
 
         window.location.hash = encodeURIComponent(JSON.stringify(funcs));

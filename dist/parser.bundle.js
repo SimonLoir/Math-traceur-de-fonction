@@ -65,37 +65,7 @@
 /************************************************************************/
 /******/ ({
 
-/***/ 13:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var parser_v2_1 = __webpack_require__(3);
-var parser = new parser_v2_1.default();
-var math = new parser_v2_1.MathObject();
-[
-    '1',
-    'x',
-    '2x',
-    'x²',
-    'x^3',
-    '2*x²',
-    '(2x)^2',
-    '1/x',
-    'sin(x)',
-    'sin(1/x)',
-    'sin(x^2)'
-].forEach(function (e) {
-    console.log('=> ' + e, math.derivative(e));
-});
-//http://jsben.ch/D2xTG
-console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));
-
-
-/***/ }),
-
-/***/ 3:
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -141,6 +111,7 @@ var Parser = /** @class */ (function () {
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
         expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.parse(_this.partials['$' + $1]) + ')'; });
+        expression = this.clean(expression);
         return expression;
     };
     /**
@@ -161,12 +132,10 @@ var Parser = /** @class */ (function () {
      * PrepareExpression
      */
     Parser.prototype.prepareExpression = function (exp) {
+        var _this = this;
         exp = exp.replace(/²/gi, '^2');
         exp = exp.replace(/³/gi, '^2');
         exp = exp.replace(/X/g, 'x');
-        exp = exp.replace(/([0-9]+)x/gi, function (exp, $1) {
-            return "(" + $1 + "*x)";
-        });
         var processed_exp = '';
         var parenthesis_level = 0;
         var buffer = '';
@@ -201,6 +170,16 @@ var Parser = /** @class */ (function () {
                 }
             }
         }
+        processed_exp = processed_exp.replace(/([0-9]+)x\^([\$0-9]+)/gi, function (exp, $1, $2) {
+            var e = '$' + (Object.keys(_this.partials).length + 1);
+            _this.partials[e] = $1 + "*x^" + $2;
+            return e;
+        });
+        processed_exp = processed_exp.replace(/([0-9]+)x/gi, function (exp, $1) {
+            var e = '$' + (Object.keys(_this.partials).length + 1);
+            _this.partials[e] = $1 + "*x";
+            return e;
+        });
         return processed_exp;
     };
     Parser.prototype.getComputedValue = function (value) {
@@ -222,6 +201,22 @@ var Parser = /** @class */ (function () {
             exp = this.parse(exp);
         }
         return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+    };
+    /**
+     * CleanUp
+     */
+    Parser.prototype.clean = function (expression) {
+        var _this = this;
+        var pattern = /\(([0-9x]+)\)/gi;
+        while (pattern.test(expression)) {
+            expression = expression.replace(pattern, function (e, $1) { return $1; });
+        }
+        expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
+        expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
+        expression = expression.replace(/\$([0-9]+)/g, function (e) {
+            return "(" + _this.partials[e] + ")";
+        });
+        return expression;
     };
     return Parser;
 }());
@@ -276,10 +271,19 @@ var MathObject = /** @class */ (function (_super) {
             return expression;
         }
         if (expression.indexOf('*') >= 0) {
-            var spl_1 = expression.split('*');
+            var spl_1 = expression.split('*').sort();
             expression = '';
             spl_1.forEach(function (s, i) {
-                return (expression += _this.derivative(s) + "*" + _this.getAllExpect(spl_1, i).join('*') + "+");
+                var others = _this.getAllExpect(spl_1, i);
+                var join = others.join('*');
+                var derivative = _this.derivative(s);
+                if (others.indexOf('0') >= 0)
+                    return;
+                if (_this.Functionize(join)(NaN) == 0)
+                    return;
+                if (_this.Functionize(derivative)(NaN) == 0)
+                    return;
+                expression += derivative + "*" + others.join('*') + "+";
             });
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
@@ -326,29 +330,16 @@ var MathObject = /** @class */ (function (_super) {
         }
         else if (/^sin\$([0-9]+)$/.test(expression) == true) {
             var partial = expression.replace('sin', '');
-            return "cos(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
+            return this.clean("cos(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")");
         }
         else if (/^cos\$([0-9]+)$/.test(expression) == true) {
             var partial = expression.replace('cos', '');
-            return "-sin(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
+            return this.clean("-sin(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")");
         }
         else {
             console.log(expression);
-            throw new Error('Something went wrong');
+            throw new Error('Something went wrong width ');
         }
-    };
-    /**
-     * CleanUp
-     */
-    MathObject.prototype.clean = function (expression) {
-        var _this = this;
-        expression = expression.replace(/\(([0-9x]+)\)/gi, function (e, $1) { return $1; });
-        expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
-        expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
-        expression = expression.replace(/\$([0-9]+)/g, function (e) {
-            return "(" + _this.partials[e] + ")";
-        });
-        return expression;
     };
     MathObject.prototype.getAllExpect = function (array, i) {
         var res = [];
@@ -413,6 +404,37 @@ var MathObject = /** @class */ (function (_super) {
     return MathObject;
 }(Parser));
 exports.MathObject = MathObject;
+
+
+/***/ }),
+
+/***/ 13:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var parser_v2_1 = __webpack_require__(0);
+var parser = new parser_v2_1.default();
+var math = new parser_v2_1.MathObject();
+[
+    '1',
+    'x',
+    '2x',
+    '2*2x',
+    'x²',
+    'x^3',
+    '2*x²',
+    '(2x)^2',
+    '1/x',
+    'sin(x)',
+    'sin(1/x)',
+    'sin(x^2)'
+].forEach(function (e) {
+    console.log('=> ' + e, math.derivative(e));
+});
+//http://jsben.ch/D2xTG
+console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));
 
 
 /***/ })

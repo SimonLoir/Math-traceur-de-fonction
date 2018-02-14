@@ -7,6 +7,7 @@ let math = new MathObject();
     '1',
     'x',
     '2x',
+    '2*2x',
     'x²',
     'x^3',
     '2*x²',

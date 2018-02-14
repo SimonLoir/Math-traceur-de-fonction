@@ -44,6 +44,8 @@ export default class Parser {
             (e, $1) => '(' + this.parse(this.partials['$' + $1]) + ')'
         );
 
+        expression = this.clean(expression);
+
         return expression;
     }
 
@@ -68,9 +70,6 @@ export default class Parser {
         exp = exp.replace(/²/gi, '^2');
         exp = exp.replace(/³/gi, '^2');
         exp = exp.replace(/X/g, 'x');
-        exp = exp.replace(/([0-9]+)x/gi, (exp, $1) => {
-            return `(${$1}*x)`;
-        });
 
         let processed_exp = '';
         let parenthesis_level = 0;
@@ -102,6 +101,22 @@ export default class Parser {
                 }
             }
         }
+
+        processed_exp = processed_exp.replace(
+            /([0-9]+)x\^([\$0-9]+)/gi,
+            (exp, $1, $2) => {
+                let e = '$' + (Object.keys(this.partials).length + 1);
+                this.partials[e] = `${$1}*x^${$2}`;
+                return e;
+            }
+        );
+
+        processed_exp = processed_exp.replace(/([0-9]+)x/gi, (exp, $1) => {
+            let e = '$' + (Object.keys(this.partials).length + 1);
+            this.partials[e] = `${$1}*x`;
+            return e;
+        });
+
         return processed_exp;
     }
 
@@ -157,6 +172,28 @@ export default class Parser {
             `
         );
     }
+
+    /**
+     * CleanUp
+     */
+    public clean(expression: string) {
+        let pattern = /\(([0-9x]+)\)/gi;
+        while (pattern.test(expression)) {
+            expression = expression.replace(pattern, (e, $1) => $1);
+        }
+        expression = expression.replace(
+            /\*([0-9])/gi,
+            (e, $1) => ($1 == 1 ? '' : e)
+        );
+        expression = expression.replace(
+            /\^([0-9])/gi,
+            (e, $1) => ($1 == 1 ? '' : e)
+        );
+        expression = expression.replace(/\$([0-9]+)/g, e => {
+            return `(${this.partials[e]})`;
+        });
+        return expression;
+    }
 }
 
 export class InvalidExpressionError extends Error {
@@ -207,15 +244,18 @@ export class MathObject extends Parser {
         }
 
         if (expression.indexOf('*') >= 0) {
-            let spl = expression.split('*');
+            let spl = expression.split('*').sort();
             expression = '';
-            spl.forEach(
-                (s, i) =>
-                    (expression += `${this.derivative(s)}*${this.getAllExpect(
-                        spl,
-                        i
-                    ).join('*')}+`)
-            );
+            spl.forEach((s, i) => {
+                let others = this.getAllExpect(spl, i);
+                let join = others.join('*');
+                let derivative = this.derivative(s);
+
+                if (others.indexOf('0') >= 0) return;
+                if (this.Functionize(join)(NaN) == 0) return;
+                if (this.Functionize(derivative)(NaN) == 0) return;
+                expression += `${derivative}*${others.join('*')}+`;
+            });
             if (expression[expression.length - 1] == '+')
                 expression = expression.slice(0, -1);
 
@@ -279,37 +319,22 @@ export class MathObject extends Parser {
             else return `(${this.derivative(part)})`;
         } else if (/^sin\$([0-9]+)$/.test(expression) == true) {
             let partial = expression.replace('sin', '');
-            return `cos(${this.partials[partial]})*(${this.derivative(
-                this.partials[partial]
-            )})`;
+            return this.clean(
+                `cos(${this.partials[partial]})*(${this.derivative(
+                    this.partials[partial]
+                )})`
+            );
         } else if (/^cos\$([0-9]+)$/.test(expression) == true) {
             let partial = expression.replace('cos', '');
-            return `-sin(${this.partials[partial]})*(${this.derivative(
-                this.partials[partial]
-            )})`;
+            return this.clean(
+                `-sin(${this.partials[partial]})*(${this.derivative(
+                    this.partials[partial]
+                )})`
+            );
         } else {
             console.log(expression);
-            throw new Error('Something went wrong');
+            throw new Error('Something went wrong width ');
         }
-    }
-
-    /**
-     * CleanUp
-     */
-    public clean(expression: string) {
-        expression = expression.replace(/\(([0-9x]+)\)/gi, (e, $1) => $1);
-        expression = expression.replace(
-            /\*([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
-        );
-        expression = expression.replace(
-            /\^([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
-        );
-        expression = expression.replace(/\$([0-9]+)/g, e => {
-            return `(${this.partials[e]})`;
-        });
-        return expression;
     }
 
     private getAllExpect(array: Array<any>, i: number) {
