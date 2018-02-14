@@ -60,18 +60,18 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 15:
+/***/ 13:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_v2_1 = __webpack_require__(5);
+var parser_v2_1 = __webpack_require__(3);
 var parser = new parser_v2_1.default();
 var math = new parser_v2_1.MathObject();
 [
@@ -95,7 +95,7 @@ console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return 
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -322,6 +322,10 @@ var MathObject = /** @class */ (function (_super) {
         else if (/^sin\$([0-9]+)$/.test(expression) == true) {
             var partial = expression.replace('sin', '');
             return "cos(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
+        }
+        else if (/^cos\$([0-9]+)$/.test(expression) == true) {
+            var partial = expression.replace('cos', '');
+            return "-sin(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
         }
         else {
             console.log(expression);

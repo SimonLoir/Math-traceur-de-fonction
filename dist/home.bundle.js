@@ -60,13 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
+/* 0 */
 /***/ (function(module, exports) {
 
 /*
@@ -148,7 +146,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -214,7 +212,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(4);
+var	fixUrls = __webpack_require__(2);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -530,7 +528,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports) {
 
 
@@ -625,14 +623,14 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(7);
+__webpack_require__(5);
 document.querySelector("header").style.backgroundImage =
     "url(./images/site-header.jpg)";
 //@ts-ignore
@@ -647,7 +645,7 @@ window.addEventListener("scroll", function (evt) {
     }
 });
 if (typeof process !== "undefined") {
-    var fs = __webpack_require__(9);
+    var fs = __webpack_require__(7);
     var fcontent_1 = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf-8"));
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "https://math.simonloir.be/package.json", true);
@@ -681,11 +679,11 @@ if (typeof process !== "undefined") {
 /* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(8);
+var content = __webpack_require__(6);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -699,7 +697,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(1)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -731,10 +729,10 @@ if(false) {
 }
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(0)(false);
 // imports
 
 
@@ -745,7 +743,7 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 
 
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");

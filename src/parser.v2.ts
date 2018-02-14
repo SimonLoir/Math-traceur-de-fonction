@@ -277,6 +277,11 @@ export class MathObject extends Parser {
             return `cos(${this.partials[partial]})*(${this.derivative(
                 this.partials[partial]
             )})`;
+        } else if (/^cos\$([0-9]+)$/.test(expression) == true) {
+            let partial = expression.replace('cos', '');
+            return `-sin(${this.partials[partial]})*(${this.derivative(
+                this.partials[partial]
+            )})`;
         } else {
             console.log(expression);
             throw new Error('Something went wrong');

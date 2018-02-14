@@ -1,11 +1,12 @@
 const path = require('path');
 
 module.exports = {
-    target:"node",
+    target: 'node',
     entry: {
         home: './src/home.ts',
         drawer: './src/drawer.ts',
-        parser: './src/parser.ui.ts'
+        parser: './src/parser.ui.ts',
+        study: './src/study_tool.ts'
     },
     module: {
         rules: [
@@ -13,18 +14,22 @@ module.exports = {
                 test: /\.ts?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/
-            }
-            , {
-                test: /\.scss$/,
-                use: [{
-                    loader: "style-loader" // creates style nodes from JS strings
-                }, {
-                    loader: "css-loader" // translates CSS into CommonJS
-                }, {
-                    loader: "sass-loader" // compiles Sass to CSS
-                }]
             },
-        ],
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: 'style-loader' // creates style nodes from JS strings
+                    },
+                    {
+                        loader: 'css-loader' // translates CSS into CommonJS
+                    },
+                    {
+                        loader: 'sass-loader' // compiles Sass to CSS
+                    }
+                ]
+            }
+        ]
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js']

@@ -60,13 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
+/* 0 */
 /***/ (function(module, exports) {
 
 /*
@@ -148,7 +146,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 3 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -214,7 +212,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(4);
+var	fixUrls = __webpack_require__(2);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -530,7 +528,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports) {
 
 
@@ -625,7 +623,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -853,6 +851,10 @@ var MathObject = /** @class */ (function (_super) {
             var partial = expression.replace('sin', '');
             return "cos(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
         }
+        else if (/^cos\$([0-9]+)$/.test(expression) == true) {
+            var partial = expression.replace('cos', '');
+            return "-sin(" + this.partials[partial] + ")*(" + this.derivative(this.partials[partial]) + ")";
+        }
         else {
             console.log(expression);
             throw new Error('Something went wrong');
@@ -886,20 +888,20 @@ exports.MathObject = MathObject;
 
 
 /***/ }),
+/* 4 */,
+/* 5 */,
 /* 6 */,
 /* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(11);
-var canvas_1 = __webpack_require__(13);
-var parser_v2_1 = __webpack_require__(5);
-var modal_1 = __webpack_require__(14);
+__webpack_require__(9);
+var canvas_1 = __webpack_require__(11);
+var parser_v2_1 = __webpack_require__(3);
+var modal_1 = __webpack_require__(12);
 // We get the default canvas
 var html_canvas_element = document.querySelector('canvas');
 //We create a new smath canvas
@@ -1046,11 +1048,11 @@ catch (error) {
 
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(12);
+var content = __webpack_require__(10);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1064,7 +1066,7 @@ var options = {"hmr":true}
 options.transform = transform
 options.insertInto = undefined;
 
-var update = __webpack_require__(3)(content, options);
+var update = __webpack_require__(1)(content, options);
 
 if(content.locals) module.exports = content.locals;
 
@@ -1096,10 +1098,10 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)(false);
+exports = module.exports = __webpack_require__(0)(false);
 // imports
 
 
@@ -1110,7 +1112,7 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1379,7 +1381,7 @@ exports.default = canvas;
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
