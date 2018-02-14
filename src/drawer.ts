@@ -169,19 +169,23 @@ let buttons: Array = document.querySelectorAll('.tab_manager span');
 //@ts-ignore
 let tabs: Array = document.querySelectorAll('.tab');
 
-buttons.forEach((e: HTMLElement) => {
+for (let i = 0; i < buttons.length; i++) {
+    const e = buttons[i];
     e.addEventListener('click', () => {
         let id = e.dataset['link'];
-        tabs.forEach((tab: HTMLDivElement) => {
+        for (let i2 = 0; i2 < tabs.length; i2++) {
+            const tab = tabs[i2];
             tab.style.display = 'none';
-        });
-        buttons.forEach((btn: HTMLSpanElement) => {
-            btn.classList.remove('active');
-        });
+        }
+        for (let i2 = 0; i2 < buttons.length; i2++) {
+            const button = buttons[i2];
+            button.classList.remove('active');
+        }
         e.classList.add('active');
         document.getElementById(id).style.display = 'block';
     });
-});
+}
+
 buttons[0].click();
 
 let hash = window.location.hash.replace('#', '');

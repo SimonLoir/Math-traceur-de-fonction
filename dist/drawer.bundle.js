@@ -1095,19 +1095,25 @@ document.getElementById('menu').addEventListener('click', function () {
 var buttons = document.querySelectorAll('.tab_manager span');
 //@ts-ignore
 var tabs = document.querySelectorAll('.tab');
-buttons.forEach(function (e) {
+var _loop_1 = function (i) {
+    var e = buttons[i];
     e.addEventListener('click', function () {
         var id = e.dataset['link'];
-        tabs.forEach(function (tab) {
+        for (var i2 = 0; i2 < tabs.length; i2++) {
+            var tab = tabs[i2];
             tab.style.display = 'none';
-        });
-        buttons.forEach(function (btn) {
-            btn.classList.remove('active');
-        });
+        }
+        for (var i2 = 0; i2 < buttons.length; i2++) {
+            var button = buttons[i2];
+            button.classList.remove('active');
+        }
         e.classList.add('active');
         document.getElementById(id).style.display = 'block';
     });
-});
+};
+for (var i = 0; i < buttons.length; i++) {
+    _loop_1(i);
+}
 buttons[0].click();
 var hash = window.location.hash.replace('#', '');
 try {
