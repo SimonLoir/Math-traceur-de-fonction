@@ -1,4 +1,4 @@
-const name = 'swcache-10';//--Cache
+const name = 'swcache-13';//--Cache
 // Good starting point for service workers cache management :
 // https://www.safaribooksonline.com/library/view/building-progressive-web/9781491961643/ch04.html
 
@@ -40,9 +40,11 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', e => {
     e.respondWith(
         caches.match(e.request).then(res => {
-            if (res) {
+            if (res && navigator.onLine == false) {
+                console.log('Resource loaded from cache');
                 return res;
             } else {
+                console.log('Recource loaded from the network');
                 return fetch(e.request);
             }
         })
