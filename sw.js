@@ -1,11 +1,14 @@
+const name = 'swcache-00001';
+//--Cache
+/**
+ * The install event is triggered by
+ */
 self.addEventListener('install', event => {
-    console.log('SW has been installed');
     event.waitUntil(
-        caches.open('static').then(cache => {
-            cache.addAll([
+        caches.open(name).then(cache => {
+            return cache.addAll([
                 './',
                 './index.html',
-                './manifest.json',
                 './public/drawer.html',
                 './dist/home.bundle.js',
                 './dist/drawer.bundle.js',
@@ -14,6 +17,7 @@ self.addEventListener('install', event => {
             ]);
         })
     );
+    console.log('The service worker has been installed. Cache name : ' + name);
 });
 
 self.addEventListener('activate', () => {

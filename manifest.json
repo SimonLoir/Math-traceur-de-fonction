@@ -1,6 +1,6 @@
 {
     "name": "SMath graphical calculator",
-    "shortName": "SMath",
+    "short_name": "SMath",
     "start_url": "./index.html",
     "display": "standalone",
     "orientation": "portrait",
@@ -15,6 +15,21 @@
         {
             "src": "./images/scode-2.18-logo144x144.png",
             "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "./images/scode-2.18-logo192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "./images/scode-2.18-logo256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "./images/scode-2.18-logo512x512.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ]
