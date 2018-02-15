@@ -1,8 +1,9 @@
-const name = 'swcache-1';//--Cache
+const name = 'swcache-5';//--Cache
 /**
  * The install event is triggered by
  */
 self.addEventListener('install', event => {
+    console.log('The service worker has been installed. Cache name : ' + name);
     event.waitUntil(
         caches.open(name).then(cache => {
             return cache.addAll([
@@ -16,11 +17,21 @@ self.addEventListener('install', event => {
             ]);
         })
     );
-    console.log('The service worker has been installed. Cache name : ' + name);
 });
 
-self.addEventListener('activate', () => {
-    console.log('SW has been activated');
+self.addEventListener('activate', function(event) {
+    console.log('activated and removes other caches');
+    event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+            return Promise.all(
+                cacheNames.map(function(cacheName) {
+                    if (name != cacheName) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
 });
 
 self.addEventListener('fetch', e => {
