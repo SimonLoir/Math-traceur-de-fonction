@@ -39,9 +39,8 @@ export default class Parser {
         );
 
         // We rebuild the complete expression
-        expression = expression.replace(
-            /\$([0-9]+)/gi,
-            (e, $1) => '(' + this.parse(this.partials['$' + $1]) + ')'
+        expression = expression.replace(/\$([0-9]+)/gi, (e, $1) =>
+            this.clean('(' + this.parse(this.partials['$' + $1]) + ')')
         );
 
         expression = this.clean(expression);
@@ -182,6 +181,11 @@ export default class Parser {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, (e, $1, $2) => $1 + $2);
         }
+
+        /*pattern = /^\(([0-9x]+)\)$/;
+
+        if (pattern.test(expression))
+            expression = expression.replace(pattern, (e, $1) => $1);*/
 
         expression = expression.replace(
             /\*([0-9])/gi,

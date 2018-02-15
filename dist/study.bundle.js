@@ -110,7 +110,9 @@ var Parser = /** @class */ (function () {
         // We tranform exponants into Math.pow()
         expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
-        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) { return '(' + _this.parse(_this.partials['$' + $1]) + ')'; });
+        expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) {
+            return _this.clean('(' + _this.parse(_this.partials['$' + $1]) + ')');
+        });
         expression = this.clean(expression);
         return expression;
     };
@@ -211,6 +213,10 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
+        /*pattern = /^\(([0-9x]+)\)$/;
+
+        if (pattern.test(expression))
+            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
