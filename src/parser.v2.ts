@@ -177,7 +177,7 @@ export default class Parser {
      * CleanUp
      */
     public clean(expression: string) {
-        let pattern = /\(([0-9x]+)\)/gi;
+        let pattern = /\(([0-9]+)\)/gi;
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, (e, $1) => $1);
         }

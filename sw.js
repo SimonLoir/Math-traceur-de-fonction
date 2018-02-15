@@ -1,6 +1,7 @@
-const name = 'swcache-6';//--Cache
+const name = 'swcache-10';//--Cache
 // Good starting point for service workers cache management :
 // https://www.safaribooksonline.com/library/view/building-progressive-web/9781491961643/ch04.html
+
 /**
  * The install event is triggered by
  */
