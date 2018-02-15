@@ -1,5 +1,4 @@
-const name = 'swcache-00001';
-//--Cache
+const name = 'swcache-1';//--Cache
 /**
  * The install event is triggered by
  */
