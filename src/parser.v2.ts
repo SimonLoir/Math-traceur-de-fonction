@@ -177,21 +177,26 @@ export default class Parser {
      * CleanUp
      */
     public clean(expression: string) {
-        let pattern = /\(([0-9]+)\)/gi;
+        let pattern = /([^a-z\/])\(([0-9x]+)\)/gi;
+
         while (pattern.test(expression)) {
-            expression = expression.replace(pattern, (e, $1) => $1);
+            expression = expression.replace(pattern, (e, $1, $2) => $1 + $2);
         }
+
         expression = expression.replace(
             /\*([0-9])/gi,
             (e, $1) => ($1 == 1 ? '' : e)
         );
+
         expression = expression.replace(
             /\^([0-9])/gi,
             (e, $1) => ($1 == 1 ? '' : e)
         );
+
         expression = expression.replace(/\$([0-9]+)/g, e => {
             return `(${this.partials[e]})`;
         });
+
         return expression;
     }
 }

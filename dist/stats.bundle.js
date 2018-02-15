@@ -206,9 +206,9 @@ var Parser = /** @class */ (function () {
      */
     Parser.prototype.clean = function (expression) {
         var _this = this;
-        var pattern = /\(([0-9]+)\)/gi;
+        var pattern = /([^a-z\/])\(([0-9x]+)\)/gi;
         while (pattern.test(expression)) {
-            expression = expression.replace(pattern, function (e, $1) { return $1; });
+            expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
