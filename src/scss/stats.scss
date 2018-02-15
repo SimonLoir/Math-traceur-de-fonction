@@ -41,6 +41,7 @@ canvas {
             padding-left: 8px;
             padding-right: 8px;
             border-right: 1px solid lightgray;
+            flex-grow: 1;
             &:last-child {
                 border: none;
             }
