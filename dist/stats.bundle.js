@@ -1332,7 +1332,7 @@ exports = module.exports = __webpack_require__(1)(false);
 
 
 // module
-exports.push([module.i, "canvas {\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  height: 50vh;\n  width: 100%; }\n\n.container {\n  position: fixed;\n  top: 50vh;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  background: #eee;\n  overflow: auto; }\n", ""]);
+exports.push([module.i, "canvas {\n  position: fixed;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  height: 100vh;\n  width: 50vw; }\n\n.container {\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  height: 100vh;\n  width: 50vw;\n  background: white;\n  overflow: auto;\n  border-right: 1px solid lightgray; }\n  .container nav {\n    height: 50px;\n    display: flex;\n    border-bottom: 1px solid lightgray; }\n    .container nav button {\n      cursor: pointer; }\n    .container nav button,\n    .container nav input {\n      flex-grow: 1;\n      padding: 0;\n      margin: 0;\n      border: none;\n      height: 100%;\n      padding-left: 8px;\n      padding-right: 8px;\n      border-right: 1px solid lightgray; }\n      .container nav button:last-child,\n      .container nav input:last-child {\n        border: none; }\n\ntable {\n  font-family: arial, sans-serif;\n  border-collapse: collapse; }\n\ntd,\nth {\n  border: 1px solid #eaeaea;\n  text-align: left;\n  padding: 8px;\n  text-align: center; }\n\ntr:nth-child(even) {\n  background-color: #eaeaea; }\n\n#action {\n  display: none; }\n\n.a {\n  display: none; }\n\n.show .a,\n.show #action {\n  display: table-cell; }\n", ""]);
 
 // exports
 
