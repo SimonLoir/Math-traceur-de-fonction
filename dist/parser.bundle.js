@@ -172,12 +172,12 @@ var Parser = /** @class */ (function () {
                 }
             }
         }
-        processed_exp = processed_exp.replace(/([0-9]+)x\^([\$0-9]+)/gi, function (exp, $1, $2) {
+        processed_exp = processed_exp.replace(/([0-9\.]+)x\^([\$0-9\.]+)/gi, function (exp, $1, $2) {
             var e = '$' + (Object.keys(_this.partials).length + 1);
             _this.partials[e] = $1 + "*x^" + $2;
             return e;
         });
-        processed_exp = processed_exp.replace(/([0-9]+)x/gi, function (exp, $1) {
+        processed_exp = processed_exp.replace(/([0-9\.]+)x/gi, function (exp, $1) {
             var e = '$' + (Object.keys(_this.partials).length + 1);
             _this.partials[e] = $1 + "*x";
             return e;

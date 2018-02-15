@@ -102,7 +102,7 @@ export default class Parser {
         }
 
         processed_exp = processed_exp.replace(
-            /([0-9]+)x\^([\$0-9]+)/gi,
+            /([0-9\.]+)x\^([\$0-9\.]+)/gi,
             (exp, $1, $2) => {
                 let e = '$' + (Object.keys(this.partials).length + 1);
                 this.partials[e] = `${$1}*x^${$2}`;
@@ -110,7 +110,7 @@ export default class Parser {
             }
         );
 
-        processed_exp = processed_exp.replace(/([0-9]+)x/gi, (exp, $1) => {
+        processed_exp = processed_exp.replace(/([0-9\.]+)x/gi, (exp, $1) => {
             let e = '$' + (Object.keys(this.partials).length + 1);
             this.partials[e] = `${$1}*x`;
             return e;

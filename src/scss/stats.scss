@@ -5,6 +5,14 @@ canvas {
     bottom: 0;
     height: 100vh;
     width: 50vw;
+    @media (max-width: 800px) {
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: auto;
+        height: 50vh;
+        width: 100vw;
+    }
 }
 
 .container {
@@ -26,7 +34,6 @@ canvas {
         border-bottom: 1px solid lightgray;
         & button,
         & input {
-            flex-grow: 1;
             padding: 0;
             margin: 0;
             border: none;
@@ -39,9 +46,30 @@ canvas {
             }
         }
     }
+    @media (max-width: 800px) {
+        top: auto;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        height: 50vh;
+        width: 100vw;
+        border-top: 1px solid lightgray;
+        & nav {
+            display: block;
+            height: initial;
+            & button,
+            & input {
+                height: none;
+                margin: 5px;
+                padding: 5px;
+                border: 1px solid lightgray;
+            }
+        }
+    }
 }
 
 table {
+    width: 100%;
     font-family: arial, sans-serif;
     border-collapse: collapse;
 }
@@ -52,6 +80,7 @@ th {
     text-align: left;
     padding: 8px;
     text-align: center;
+    word-break: break-all;
 }
 
 tr:nth-child(even) {

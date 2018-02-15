@@ -14,10 +14,10 @@
     </canvas>
     <div class="container">
         <nav>
-            <button>Afficher/Masquer les actions</button>
+            <button id="toggleActions">Afficher/Masquer les actions</button>
             <input type="text" placeholder="Intervalle : de->à:étape">
             <button>Remplir par intervalle</button>
-            <button>Calculer et tracer</button>
+            <button style="background:coral; color:white;" id="process">Calculer et tracer</button>
         </nav>
         <table style="width:100%">
             <thead>
@@ -41,6 +41,9 @@
                 </tr>
             </tbody>
         </table>
+        <div id="result">
+
+        </div>
     </div>
     <script src="../dist/stats.bundle.js"></script>
 </body>
