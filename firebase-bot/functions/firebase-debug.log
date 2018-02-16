@@ -1,49 +1,53 @@
-[debug] [2018-02-06T19:43:03.371Z] ----------------------------------------------------------------------
-[debug] [2018-02-06T19:43:03.373Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\simon\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve --only functions,hosting
-[debug] [2018-02-06T19:43:03.373Z] CLI Version:   3.17.4
-[debug] [2018-02-06T19:43:03.373Z] Platform:      win32
-[debug] [2018-02-06T19:43:03.373Z] Node Version:  v8.9.4
-[debug] [2018-02-06T19:43:03.373Z] Time:          Tue Feb 06 2018 20:43:03 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:03.373Z] ----------------------------------------------------------------------
+[debug] [2018-02-16T11:06:55.209Z] ----------------------------------------------------------------------
+[debug] [2018-02-16T11:06:55.210Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\simon\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve --only hosting,functions
+[debug] [2018-02-16T11:06:55.211Z] CLI Version:   3.17.4
+[debug] [2018-02-16T11:06:55.211Z] Platform:      win32
+[debug] [2018-02-16T11:06:55.211Z] Node Version:  v8.9.4
+[debug] [2018-02-16T11:06:55.211Z] Time:          Fri Feb 16 2018 12:06:55 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:55.211Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-02-06T19:43:03.380Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-02-06T19:43:03.381Z] > authorizing via signed-in user
-[debug] [2018-02-06T19:43:03.382Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/simonloir-test  
+[debug] [2018-02-16T11:06:55.219Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-02-16T11:06:55.220Z] > authorizing via signed-in user
+[debug] [2018-02-16T11:06:55.221Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/simonloir-test  
   
- Tue Feb 06 2018 20:43:03 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:04.036Z] <<< HTTP RESPONSE 200
-[debug] [2018-02-06T19:43:04.038Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/simonloir-test/tokens  
+ Fri Feb 16 2018 12:06:55 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:55.896Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-16T11:06:55.897Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/simonloir-test/tokens  
   
- Tue Feb 06 2018 20:43:04 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:04.647Z] <<< HTTP RESPONSE 200
+ Fri Feb 16 2018 12:06:55 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:56.492Z] <<< HTTP RESPONSE 200
 [info] 
-[info] === Serving from 'C:\Users\simon\Documents\dev\SMath\firebase-bot'...
+[info] === Serving from 'C:\wamp64\www\SMath\firebase-bot'...
 [info] 
 [info] i  functions: Preparing to emulate functions.
-[debug] [2018-02-06T19:43:04.896Z] Fetching environment
-[debug] [2018-02-06T19:43:04.897Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/simonloir-test  
+[debug] [2018-02-16T11:06:56.722Z] Fetching environment
+[debug] [2018-02-16T11:06:56.723Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/simonloir-test  
   
- Tue Feb 06 2018 20:43:04 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:04.897Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/simonloir-test/apiKeys  
+ Fri Feb 16 2018 12:06:56 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:56.723Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/simonloir-test/apiKeys  
   
- Tue Feb 06 2018 20:43:04 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:04.897Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/simonloir-test  
+ Fri Feb 16 2018 12:06:56 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:56.723Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/simonloir-test  
   
- Tue Feb 06 2018 20:43:04 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:05.653Z] <<< HTTP RESPONSE 200
-[debug] [2018-02-06T19:43:05.654Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/504074372344/clients/_:getWebAppConfig  
+ Fri Feb 16 2018 12:06:56 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:57.453Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-16T11:06:57.478Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-16T11:06:57.478Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/504074372344/clients/_:getWebAppConfig  
   
- Tue Feb 06 2018 20:43:05 GMT+0100 (Paris, Madrid)
-[debug] [2018-02-06T19:43:05.656Z] <<< HTTP RESPONSE 200
-[debug] [2018-02-06T19:43:05.752Z] <<< HTTP RESPONSE 200
-[debug] [2018-02-06T19:43:05.753Z] Starting @google-cloud/functions-emulator
-[debug] [2018-02-06T19:43:06.072Z] <<< HTTP RESPONSE 200
+ Fri Feb 16 2018 12:06:57 GMT+0100 (Paris, Madrid)
+[debug] [2018-02-16T11:06:57.518Z] <<< HTTP RESPONSE 200
+[debug] [2018-02-16T11:06:57.518Z] Starting @google-cloud/functions-emulator
+[debug] [2018-02-16T11:06:58.159Z] <<< HTTP RESPONSE 200
 [info] i  hosting: Serving hosting files from: public
 [info] +  hosting: Local server: http://localhost:5000
 
-[debug] [2018-02-06T19:43:06.837Z] Parsing function triggers
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33 to local function app
+[debug] [2018-02-16T11:06:58.598Z] Parsing function triggers
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33 to local function app
 [info] +  functions: app: http://localhost:5001/simonloir-test/us-central1/app
-[info] [hosting] Rewriting /app?function=x to local function app
-[info] [hosting] Rewriting /app?function=x to local function app
-[info] [hosting] Rewriting /app?function=x^2+6x+3 to local function app
-[info] [hosting] Rewriting /app?function=x^2-6x-6 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&interval=0;10;1 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&interval=0;10;1 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&i0nterval=-1000;1000;1 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&i0nterval=-1000;1000;1 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&interval=-1000;1000;1 to local function app
+[info] [hosting] Rewriting /app?function=x%C2%B2-6x-33&interval=-10000;10000;1 to local function app

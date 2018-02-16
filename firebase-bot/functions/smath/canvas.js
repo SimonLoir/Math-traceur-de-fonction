@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var parser_1 = require("./parser");
 var canvas = /** @class */ (function () {
     function canvas(canvas) {
         var _this = this;
@@ -21,11 +20,14 @@ var canvas = /** @class */ (function () {
         canvas.addEventListener('mousedown', function (e) {
             down = true;
             start = { x: e.pageX, y: e.pageY };
-            canvas.style.cursor = "grabbing";
+            canvas.style.cursor = 'grabbing';
         });
         canvas.addEventListener('touchstart', function (e) {
             down = true;
-            start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+            start = {
+                x: e.touches.item(0).clientX,
+                y: e.touches.item(0).clientY
+            };
         });
         // When the user moves on the surface of the canvas.
         canvas.addEventListener('mousemove', function (e) {
@@ -39,8 +41,12 @@ var canvas = /** @class */ (function () {
             }
         });
         canvas.addEventListener('touchmove', function (e) {
+            e.preventDefault();
             if (down == true) {
-                var new_start = { x: e.touches.item(0).clientX, y: e.touches.item(0).clientY };
+                var new_start = {
+                    x: e.touches.item(0).clientX,
+                    y: e.touches.item(0).clientY
+                };
                 var old = start;
                 var drawn = _this.move(old, new_start);
                 if (drawn) {
@@ -51,7 +57,7 @@ var canvas = /** @class */ (function () {
         //When the user stops clicking on teh surface
         canvas.addEventListener('mouseup', function (e) {
             down = false;
-            canvas.style.cursor = "grab";
+            canvas.style.cursor = 'grab';
         });
         canvas.addEventListener('touchend', function (e) {
             down = false;
@@ -60,11 +66,11 @@ var canvas = /** @class */ (function () {
             _this.reload();
         });
         canvas.addEventListener('mousewheel', function (e) {
-            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
         });
         canvas.addEventListener('DOMMouseScroll', function (e) {
-            var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
         });
     }
@@ -86,24 +92,41 @@ var canvas = /** @class */ (function () {
         this.drawGrid();
     };
     canvas.prototype.drawGrid = function () {
+        var max = Math.max(this.canvas.height, this.canvas.width);
+        max = max / Math.min(this.x_unit, this.y_unit);
         // Clears the view
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.beginPath();
-        this.ctx.fillStyle = "#fafafa";
+        this.ctx.fillStyle = '#fafafa';
         this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fill();
         this.ctx.closePath();
-        var to = 100;
-        var xpos = 0 - to;
+        var to = Math.floor(this.center_x + max);
+        var xpos = Math.floor(this.center_x - max);
         while (xpos < to) {
-            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(this.center_y + to), this.getRelativePositionX(xpos), this.getRelativePositionY(this.center_y - to), (xpos == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y + max)), this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y - max)), Math.floor(xpos) == 0 ? 'black' : undefined);
+            this.ctx.beginPath();
+            this.ctx.font = '15px Sans Serif';
+            this.ctx.fillStyle = 'gray';
+            this.ctx.fillText(xpos.toString(), this.getRelativePositionX(xpos), this.getRelativePositionY(0) + 15);
+            this.ctx.closePath();
             xpos++;
         }
-        var ypos = 0 - to;
+        to = Math.floor(this.center_y + max);
+        var ypos = Math.floor(this.center_y - max);
         while (ypos < to) {
-            this.drawLine(this.getRelativePositionX(this.center_x + to), this.getRelativePositionY(ypos), this.getRelativePositionX(this.center_x - to), this.getRelativePositionY(ypos), (ypos == 0) ? "black" : undefined);
+            this.drawLine(this.getRelativePositionX(Math.floor(this.center_x + max)), this.getRelativePositionY(ypos), this.getRelativePositionX(Math.floor(this.center_x - max)), this.getRelativePositionY(ypos), Math.floor(ypos) == 0 ? 'black' : undefined);
+            this.ctx.beginPath();
+            this.ctx.font = '15px Sans Serif';
+            this.ctx.fillStyle = 'gray';
+            this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) -
+                ypos.toString().length * 15 / 2 -
+                5, this.getRelativePositionY(ypos));
+            this.ctx.closePath();
             ypos++;
         }
+        // The program will be able to trace points
+        // this.point(this.getRelativePositionX(0), this.getRelativePositionY(0));
     };
     canvas.prototype.move = function (previous, now) {
         var diff_x = previous.x - now.x;
@@ -118,7 +141,7 @@ var canvas = /** @class */ (function () {
     canvas.prototype.drawLine = function (x, y, x2, y2, color, width) {
         this.ctx.beginPath();
         if (color == undefined) {
-            this.ctx.strokeStyle = "#eee";
+            this.ctx.strokeStyle = '#eee';
         }
         else {
             this.ctx.strokeStyle = color;
@@ -134,12 +157,16 @@ var canvas = /** @class */ (function () {
         this.ctx.stroke();
     };
     canvas.prototype.getRelativePositionX = function (point) {
-        return (this.canvas.width / 2) + point * this.x_unit - this.center_x * this.x_unit;
+        return (this.canvas.width / 2 +
+            point * this.x_unit -
+            this.center_x * this.x_unit);
     };
     canvas.prototype.getRelativePositionY = function (point) {
-        return (this.canvas.height / 2) - point * this.y_unit + this.center_y * this.y_unit;
+        return (this.canvas.height / 2 -
+            point * this.y_unit +
+            this.center_y * this.y_unit);
     };
-    canvas.prototype.drawFromArray = function (array, color, isPreview) {
+    canvas.prototype.drawFromFunc = function (func, color, isPreview) {
         if (color === void 0) { color = undefined; }
         if (isPreview === void 0) { isPreview = false; }
         if (!color) {
@@ -149,10 +176,10 @@ var canvas = /** @class */ (function () {
                 color += letters[Math.floor(Math.random() * 16)];
             }
         }
-        var display_size = (this.canvas.width / 2) / this.x_unit;
+        var display_size = this.canvas.width / 2 / this.x_unit;
         var x = this.center_x - display_size;
         var last = undefined;
-        var label = (new parser_1.default).stringify(array);
+        var label = func;
         var was_defined = true;
         if (this.pathes[label] == undefined) {
             this.pathes[label] = {};
@@ -167,7 +194,7 @@ var canvas = /** @class */ (function () {
                 new_x = this.getRelativePositionX(x);
             }
             else {
-                pos = this.getFor(x, array, label);
+                pos = this.getFor(x, func, label);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
@@ -189,7 +216,7 @@ var canvas = /** @class */ (function () {
         }
         return color;
     };
-    canvas.prototype.getFor = function (start, array, label) {
+    canvas.prototype.getFor = function (start, func, label) {
         if (this.stored[label] == undefined) {
             this.stored[label] = {};
         }
@@ -197,29 +224,8 @@ var canvas = /** @class */ (function () {
             return this.stored[label][start];
         }
         else {
-            var result = 0;
-            for (var i = 0; i < Object.keys(array).length; i++) {
-                var element = Object.keys(array)[i];
-                if (element == "~") {
-                    if (array[element] != "") {
-                        result += array[element];
-                    }
-                }
-                else if (element == "x") {
-                    result += array[element] * start;
-                }
-                else if (element.indexOf("^m") >= 0) {
-                    result += array[element] * (1 / Math.pow(start, parseFloat(element.split("^m")[1])));
-                }
-                else if (element == "over") {
-                    result = result / this.getFor(start, array[element], (new parser_1.default).stringify(array[element]));
-                }
-                else {
-                    result += array[element] * Math.pow(start, parseFloat(element.split("^")[1]));
-                }
-            }
-            this.stored[label][start] = result;
-            return result;
+            this.stored[label][start] = func(start);
+            return this.stored[label][start];
         }
     };
     canvas.prototype.reload = function (fdata) {
@@ -232,10 +238,17 @@ var canvas = /** @class */ (function () {
         requestAnimationFrame(function () {
             data.forEach(function (key) {
                 if (_this.fdata[key].visible == true) {
-                    _this.drawFromArray(_this.fdata[key].array, _this.fdata[key].color);
+                    _this.drawFromFunc(_this.fdata[key].array, _this.fdata[key].color);
                 }
             });
         });
+    };
+    canvas.prototype.point = function (x, y) {
+        x = this.getRelativePositionX(x);
+        y = this.getRelativePositionX(y);
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
+        this.ctx.fill();
     };
     Object.defineProperty(canvas.prototype, "funcs", {
         set: function (fdata) {
