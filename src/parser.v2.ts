@@ -143,28 +143,29 @@ export default class Parser {
         return new Function(
             'x',
             `
-            let sin = Math.sin;
-            let tan = Math.tan;
-            let cos = Math.cos;
-            let asin = Math.asin;
-            let atan = Math.atan;
-            let acos = Math.acos;
+            const sin = Math.sin;
+            const tan = Math.tan;
+            const cos = Math.cos;
+            const asin = Math.asin;
+            const atan = Math.atan;
+            const acos = Math.acos;
 
-            let sinh = Math.sinh;
-            let tanh = Math.tanh;
-            let cosh = Math.cosh;
-            let asinh = Math.asinh;
-            let atanh = Math.atanh;
-            let acosh = Math.acosh;
+            const sinh = Math.sinh;
+            const tanh = Math.tanh;
+            const cosh = Math.cosh;
+            const asinh = Math.asinh;
+            const atanh = Math.atanh;
+            const acosh = Math.acosh;
 
-            let ceil = Math.ceil;
-            let floor = Math.floor;
-            let abs = Math.abs;
-            let exp = Math.exp;
-            let log = Math.log;
-            
-            let e = Math.E;
-            let pi = Math.PI;
+            const ceil = Math.ceil;
+            const floor = Math.floor;
+            const abs = Math.abs;
+            const exp = Math.exp;
+            const ln = Math.log;
+            const log = function (base, y) { return Math.log(y) / Math.log(base)};
+
+            const e = Math.E;
+            const pi = Math.PI;
             
             return ${exp};
             
