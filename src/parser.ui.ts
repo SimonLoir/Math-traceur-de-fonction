@@ -6,6 +6,9 @@ let math = new MathObject();
 [
     '1',
     'x',
+    'x+1',
+    'x-1',
+    '((x-1))',
     '2x',
     '2*2x',
     'x²',
@@ -17,7 +20,11 @@ let math = new MathObject();
     'sin(1/x)',
     'sin(x^2)'
 ].forEach(e => {
-    console.log('=> ' + e, math.derivative(e));
+    //console.log('=> Derivative(' + e + ')', math.derivative(e));
+    console.log('=> Tokenize ' + e, parser.tokenize(e));
+    document.body.innerText += `
+    ${e} =>  ${JSON.stringify(parser.tokenize(e), null, '    ')}
+    `;
 });
 
 //http://jsben.ch/D2xTG

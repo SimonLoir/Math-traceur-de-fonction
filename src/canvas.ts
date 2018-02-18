@@ -258,6 +258,13 @@ export default class canvas {
             was_defined = false;
         }
 
+        let xs_increment = Math.min(
+            5 * this.canvas.width / (this.x_unit * 1000),
+            0.05
+        );
+
+        console.log(xs_increment);
+
         while (x < this.center_x + display_size) {
             let pos;
             let new_y;
@@ -284,7 +291,7 @@ export default class canvas {
             if (isPreview == true) {
                 x += 0.5;
             } else {
-                x += 0.05;
+                x += xs_increment;
             }
 
             //x+= this.x_unit /500;

@@ -224,6 +224,81 @@ var Parser = /** @class */ (function () {
         });
         return expression;
     };
+    /**
+     * @see https://medium.freecodecamp.org/how-to-build-a-math-expression-tokenizer-using-javascript-3638d4e5fbe9
+     * But the tokenizer will be a bit different.
+     */
+    Parser.prototype.tokenize = function (expression) {
+        var _this = this;
+        if (typeof expression == 'number') {
+            //@ts-ignore
+            expression = expression.toString();
+        }
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError('Invalid expression given');
+        }
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        // 3) We really parse the expression
+        if (!isNaN(expression)) {
+            return {
+                type: 'number',
+                value: expression
+            };
+        }
+        else if (expression == 'x') {
+            return {
+                type: 'variable',
+                value: 'x'
+            };
+        }
+        else if (expression.indexOf('+') >= 0) {
+            var exp_spl = expression.split('+');
+            var value_1 = [];
+            exp_spl.forEach(function (e) {
+                value_1.push(_this.tokenize(e));
+            });
+            return {
+                type: 'plus',
+                value: value_1
+            };
+        }
+        else if (expression.indexOf('-') >= 0) {
+            var exp_spl = expression.split('-');
+            var value_2 = [];
+            exp_spl.forEach(function (e, i) {
+                e = e.trim();
+                if (i == 0 && e == '') {
+                    value_2.push(_this.tokenize(0));
+                }
+                else {
+                    value_2.push(_this.tokenize(e));
+                }
+            });
+            return {
+                type: 'minus',
+                value: value_2
+            };
+        }
+        else if (expression.indexOf('*') >= 0) {
+            var exp_spl = expression.split('*');
+            var value_3 = [];
+            exp_spl.forEach(function (e) {
+                value_3.push(_this.tokenize(e));
+            });
+            return {
+                type: 'times',
+                value: value_3
+            };
+        }
+        else if (/^\$([0-9]+)$/.test(expression) == true) {
+            return this.tokenize(this.partials[expression]);
+        }
+        else {
+            throw new Error('Could not parse expression ' + expression);
+        }
+    };
     return Parser;
 }());
 exports.default = Parser;
@@ -426,6 +501,9 @@ var math = new parser_v2_1.MathObject();
 [
     '1',
     'x',
+    'x+1',
+    'x-1',
+    '((x-1))',
     '2x',
     '2*2x',
     'x²',
@@ -437,7 +515,9 @@ var math = new parser_v2_1.MathObject();
     'sin(1/x)',
     'sin(x^2)'
 ].forEach(function (e) {
-    console.log('=> ' + e, math.derivative(e));
+    //console.log('=> Derivative(' + e + ')', math.derivative(e));
+    console.log('=> Tokenize ' + e, parser.tokenize(e));
+    document.body.innerText += "\n    " + e + " =>  " + JSON.stringify(parser.tokenize(e), null, '    ') + "\n    ";
 });
 //http://jsben.ch/D2xTG
 console.log(parser.parse('(sqrt(x²+6x+3)+6x+33)/2'), new Function('x', 'return ' + parser.parse('(sqrt(x²+6x+3)+6x+33)/2'))(0));

@@ -204,6 +204,85 @@ export default class Parser {
 
         return expression;
     }
+
+    /**
+     * @see https://medium.freecodecamp.org/how-to-build-a-math-expression-tokenizer-using-javascript-3638d4e5fbe9
+     * But the tokenizer will be a bit different.
+     */
+    public tokenize(expression: any): any {
+        if (typeof expression == 'number') {
+            //@ts-ignore
+            expression = expression.toString();
+        }
+
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError('Invalid expression given');
+        }
+
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+
+        expression = this.prepareExpression(expression);
+
+        // 3) We really parse the expression
+
+        if (!isNaN(expression)) {
+            return {
+                type: 'number',
+                value: expression
+            };
+        } else if (expression == 'x') {
+            return {
+                type: 'variable',
+                value: 'x'
+            };
+        } else if (expression.indexOf('+') >= 0) {
+            let exp_spl: string[] = expression.split('+');
+            let value: any[] = [];
+
+            exp_spl.forEach(e => {
+                value.push(this.tokenize(e));
+            });
+
+            return {
+                type: 'plus',
+                value
+            };
+        } else if (expression.indexOf('-') >= 0) {
+            let exp_spl: string[] = expression.split('-');
+            let value: any[] = [];
+
+            exp_spl.forEach((e, i) => {
+                e = e.trim();
+                if (i == 0 && e == '') {
+                    value.push(this.tokenize(0));
+                } else {
+                    value.push(this.tokenize(e));
+                }
+            });
+
+            return {
+                type: 'minus',
+                value
+            };
+        } else if (expression.indexOf('*') >= 0) {
+            let exp_spl: string[] = expression.split('*');
+            let value: any[] = [];
+
+            exp_spl.forEach(e => {
+                value.push(this.tokenize(e));
+            });
+
+            return {
+                type: 'times',
+                value
+            };
+        } else if (/^\$([0-9]+)$/.test(expression) == true) {
+            return this.tokenize(this.partials[expression]);
+        } else {
+            throw new Error('Could not parse expression ' + expression);
+        }
+    }
 }
 
 export class InvalidExpressionError extends Error {
