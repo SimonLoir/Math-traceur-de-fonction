@@ -241,6 +241,44 @@ var Parser = /** @class */ (function () {
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
         // 3) We really parse the expression
+        var math_functions = function (expression, returns) {
+            var mfuncs = [
+                'sin',
+                'tan',
+                'cos',
+                'asin',
+                'atan',
+                'acos',
+                'cos',
+                'sinh',
+                'tanh',
+                'cosh',
+                'asinh',
+                'atanh',
+                'acosh',
+                'cosh',
+                'ceil',
+                'floor',
+                'abs',
+                'exp',
+                'ln',
+                'log'
+            ];
+            for (var i = 0; i < mfuncs.length; i++) {
+                var func = mfuncs[i];
+                if (expression.indexOf(func) == 0) {
+                    if (returns == true) {
+                        return func;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+        var math_numbers = ['e', 'pi'];
+        expression = expression.trim();
         if (!isNaN(expression)) {
             return {
                 type: 'number',
@@ -292,8 +330,52 @@ var Parser = /** @class */ (function () {
                 value: value_3
             };
         }
+        else if (expression.indexOf('/') >= 0) {
+            var exp_spl = expression.split('/');
+            var rm = function (array) {
+                array.shift();
+                return array;
+            };
+            var value = [
+                this.tokenize(exp_spl[0]),
+                this.tokenize('(' + rm(exp_spl).join(')*(') + ')')
+            ];
+            return {
+                type: 'over',
+                value: value
+            };
+        }
         else if (/^\$([0-9]+)$/.test(expression) == true) {
             return this.tokenize(this.partials[expression]);
+        }
+        else if (expression.indexOf('^') > 0) {
+            var spl_exp = expression.split('^');
+            if (spl_exp.length == 2) {
+                return {
+                    type: 'power',
+                    value: [
+                        this.tokenize(spl_exp[0]),
+                        this.tokenize(spl_exp[1])
+                    ]
+                };
+            }
+            else {
+                throw new Error('Unexpected expression');
+            }
+        }
+        else if (math_functions(expression) == true) {
+            var start = math_functions(expression, true);
+            return {
+                type: 'function',
+                value: start,
+                args: this.tokenize(expression.replace(start, ''))
+            };
+        }
+        else if (expression.indexOf(',') >= 0) {
+            var spl_exp = expression.split(',');
+            return spl_exp.map(function (element) {
+                return _this.tokenize(element);
+            });
         }
         else {
             throw new Error('Could not parse expression ' + expression);
@@ -316,7 +398,7 @@ var MathObject = /** @class */ (function (_super) {
     __extends(MathObject, _super);
     function MathObject() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.ce = '';
+        _this.ce = [];
         _this.type = 'MathObject';
         return _this;
     }
@@ -431,55 +513,29 @@ var MathObject = /** @class */ (function (_super) {
         });
         return res;
     };
-    MathObject.prototype.getDomF = function (expression, clear) {
+    MathObject.prototype.getDomF = function (tokens, clear) {
         var _this = this;
         if (clear === void 0) { clear = true; }
-        if (clear == true) {
-            this.ce = '';
+        if (clear == true)
+            this.ce = [];
+        if (tokens.type === 'plus' ||
+            tokens.type === 'minus' ||
+            tokens.type === 'times') {
+            var value = tokens.value;
+            value.forEach(function (e) {
+                _this.getDomF(e);
+            });
         }
-        // 1) We have to check wheter or not the expression is valid
-        if (this.check(expression) == false) {
-            throw new InvalidExpressionError('Invalid expression given');
+        else if (tokens.type == 'over') {
+            this.ce.push(JSON.stringify(tokens.value[1]));
         }
-        // 2) We convert ...(....) into ...$1 and $1 = ....
-        expression = this.prepareExpression(expression);
-        if (expression.indexOf('+') >= 0) {
-            var spl = expression.split('+');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
-        }
-        if (expression.indexOf('-') >= 0) {
-            var spl = expression.split('-');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
-        }
-        if (expression.indexOf('*') >= 0) {
-            var spl = expression.split('*');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
-        }
-        if (expression.indexOf('/') >= 0) {
-            var spl = expression.split('/');
-            var spl_copy = spl.slice();
-            spl_copy.shift();
-            var bottom = "(" + spl_copy.join(')*(') + ")";
-            this.ce += '\n' + this.clean(bottom) + ' != 0';
-            this.getDomF(bottom, false);
-            return this.realGetDomF();
-        }
-        if (/^\$([0-9]+)$/.test(expression) == true) {
-            var part = this.partials[expression];
-            this.getDomF(part, false);
-            return this.realGetDomF();
-        }
-        return this.realGetDomF();
-    };
-    MathObject.prototype.realGetDomF = function () {
-        if (this.ce.trim() == '') {
-            return 'R';
-        }
-        else {
-            return 'CE: ' + this.ce;
+        if (clear === true) {
+            if (this.ce.length === 0) {
+                return 'R';
+            }
+            else {
+                return 'ce : ' + this.ce.join('\n');
+            }
         }
     };
     return MathObject;
@@ -503,6 +559,7 @@ var math = new parser_v2_1.MathObject();
     'x',
     'x+1',
     'x-1',
+    '-x-1',
     '((x-1))',
     '2x',
     '2*2x',
@@ -511,9 +568,12 @@ var math = new parser_v2_1.MathObject();
     '2*x²',
     '(2x)^2',
     '1/x',
+    '1/x/x',
     'sin(x)',
     'sin(1/x)',
-    'sin(x^2)'
+    'sin(x^2)',
+    'log(2, x)',
+    'sin(x)*x+x*(x²+6x+3*x-2x/x)*10'
 ].forEach(function (e) {
     //console.log('=> Derivative(' + e + ')', math.derivative(e));
     console.log('=> Tokenize ' + e, parser.tokenize(e));

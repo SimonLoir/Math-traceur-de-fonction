@@ -8,6 +8,7 @@ let math = new MathObject();
     'x',
     'x+1',
     'x-1',
+    '-x-1',
     '((x-1))',
     '2x',
     '2*2x',
@@ -16,9 +17,12 @@ let math = new MathObject();
     '2*x²',
     '(2x)^2',
     '1/x',
+    '1/x/x',
     'sin(x)',
     'sin(1/x)',
-    'sin(x^2)'
+    'sin(x^2)',
+    'log(2, x)',
+    'sin(x)*x+x*(x²+6x+3*x-2x/x)*10'
 ].forEach(e => {
     //console.log('=> Derivative(' + e + ')', math.derivative(e));
     console.log('=> Tokenize ' + e, parser.tokenize(e));
