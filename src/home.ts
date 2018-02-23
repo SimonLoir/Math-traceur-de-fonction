@@ -6,6 +6,10 @@ document.querySelector('header').style.backgroundImage =
 document.querySelector('.graph').style.backgroundImage =
     'url(./images/graph.jpg)';
 
+//@ts-ignore
+document.querySelector('.stats').style.backgroundImage =
+    'url(./images/stats.jpg)';
+
 window.addEventListener('scroll', (evt: Event) => {
     if (window.scrollY > 20) {
         document.querySelector('header').classList.add('floating');

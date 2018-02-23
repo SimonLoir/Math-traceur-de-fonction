@@ -1,4 +1,4 @@
-const name = 'swcache-14';//--Cache
+const name = 'swcache-14'; //--Cache
 // Good starting point for service workers cache management :
 // https://www.safaribooksonline.com/library/view/building-progressive-web/9781491961643/ch04.html
 
@@ -16,7 +16,8 @@ self.addEventListener('install', event => {
                 './dist/home.bundle.js',
                 './dist/drawer.bundle.js',
                 './images/site-header.jpg',
-                './images/graph.jpg'
+                './images/graph.jpg',
+                './images/stats.png'
             ]);
         })
     );
@@ -44,8 +45,19 @@ self.addEventListener('fetch', e => {
                 console.log('Resource loaded from cache');
                 return res;
             } else {
-                console.log('Recource loaded from the network');
-                return fetch(e.request);
+                console.log(e.request);
+                if (
+                    res &&
+                    (e.request.url.indexOf('.png') >= 0 ||
+                        e.request.url.indexOf('.jpg') >= 0) &&
+                    navigator.onLine == true
+                ) {
+                    console.log('Image loaded from sw');
+                    return res;
+                } else {
+                    console.log('Recource loaded from the network');
+                    return fetch(e.request);
+                }
             }
         })
     );
