@@ -13,11 +13,13 @@ self.addEventListener('install', event => {
                 './',
                 './index.html',
                 './public/drawer.html',
+                './public/stats.html',
                 './dist/home.bundle.js',
                 './dist/drawer.bundle.js',
+                './dist/stats.bundle.js',
                 './images/site-header.jpg',
                 './images/graph.jpg',
-                './images/stats.png'
+                './images/stats.jpg'
             ]);
         })
     );

@@ -247,7 +247,8 @@ export default class Parser {
                 'abs',
                 'exp',
                 'ln',
-                'log'
+                'log',
+                'sqrt'
             ];
             for (let i = 0; i < mfuncs.length; i++) {
                 const func = mfuncs[i];
@@ -531,7 +532,9 @@ export class MathObject extends Parser {
                 this.getDomF(e);
             });
         } else if (tokens.type == 'over') {
-            this.ce.push(JSON.stringify(tokens.value[1]));
+            this.ce.push(JSON.stringify(tokens.value[1]) + ' not null');
+        } else if (tokens.type == 'function' && tokens.value == 'sqrt') {
+            this.ce.push(JSON.stringify(tokens.args) + '>=0');
         }
 
         if (clear === true) {

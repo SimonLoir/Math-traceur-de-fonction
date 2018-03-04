@@ -51,6 +51,23 @@ if (typeof process !== 'undefined') {
 }
 
 if ('serviceWorker' in navigator)
-    navigator.serviceWorker.register('./sw.js').then(() => {
-        console.log('activated');
-    });
+    navigator.serviceWorker
+        .register('./sw.js')
+        .then((registration: ServiceWorkerRegistration) => {
+            console.log('activated');
+        });
+
+/*Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+        navigator.serviceWorker.ready.then(function(registration) {
+            let notification = registration.showNotification(
+                'Vibration Sample',
+                {
+                    body: 'Buzz! Buzz!',
+                    icon: '../images/scode-2.18-logo192x192.png',
+                    tag: 'vibration-sample'
+                }
+            );
+        });
+    }
+});*/

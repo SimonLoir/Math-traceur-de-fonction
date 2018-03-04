@@ -49,7 +49,6 @@ header {
     & h1 {
         position: absolute;
         top: 30px;
-        ;
         left: 25px;
         font-size: 25px;
         padding: 0;
@@ -58,7 +57,6 @@ header {
     & nav {
         position: absolute;
         top: 30px;
-        ;
         right: 25px;
         height: 30px;
         display: block;
@@ -92,7 +90,7 @@ header {
         max-width: 650px;
         text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
-    @media screen and (max-width:750px) {
+    @media screen and (max-width: 750px) {
         & .title {
             text-align: center;
             display: block;
@@ -106,12 +104,25 @@ header {
             display: none;
         }
     }
-    @media screen and (max-width:670px) {
+    @media screen and (max-width: 670px) {
         & nav {
             display: none;
         }
     }
     text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    &.study_tool {
+        height: 50vh;
+        & canvas {
+            position: absolute;
+            height: calc(100% - 90px);
+            width: 100%;
+            background: white;
+            top: 90px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    }
 }
 
 section {
