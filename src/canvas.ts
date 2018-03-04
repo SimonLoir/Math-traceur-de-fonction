@@ -1,5 +1,5 @@
 export default class canvas {
-    private fdata: any;
+    private fdata: any = {};
 
     private ctx: CanvasRenderingContext2D;
 
@@ -16,6 +16,8 @@ export default class canvas {
     private stored: any = {};
 
     private pathes: any = {};
+
+    private objects: any[] = [];
 
     constructor(canvas: HTMLCanvasElement) {
         canvas.height = canvas.scrollHeight;
@@ -174,9 +176,6 @@ export default class canvas {
             this.ctx.closePath();
             ypos++;
         }
-
-        // The program will be able to trace points
-        // this.point(this.getRelativePositionX(0), this.getRelativePositionY(0));
     }
 
     public move(previous: any, now: any): any {
@@ -263,8 +262,6 @@ export default class canvas {
             0.05
         );
 
-        console.log(xs_increment);
-
         while (x < this.center_x + display_size) {
             let pos;
             let new_y;
@@ -293,8 +290,6 @@ export default class canvas {
             } else {
                 x += xs_increment;
             }
-
-            //x+= this.x_unit /500;
         }
         return color;
     }
@@ -330,12 +325,19 @@ export default class canvas {
                     );
                 }
             });
+
+            let objs = this.objects;
+            objs.forEach(obj => {
+                if (obj.type == 'point') {
+                    this.point(obj.x, obj.y);
+                }
+            });
         });
     }
 
     public point(x: number, y: number) {
         x = this.getRelativePositionX(x);
-        y = this.getRelativePositionX(y);
+        y = this.getRelativePositionY(y);
         this.ctx.beginPath();
         this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
         this.ctx.fill();
@@ -343,5 +345,9 @@ export default class canvas {
 
     set funcs(fdata: any) {
         this.fdata = fdata;
+    }
+
+    set object_list(objects: any) {
+        this.objects = objects;
     }
 }

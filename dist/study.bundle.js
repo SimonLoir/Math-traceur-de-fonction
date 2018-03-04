@@ -1115,12 +1115,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var canvas = /** @class */ (function () {
     function canvas(canvas) {
         var _this = this;
+        this.fdata = {};
         this.center_x = 0;
         this.center_y = 0;
         this.x_unit = 50;
         this.y_unit = 50;
         this.stored = {};
         this.pathes = {};
+        this.objects = [];
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
         this.canvas = canvas;
@@ -1237,8 +1239,6 @@ var canvas = /** @class */ (function () {
             this.ctx.closePath();
             ypos++;
         }
-        // The program will be able to trace points
-        // this.point(this.getRelativePositionX(0), this.getRelativePositionY(0));
     };
     canvas.prototype.move = function (previous, now) {
         var diff_x = previous.x - now.x;
@@ -1298,7 +1298,6 @@ var canvas = /** @class */ (function () {
             was_defined = false;
         }
         var xs_increment = Math.min(5 * this.canvas.width / (this.x_unit * 1000), 0.05);
-        console.log(xs_increment);
         while (x < this.center_x + display_size) {
             var pos = void 0;
             var new_y = void 0;
@@ -1326,7 +1325,6 @@ var canvas = /** @class */ (function () {
             else {
                 x += xs_increment;
             }
-            //x+= this.x_unit /500;
         }
         return color;
     };
@@ -1355,11 +1353,17 @@ var canvas = /** @class */ (function () {
                     _this.drawFromFunc(_this.fdata[key].array, _this.fdata[key].color);
                 }
             });
+            var objs = _this.objects;
+            objs.forEach(function (obj) {
+                if (obj.type == 'point') {
+                    _this.point(obj.x, obj.y);
+                }
+            });
         });
     };
     canvas.prototype.point = function (x, y) {
         x = this.getRelativePositionX(x);
-        y = this.getRelativePositionX(y);
+        y = this.getRelativePositionY(y);
         this.ctx.beginPath();
         this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
         this.ctx.fill();
@@ -1367,6 +1371,13 @@ var canvas = /** @class */ (function () {
     Object.defineProperty(canvas.prototype, "funcs", {
         set: function (fdata) {
             this.fdata = fdata;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(canvas.prototype, "object_list", {
+        set: function (objects) {
+            this.objects = objects;
         },
         enumerable: true,
         configurable: true
@@ -2060,7 +2071,7 @@ canvas.init();
 canvas.funcs = {};
 extjs_1.$('header').addClass('floating');
 if (window.location.hash != '') {
-    var func_str = window.location.hash.replace('#', '');
+    var func_str = decodeURIComponent(window.location.hash.replace('#', ''));
     var func = parser.Functionize(func_str);
     var color = canvas.drawFromFunc(func);
     canvas.funcs = {
@@ -2070,6 +2081,23 @@ if (window.location.hash != '') {
             array: func,
             exp: func_str,
             initial: func_str
+        }
+    };
+    var analysis = extjs_1.$('#func_anal');
+    var derivative = math.derivative(func_str);
+    var sec_derivative = math.derivative(derivative);
+    analysis.child('p').html("\n    f(x) = " + func_str + "\n    <br />\n    \n    <br />\n    f'(x) = " + derivative + "\n    <br /><br />\n    f''(x) = " + sec_derivative + "\n    ");
+    var derivative_canvas = new canvas_1.default(extjs_1.$('#derivative_graph').get(0));
+    derivative_canvas.init();
+    var derfunc = parser.Functionize(derivative, true);
+    var dercolor = derivative_canvas.drawFromFunc(derfunc);
+    derivative_canvas.funcs = {
+        func: {
+            visible: true,
+            color: color,
+            array: derfunc,
+            exp: derivative,
+            initial: derivative
         }
     };
 }

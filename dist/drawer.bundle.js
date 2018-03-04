@@ -1115,12 +1115,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var canvas = /** @class */ (function () {
     function canvas(canvas) {
         var _this = this;
+        this.fdata = {};
         this.center_x = 0;
         this.center_y = 0;
         this.x_unit = 50;
         this.y_unit = 50;
         this.stored = {};
         this.pathes = {};
+        this.objects = [];
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
         this.canvas = canvas;
@@ -1237,8 +1239,6 @@ var canvas = /** @class */ (function () {
             this.ctx.closePath();
             ypos++;
         }
-        // The program will be able to trace points
-        // this.point(this.getRelativePositionX(0), this.getRelativePositionY(0));
     };
     canvas.prototype.move = function (previous, now) {
         var diff_x = previous.x - now.x;
@@ -1298,7 +1298,6 @@ var canvas = /** @class */ (function () {
             was_defined = false;
         }
         var xs_increment = Math.min(5 * this.canvas.width / (this.x_unit * 1000), 0.05);
-        console.log(xs_increment);
         while (x < this.center_x + display_size) {
             var pos = void 0;
             var new_y = void 0;
@@ -1326,7 +1325,6 @@ var canvas = /** @class */ (function () {
             else {
                 x += xs_increment;
             }
-            //x+= this.x_unit /500;
         }
         return color;
     };
@@ -1355,11 +1353,17 @@ var canvas = /** @class */ (function () {
                     _this.drawFromFunc(_this.fdata[key].array, _this.fdata[key].color);
                 }
             });
+            var objs = _this.objects;
+            objs.forEach(function (obj) {
+                if (obj.type == 'point') {
+                    _this.point(obj.x, obj.y);
+                }
+            });
         });
     };
     canvas.prototype.point = function (x, y) {
         x = this.getRelativePositionX(x);
-        y = this.getRelativePositionX(y);
+        y = this.getRelativePositionY(y);
         this.ctx.beginPath();
         this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
         this.ctx.fill();
@@ -1367,6 +1371,13 @@ var canvas = /** @class */ (function () {
     Object.defineProperty(canvas.prototype, "funcs", {
         set: function (fdata) {
             this.fdata = fdata;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(canvas.prototype, "object_list", {
+        set: function (objects) {
+            this.objects = objects;
         },
         enumerable: true,
         configurable: true
@@ -1602,7 +1613,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 98;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  color: gray;\n  background: white;\n  display: none;\n  height: 25px;\n  width: 100%; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 95;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      top: 25px;\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab {\n      background: white;\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      right: 0;\n      left: 0; }\n      .panel .tabs .tab#objects {\n        overflow: auto;\n        --w: 90%; }\n        .panel .tabs .tab#objects #function_add_input,\n        .panel .tabs .tab#objects #function_add_button {\n          display: inline-block;\n          padding: 0;\n          height: 40px;\n          margin: 0;\n          border: none;\n          border-bottom: 1px solid lightgray; }\n        .panel .tabs .tab#objects #function_add_input {\n          position: absolute;\n          top: 0;\n          left: 0;\n          padding-left: 15px;\n          padding-right: 15px;\n          width: calc(var(--w) - 30px); }\n        .panel .tabs .tab#objects #function_add_button {\n          position: absolute;\n          top: 1px;\n          right: 0;\n          background: #f0f0f0;\n          width: 10%;\n          cursor: pointer; }\n        .panel .tabs .tab#objects #list {\n          overflow: auto;\n          position: absolute;\n          top: 41px;\n          left: 0;\n          right: 0;\n          bottom: 0;\n          padding: 25px; }\n          .panel .tabs .tab#objects #list .title {\n            color: gray;\n            font-weight: 700; }\n          .panel .tabs .tab#objects #list .item {\n            color: #bababa;\n            line-height: 25px; }\n            .panel .tabs .tab#objects #list .item span {\n              display: inline-block;\n              max-width: 80%;\n              word-break: break-all; }\n            .panel .tabs .tab#objects #list .item button {\n              background: transparent;\n              border: none;\n              float: right;\n              cursor: pointer; }\n          .panel .tabs .tab#objects #list #copy {\n            text-align: center;\n            color: lightgray;\n            font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%;\n      top: 25px; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n\n.mask {\n  z-index: 99;\n  background: rgba(0, 0, 0, 0.02);\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  bottom: 0; }\n\n.modal {\n  z-index: 100;\n  background: white;\n  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 300px;\n  max-width: calc(100% - 75px);\n  padding: 25px;\n  border-radius: 4px; }\n  .modal input {\n    width: calc(100% - 16px);\n    padding: 5px;\n    padding-left: 8px;\n    padding-right: 8px;\n    border: 1px solid lightgray; }\n  .modal .clearfix {\n    height: 25px;\n    margin-top: 25px; }\n    .modal .clearfix button {\n      float: right;\n      background: gray;\n      color: white;\n      border: none;\n      padding: 5px;\n      padding-left: 8px;\n      padding-right: 8px;\n      cursor: pointer;\n      border-radius: 4px; }\n", ""]);
+exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index: 98;\n  position: fixed;\n  top: 0;\n  left: 0;\n  border: 1px solid gray;\n  color: gray;\n  background: white;\n  display: none;\n  height: 25px;\n  width: 100%; }\n  @media (max-width: 600px) {\n    #menu {\n      display: block; } }\n\n.panel {\n  z-index: 95;\n  position: fixed;\n  top: 0;\n  left: 0;\n  bottom: 0;\n  width: 300px;\n  background: white;\n  border-right: 1px solid lightgray; }\n  .panel.hidden {\n    display: none; }\n  @media (max-width: 600px) {\n    .panel {\n      top: 25px;\n      width: 100%; } }\n  .panel .tab_manager {\n    display: flex;\n    height: 50px;\n    line-height: 50px;\n    text-align: center;\n    border-bottom: 1px solid lightgray; }\n    .panel .tab_manager span {\n      color: gray;\n      transition: 0.25s;\n      display: inline-block;\n      flex-grow: 1;\n      height: 100%;\n      border-bottom: 2px solid lightgray;\n      cursor: pointer; }\n      .panel .tab_manager span:hover, .panel .tab_manager span.active {\n        border-bottom: 2px solid rgba(255, 165, 0, 0.8); }\n  .panel .tabs {\n    position: absolute;\n    top: 52px;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n    .panel .tabs .tab {\n      background: white;\n      position: absolute;\n      top: 0;\n      bottom: 0;\n      right: 0;\n      left: 0; }\n      .panel .tabs .tab#objects {\n        overflow: auto;\n        --w: 90%; }\n        .panel .tabs .tab#objects #function_add_input,\n        .panel .tabs .tab#objects #function_add_button {\n          display: inline-block;\n          padding: 0;\n          height: 40px;\n          margin: 0;\n          border: none;\n          border-bottom: 1px solid lightgray; }\n        .panel .tabs .tab#objects #function_add_input {\n          position: absolute;\n          top: 0;\n          left: 0;\n          padding-left: 15px;\n          padding-right: 15px;\n          width: calc(var(--w) - 30px); }\n        .panel .tabs .tab#objects #function_add_button {\n          position: absolute;\n          top: 1px;\n          right: 0;\n          background: #f0f0f0;\n          width: 10%;\n          cursor: pointer; }\n        .panel .tabs .tab#objects #list {\n          overflow: auto;\n          position: absolute;\n          top: 41px;\n          left: 0;\n          right: 0;\n          bottom: 0;\n          padding: 25px; }\n          .panel .tabs .tab#objects #list .title {\n            color: gray;\n            font-weight: 700; }\n          .panel .tabs .tab#objects #list .item {\n            color: #bababa;\n            line-height: 25px; }\n            .panel .tabs .tab#objects #list .item span {\n              display: inline-block;\n              max-width: 70%;\n              word-break: break-all; }\n            .panel .tabs .tab#objects #list .item button {\n              background: transparent;\n              border: none;\n              float: right;\n              cursor: pointer; }\n          .panel .tabs .tab#objects #list #copy {\n            text-align: center;\n            color: lightgray;\n            font-size: 10px; }\n\n.drawing_area {\n  z-index: 90;\n  position: fixed;\n  top: 0;\n  bottom: 0;\n  width: calc(100vw - 301px);\n  right: 0; }\n  @media (max-width: 600px) {\n    .drawing_area {\n      width: 100%;\n      top: 25px; } }\n  .drawing_area canvas {\n    background: #fafafa;\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 100%; }\n\n.mask {\n  z-index: 99;\n  background: rgba(0, 0, 0, 0.02);\n  position: fixed;\n  top: 0;\n  right: 0;\n  left: 0;\n  bottom: 0; }\n\n.modal {\n  z-index: 100;\n  background: white;\n  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.15);\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  width: 300px;\n  max-width: calc(100% - 75px);\n  padding: 25px;\n  border-radius: 4px; }\n  .modal input {\n    width: calc(100% - 16px);\n    padding: 5px;\n    padding-left: 8px;\n    padding-right: 8px;\n    border: 1px solid lightgray; }\n  .modal .clearfix {\n    height: 25px;\n    margin-top: 25px; }\n    .modal .clearfix button {\n      float: right;\n      background: gray;\n      color: white;\n      border: none;\n      padding: 5px;\n      padding-left: 8px;\n      padding-right: 8px;\n      cursor: pointer;\n      border-radius: 4px; }\n", ""]);
 
 // exports
 
