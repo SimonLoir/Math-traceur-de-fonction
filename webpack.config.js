@@ -7,7 +7,8 @@ module.exports = {
         drawer: './src/drawer.ts',
         parser: './src/parser.ui.ts',
         study: './src/study_tool.ts',
-        stats: './src/stats.ts'
+        stats: './src/stats.ts',
+        '3d': './src/3d.ts'
     },
     module: {
         rules: [
