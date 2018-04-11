@@ -2,12 +2,14 @@ import './scss/drawer.scss';
 import canvas from './canvas';
 import parser from './parser.v2';
 import modal from './modal';
+import { $ } from './extjs';
 
 // We get the default canvas
 let html_canvas_element = document.querySelector('canvas');
 
 //We create a new smath canvas
 let smath = new canvas(html_canvas_element);
+smath.object_list = [];
 
 // We create a new expression parser
 let parse = new parser();
@@ -15,6 +17,7 @@ let parse = new parser();
 //We create an object that will contain all the functions
 let fdata: any = {};
 smath.funcs = fdata;
+smath.reload();
 
 // Function name attribution
 let row = 0;
@@ -201,3 +204,5 @@ try {
 } catch (error) {
     //console.log(error);
 }
+
+$('#tools button').click(() => {});

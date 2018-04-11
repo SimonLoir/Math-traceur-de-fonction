@@ -19,6 +19,8 @@ export default class canvas {
 
     private objects: any[] = [];
 
+    public add: boolean;
+
     constructor(canvas: HTMLCanvasElement) {
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;

@@ -1,5 +1,6 @@
 $accent_color: rgba(orange, 0.8);
 $borders_color: lightgray;
+$i_w: 90%;
 * {
     font-family: sans-serif;
 }
@@ -71,8 +72,7 @@ $borders_color: lightgray;
             left: 0;
             &#objects {
                 overflow: auto;
-                $i_w: 90%;
-                --w: $i_w;
+                --w: 90%;
                 $h: 40px;
                 & #function_add_input,
                 & #function_add_button {
