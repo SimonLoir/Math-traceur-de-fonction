@@ -2150,7 +2150,9 @@ try {
 catch (error) {
     //console.log(error);
 }
-extjs_1.$('#tools button').click(function () { });
+extjs_1.$('#tools button').click(function () {
+    smath.add = true;
+});
 
 
 /***/ }),

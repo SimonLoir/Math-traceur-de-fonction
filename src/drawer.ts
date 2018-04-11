@@ -205,4 +205,6 @@ try {
     //console.log(error);
 }
 
-$('#tools button').click(() => {});
+$('#tools button').click(() => {
+    smath.add = true;
+});
