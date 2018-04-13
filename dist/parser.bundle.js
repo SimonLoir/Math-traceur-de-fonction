@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 14:
+/***/ 13:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -242,7 +242,15 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp;\n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+    };
+    Parser.prototype.FunctionizeCalls = function (exp) {
+        var _this = this;
+        console.log(exp);
+        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log(e);
+            return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
+        });
     };
     /**
      * CleanUp
@@ -253,10 +261,6 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -760,7 +760,15 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp;\n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+    };
+    Parser.prototype.FunctionizeCalls = function (exp) {
+        var _this = this;
+        console.log(exp);
+        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log(e);
+            return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
+        });
     };
     /**
      * CleanUp
@@ -771,10 +779,6 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
@@ -1336,7 +1340,7 @@ var canvas = /** @class */ (function () {
             return this.stored[label][start];
         }
         else {
-            this.stored[label][start] = func(start);
+            this.stored[label][start] = func(start, this.fdata);
             return this.stored[label][start];
         }
     };
@@ -1356,7 +1360,14 @@ var canvas = /** @class */ (function () {
             var objs = _this.objects;
             objs.forEach(function (obj) {
                 if (obj.type == 'point') {
-                    _this.point(obj.x, obj.y);
+                    var y = NaN;
+                    if (!isNaN(obj.y)) {
+                        y = obj.y;
+                    }
+                    else {
+                        y = obj.y(parseFloat(obj.x), _this.fdata);
+                    }
+                    _this.point(obj.x, y);
                 }
             });
         });
@@ -1376,6 +1387,15 @@ var canvas = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(canvas.prototype, "object_list", {
+        get: function () {
+            return {
+                objects: this.objects,
+                push: function (toAdd) {
+                    this.objects.push(toAdd);
+                    return this.objects;
+                }
+            };
+        },
         set: function (objects) {
             this.objects = objects;
         },
@@ -1389,70 +1409,6 @@ exports.default = canvas;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(6);
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(1)(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {
-	module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./home.scss", function() {
-		var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./home.scss");
-
-		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-
-		var locals = (function(a, b) {
-			var key, idx = 0;
-
-			for(key in a) {
-				if(!b || a[key] !== b[key]) return false;
-				idx++;
-			}
-
-			for(key in b) idx--;
-
-			return idx === 0;
-		}(content.locals, newContent.locals));
-
-		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
-
-		update(newContent);
-	});
-
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(false);
-// imports
-
-
-// module
-exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 0;\n  padding: 0; }\n\nheader {\n  position: relative;\n  margin: 0;\n  padding: 0;\n  top: 0;\n  right: 0;\n  left: 0;\n  background-position: center;\n  background-size: cover;\n  background-repeat: no-repeat;\n  height: 80vh;\n  color: white;\n  transition: 0.75s;\n  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); }\n  header.floating .real_header {\n    z-index: 90;\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    transition: background-color 0.25s;\n    background: white;\n    height: 90px;\n    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);\n    color: black;\n    text-shadow: 0px 0px 0px transparent; }\n    header.floating .real_header nav a {\n      color: black;\n      text-shadow: 0px 0px 0px transparent;\n      text-transform: capitalize;\n      transition: 0.25s; }\n      header.floating .real_header nav a:hover {\n        color: orange; }\n  header h1 {\n    position: absolute;\n    top: 30px;\n    left: 25px;\n    font-size: 25px;\n    padding: 0;\n    margin: 0; }\n  header nav {\n    position: absolute;\n    top: 30px;\n    right: 25px;\n    height: 30px;\n    display: block;\n    line-height: 30px; }\n    header nav a {\n      color: white;\n      text-decoration: none;\n      text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n      text-transform: uppercase;\n      margin-left: 10px;\n      margin-right: 15px;\n      display: inline-block; }\n  header .title {\n    text-align: center;\n    display: block;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, calc(-5vh - 50%));\n    font-size: 5vh; }\n  header .content-header {\n    text-align: center;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, calc(+5vh - 50%));\n    width: 100%;\n    max-width: 650px;\n    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); }\n  @media screen and (max-width: 750px) {\n    header .title {\n      text-align: center;\n      display: block;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      transform: translate(-50%, -50%);\n      font-size: 5vh; }\n    header .content-header {\n      display: none; } }\n  @media screen and (max-width: 670px) {\n    header nav {\n      display: none; } }\n  header.study_tool {\n    height: 50vh; }\n    header.study_tool canvas {\n      position: absolute;\n      height: calc(100% - 90px);\n      width: 100%;\n      background: white;\n      top: 90px;\n      right: 0;\n      bottom: 0;\n      left: 0; }\n\nsection {\n  position: relative;\n  text-align: center;\n  padding: 25px; }\n  section h2 {\n    padding: 0;\n    margin: 0; }\n  section p {\n    margin: 15px auto;\n    max-width: 650px;\n    width: 100%; }\n  section:nth-child(odd) {\n    z-index: 70;\n    background: #e7e7e7;\n    color: #666666; }\n  section:nth-child(even) {\n    z-index: 75;\n    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); }\n  section.graph, section.stats {\n    background-position: center;\n    background-size: cover;\n    background-repeat: no-repeat; }\n  section button,\n  section .action-button {\n    display: inline-block;\n    text-decoration: none;\n    color: white;\n    border: none;\n    background: #db332f;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);\n    margin: 15px;\n    border-radius: 5px;\n    padding-left: 21px;\n    padding-right: 21px;\n    padding-top: 17px;\n    padding-bottom: 17px; }\n\nfooter {\n  background: black;\n  color: white;\n  text-align: center;\n  padding: 25px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2047,22 +2003,85 @@ exports.$ = $;
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(7);
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(1)(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {
+	module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./home.scss", function() {
+		var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/sass-loader/lib/loader.js!./home.scss");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 0;\n  padding: 0; }\n\nheader {\n  position: relative;\n  margin: 0;\n  padding: 0;\n  top: 0;\n  right: 0;\n  left: 0;\n  background-position: center;\n  background-size: cover;\n  background-repeat: no-repeat;\n  height: 80vh;\n  color: white;\n  transition: 0.75s;\n  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); }\n  header.floating .real_header {\n    z-index: 90;\n    position: fixed;\n    top: 0;\n    right: 0;\n    left: 0;\n    transition: background-color 0.25s;\n    background: white;\n    height: 90px;\n    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);\n    color: black;\n    text-shadow: 0px 0px 0px transparent; }\n    header.floating .real_header nav a {\n      color: black;\n      text-shadow: 0px 0px 0px transparent;\n      text-transform: capitalize;\n      transition: 0.25s; }\n      header.floating .real_header nav a:hover {\n        color: orange; }\n  header h1 {\n    position: absolute;\n    top: 30px;\n    left: 25px;\n    font-size: 25px;\n    padding: 0;\n    margin: 0; }\n  header nav {\n    position: absolute;\n    top: 30px;\n    right: 25px;\n    height: 30px;\n    display: block;\n    line-height: 30px; }\n    header nav a {\n      color: white;\n      text-decoration: none;\n      text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);\n      text-transform: uppercase;\n      margin-left: 10px;\n      margin-right: 15px;\n      display: inline-block; }\n  header .title {\n    text-align: center;\n    display: block;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, calc(-5vh - 50%));\n    font-size: 5vh; }\n  header .content-header {\n    text-align: center;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, calc(+5vh - 50%));\n    width: 100%;\n    max-width: 650px;\n    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); }\n  @media screen and (max-width: 750px) {\n    header .title {\n      text-align: center;\n      display: block;\n      position: absolute;\n      top: 50%;\n      left: 50%;\n      transform: translate(-50%, -50%);\n      font-size: 5vh; }\n    header .content-header {\n      display: none; } }\n  @media screen and (max-width: 670px) {\n    header nav {\n      display: none; } }\n  header.study_tool {\n    height: 50vh; }\n    header.study_tool canvas {\n      position: absolute;\n      height: calc(100% - 90px);\n      width: 100%;\n      background: white;\n      top: 90px;\n      right: 0;\n      bottom: 0;\n      left: 0; }\n\nsection {\n  position: relative;\n  text-align: center;\n  padding: 25px; }\n  section h2 {\n    padding: 0;\n    margin: 0; }\n  section p {\n    margin: 15px auto;\n    max-width: 650px;\n    width: 100%; }\n  section:nth-child(odd) {\n    z-index: 70;\n    background: #e7e7e7;\n    color: #666666; }\n  section:nth-child(even) {\n    z-index: 75;\n    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); }\n  section.graph, section.stats {\n    background-position: center;\n    background-size: cover;\n    background-repeat: no-repeat; }\n  section button,\n  section .action-button {\n    display: inline-block;\n    text-decoration: none;\n    color: white;\n    border: none;\n    background: #db332f;\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);\n    margin: 15px;\n    border-radius: 5px;\n    padding-left: 21px;\n    padding-right: 21px;\n    padding-top: 17px;\n    padding-bottom: 17px; }\n\nfooter {\n  background: black;\n  color: white;\n  text-align: center;\n  padding: 25px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 8 */,
 /* 9 */,
 /* 10 */,
 /* 11 */,
 /* 12 */,
 /* 13 */,
-/* 14 */,
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var parser_v2_1 = __webpack_require__(3);
-var extjs_1 = __webpack_require__(7);
-__webpack_require__(5);
+var extjs_1 = __webpack_require__(5);
+__webpack_require__(6);
 var canvas_1 = __webpack_require__(4);
 var parser = new parser_v2_1.default();
 var math = new parser_v2_1.MathObject();

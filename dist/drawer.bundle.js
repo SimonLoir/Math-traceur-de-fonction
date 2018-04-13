@@ -760,7 +760,15 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp;\n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+    };
+    Parser.prototype.FunctionizeCalls = function (exp) {
+        var _this = this;
+        console.log(exp);
+        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log(e);
+            return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
+        });
     };
     /**
      * CleanUp
@@ -771,10 +779,6 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
@@ -1336,7 +1340,7 @@ var canvas = /** @class */ (function () {
             return this.stored[label][start];
         }
         else {
-            this.stored[label][start] = func(start);
+            this.stored[label][start] = func(start, this.fdata);
             return this.stored[label][start];
         }
     };
@@ -1356,7 +1360,14 @@ var canvas = /** @class */ (function () {
             var objs = _this.objects;
             objs.forEach(function (obj) {
                 if (obj.type == 'point') {
-                    _this.point(obj.x, obj.y);
+                    var y = NaN;
+                    if (!isNaN(obj.y)) {
+                        y = obj.y;
+                    }
+                    else {
+                        y = obj.y(parseFloat(obj.x), _this.fdata);
+                    }
+                    _this.point(obj.x, y);
                 }
             });
         });
@@ -1376,6 +1387,15 @@ var canvas = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(canvas.prototype, "object_list", {
+        get: function () {
+            return {
+                objects: this.objects,
+                push: function (toAdd) {
+                    this.objects.push(toAdd);
+                    return this.objects;
+                }
+            };
+        },
         set: function (objects) {
             this.objects = objects;
         },
@@ -1388,9 +1408,7 @@ exports.default = canvas;
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1985,6 +2003,8 @@ exports.$ = $;
 
 
 /***/ }),
+/* 6 */,
+/* 7 */,
 /* 8 */,
 /* 9 */,
 /* 10 */
@@ -1996,8 +2016,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(11);
 var canvas_1 = __webpack_require__(4);
 var parser_v2_1 = __webpack_require__(3);
-var modal_1 = __webpack_require__(13);
-var extjs_1 = __webpack_require__(7);
+var extjs_1 = __webpack_require__(5);
+var drawer_obj_1 = __webpack_require__(20);
+var menu = new drawer_obj_1.default();
 // We get the default canvas
 var html_canvas_element = document.querySelector('canvas');
 //We create a new smath canvas
@@ -2013,96 +2034,8 @@ smath.reload();
 var row = 0;
 var letter = 0;
 var letters = 'fghpqrst';
-// We add an event listener on the (+) button so that it can add teh function
-document.querySelector('#function_add_button').addEventListener('click', function () {
-    var update = function (fdata) {
-        var keys = Object.keys(fdata);
-        var funcs = [];
-        keys.forEach(function (key) {
-            funcs.push(fdata[key].initial);
-        });
-        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
-    };
-    var value = document
-        .querySelector('#function_add_input')
-        //@ts-ignore
-        .value.trim();
-    //If it's empty, we don't do anything
-    if (value == '') {
-        return;
-    }
-    //We keep the initial value in a variable
-    var initial = value;
-    //We get the computed value of the expression
-    value = parse.getComputedValue(value);
-    //Adds a text to an element
-    var addText = function (e, color, row, initial, value) {
-        e.innerHTML = "\n            <i style=\"background:" + color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n            " + letters[letter] + "<sub>" + (row != 0 ? row : '') + "</sub>(x) =  " + initial + " \n            " + (initial != value ? '= ' + value : '') + "\n        ";
-    };
-    //We get an array from the parsed expression
-    var func = parse.Functionize(value, true);
-    console.log(func.toString());
-    //We draw the function for the first time and we get its color
-    var color = smath.drawFromFunc(func);
-    //We create a new item in the functions list
-    var item = document
-        .querySelector('#functions')
-        .appendChild(document.createElement('div'));
-    item.classList.add('item');
-    addText(item.appendChild(document.createElement('span')), color, row, initial, value);
-    var remove = item.appendChild(document.createElement('button'));
-    remove.innerHTML = '×';
-    //We add the edit button
-    var edit = item.appendChild(document.createElement('button'));
-    edit.innerHTML = '&#128393;';
-    var fname = letters[letter] + '' + row;
-    //We add the ability to the user to modify the function
-    edit.addEventListener('click', function () {
-        var p = new modal_1.default('prompt', {
-            title: 'Modifier la fonction',
-            message: "Modifier l'équation de la fonction : ",
-            default: fdata[fname].initial
-        });
-        p.confirm = function (value) {
-            var initial = value;
-            value = parse.getComputedValue(value);
-            fdata[fname].initial = initial;
-            fdata[fname].exp = value;
-            fdata[fname].array = parse.Functionize(value, true);
-            addText(item.querySelector('span'), color, row, initial, value);
-            smath.reload(fdata);
-            update(fdata);
-        };
-    });
-    remove.addEventListener('click', function () {
-        var p = new modal_1.default('ask', {
-            title: 'Supprimer',
-            message: 'Supprimer la fonction ?',
-            default: fdata[fname].initial
-        });
-        p.confirm = function (value) {
-            delete fdata[fname];
-            smath.reload(fdata);
-            update(fdata);
-            item.parentElement.removeChild(item);
-        };
-    });
-    fdata[fname] = {
-        visible: true,
-        color: color,
-        array: func,
-        exp: value,
-        initial: initial
-    };
-    update(fdata);
-    if (letter + 1 < letters.length) {
-        letter++;
-    }
-    else {
-        row++;
-        letter = 0;
-    }
-});
+// Points name attribution
+var pprimes = 0;
 // We create the menu system
 document.getElementById('menu').addEventListener('click', function () {
     var panel = document.querySelector('.panel');
@@ -2137,21 +2070,56 @@ for (var i = 0; i < buttons.length; i++) {
     _loop_1(i);
 }
 buttons[0].click();
-var hash = window.location.hash.replace('#', '');
-try {
-    var a = JSON.parse(decodeURIComponent(hash));
-    a.forEach(function (element) {
-        //@ts-ignore
-        document.querySelector('#function_add_input').value = element;
-        //@ts-ignore
-        document.querySelector('#function_add_button').click();
-    });
-}
-catch (error) {
-    //console.log(error);
-}
-extjs_1.$('#tools button').click(function () {
-    smath.add = true;
+extjs_1.$('#function_add_button').click(function () {
+    //Gets the value
+    var val = extjs_1.$('#function_add_input')
+        .value()
+        .trim();
+    //Checks if teh value is not empty
+    if (val == '') {
+        return false;
+    }
+    //We check if it's an object or a function
+    if (/^\((.+),(.+)\)$/i.test(val) || /^point\((.+),(.+)\)$/i.test(val)) {
+        var r = /\((.+),(.+)\)/g.exec(val);
+        smath.object_list = smath.object_list.push({
+            type: 'point',
+            x: r[1],
+            y: parse.Functionize(r[2], true)
+        });
+        console.log(smath.object_list);
+        smath.reload();
+    }
+    else {
+        //Saves the inital value
+        var initial = val;
+        //Parses the value for the first time
+        val = parse.getComputedValue(val);
+        //Creates a function name
+        var fname = letters[letter] + '' + (row == 0 ? '' : "" + row);
+        //We create a js function from teh math function
+        var func = parse.Functionize(val, true);
+        //We draw the function for the first time
+        var color = smath.drawFromFunc(func);
+        //Adds the function to the function list so that it can be redrawn later
+        fdata[fname] = {
+            visible: true,
+            color: color,
+            array: func,
+            exp: val,
+            initial: initial
+        };
+        //We update the function name
+        if (letter + 1 < letters.length) {
+            letter++;
+        }
+        else {
+            row++;
+            letter = 0;
+        }
+        console.log(fdata);
+    }
+    menu.update(fdata);
 });
 
 
@@ -2220,75 +2188,41 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\n#menu {\n  z-index
 
 
 /***/ }),
-/* 13 */
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var modal = /** @class */ (function () {
-    function modal(type, options) {
-        var _this = this;
-        var mask = document.createElement('div');
-        mask.classList.add('mask');
-        document.body.appendChild(mask);
-        mask.onclick = function () {
-            rm();
-        };
-        var div = document.createElement('div');
-        div.classList.add('modal');
-        document.body.appendChild(div);
-        var rm = function () {
-            mask.parentNode.removeChild(mask);
-            div.parentNode.removeChild(div);
-        };
-        if (type == 'prompt') {
-            div.appendChild(document.createElement('b')).innerHTML =
-                options.title;
-            div.appendChild(document.createElement('p')).innerHTML =
-                options.message;
-            var input_1 = div.appendChild(document.createElement('input'));
-            input_1.value = options.default;
-            var clearfix = div.appendChild(document.createElement('div'));
-            clearfix.classList.add('clearfix');
-            var confirm_1 = clearfix.appendChild(document.createElement('button'));
-            confirm_1.innerHTML = 'Confirmer';
-            confirm_1.addEventListener('click', function () {
-                _this._c(input_1.value);
-                rm();
-            });
-        }
-        else if (type == 'ask') {
-            div.appendChild(document.createElement('b')).innerHTML =
-                options.title;
-            div.appendChild(document.createElement('p')).innerHTML =
-                options.message;
-            var clearfix = div.appendChild(document.createElement('div'));
-            clearfix.classList.add('clearfix');
-            var confirm_2 = clearfix.appendChild(document.createElement('button'));
-            confirm_2.innerHTML = 'Confirmer';
-            confirm_2.addEventListener('click', function () {
-                _this._c('');
-                rm();
-            });
-            var cancel = clearfix.appendChild(document.createElement('button'));
-            cancel.innerHTML = 'Annuler';
-            cancel.style.marginRight = '5px';
-            cancel.addEventListener('click', function () {
-                rm();
-            });
-        }
+var extjs_1 = __webpack_require__(5);
+var Menu = /** @class */ (function () {
+    function Menu() {
     }
-    Object.defineProperty(modal.prototype, "confirm", {
-        set: function (v) {
-            this._c = v;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return modal;
+    Menu.prototype.update = function (fdata) {
+        var container = extjs_1.$('#functions');
+        container.html('');
+        var keys = Object.keys(fdata);
+        keys.forEach(function (key) {
+            var item = container.child('div').addClass('item');
+            var span = item.child('span').html("<i style=\"background:" + fdata[key].color + "; width:5px;height:5px;border-radius:5px;display:inline-block;\"></i>\n                    " + key + "(x) = " + fdata[key].initial);
+        });
+        var obj_container = extjs_1.$('#objs');
+        obj_container.html('');
+        var grid = obj_container.child('div').addClass('item');
+        grid.child('span').text('Grille');
+        grid.child('button').html('&#128393;');
+    };
+    Menu.prototype.updateCallback = function (callback) { };
+    return Menu;
 }());
-exports.default = modal;
+exports.default = Menu;
 
 
 /***/ })

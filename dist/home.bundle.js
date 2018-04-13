@@ -625,11 +625,12 @@ module.exports = function (css) {
 /***/ }),
 /* 3 */,
 /* 4 */,
-/* 5 */
+/* 5 */,
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -675,7 +676,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(false);
@@ -689,14 +690,13 @@ exports.push([module.i, "* {\n  font-family: sans-serif; }\n\nbody {\n  margin: 
 
 
 /***/ }),
-/* 7 */,
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(5);
+__webpack_require__(6);
 document.querySelector('header').style.backgroundImage =
     'url(./images/site-header.jpg)';
 //@ts-ignore

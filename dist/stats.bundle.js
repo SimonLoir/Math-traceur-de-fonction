@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -760,7 +760,15 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp;\n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+    };
+    Parser.prototype.FunctionizeCalls = function (exp) {
+        var _this = this;
+        console.log(exp);
+        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log(e);
+            return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
+        });
     };
     /**
      * CleanUp
@@ -771,10 +779,6 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
@@ -1336,7 +1340,7 @@ var canvas = /** @class */ (function () {
             return this.stored[label][start];
         }
         else {
-            this.stored[label][start] = func(start);
+            this.stored[label][start] = func(start, this.fdata);
             return this.stored[label][start];
         }
     };
@@ -1356,7 +1360,14 @@ var canvas = /** @class */ (function () {
             var objs = _this.objects;
             objs.forEach(function (obj) {
                 if (obj.type == 'point') {
-                    _this.point(obj.x, obj.y);
+                    var y = NaN;
+                    if (!isNaN(obj.y)) {
+                        y = obj.y;
+                    }
+                    else {
+                        y = obj.y(parseFloat(obj.x), _this.fdata);
+                    }
+                    _this.point(obj.x, y);
                 }
             });
         });
@@ -1376,6 +1387,15 @@ var canvas = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(canvas.prototype, "object_list", {
+        get: function () {
+            return {
+                objects: this.objects,
+                push: function (toAdd) {
+                    this.objects.push(toAdd);
+                    return this.objects;
+                }
+            };
+        },
         set: function (objects) {
             this.objects = objects;
         },
@@ -1388,9 +1408,7 @@ exports.default = canvas;
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1985,6 +2003,8 @@ exports.$ = $;
 
 
 /***/ }),
+/* 6 */,
+/* 7 */,
 /* 8 */,
 /* 9 */,
 /* 10 */,
@@ -1992,17 +2012,16 @@ exports.$ = $;
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */,
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(17);
+__webpack_require__(16);
 var canvas_1 = __webpack_require__(4);
 var parser_v2_1 = __webpack_require__(3);
-var extjs_1 = __webpack_require__(7);
+var extjs_1 = __webpack_require__(5);
 var canvas = new canvas_1.default(document.querySelector('canvas'));
 var parser = new parser_v2_1.default();
 canvas.init();
@@ -2148,11 +2167,11 @@ extjs_1.$('#toggleActions').click(toggleActions);
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(18);
+var content = __webpack_require__(17);
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -2198,7 +2217,7 @@ if(false) {
 }
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(false);

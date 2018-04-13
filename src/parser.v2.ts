@@ -142,6 +142,7 @@ export default class Parser {
         }
         return new Function(
             'x',
+            'funcs',
             `
             const sin = Math.sin;
             const tan = Math.tan;
@@ -160,16 +161,29 @@ export default class Parser {
             const ceil = Math.ceil;
             const floor = Math.floor;
             const abs = Math.abs;
-            const exp = Math.exp;
+            const exp = Math.exp; 
             const ln = Math.log;
             const log = function (base, y) { return Math.log(y) / Math.log(base)};
 
             const e = Math.E;
             const pi = Math.PI;
             
-            return ${exp};
+            return ${this.FunctionizeCalls(exp)};
             
             `
+        );
+    }
+
+    public FunctionizeCalls(exp: string): string {
+        console.log(exp);
+        return exp.replace(
+            /([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g,
+            (e, $1, $2, $3) => {
+                console.log(e);
+                return `funcs.${$1 + $2}.array(${this.FunctionizeCalls(
+                    $3
+                )}, funcs)`;
+            }
         );
     }
 
@@ -182,11 +196,6 @@ export default class Parser {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, (e, $1, $2) => $1 + $2);
         }
-
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
 
         expression = expression.replace(
             /\*([0-9])/gi,

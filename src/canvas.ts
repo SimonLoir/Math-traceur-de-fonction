@@ -1,3 +1,5 @@
+import { parse } from 'url';
+
 export default class canvas {
     private fdata: any = {};
 
@@ -304,7 +306,7 @@ export default class canvas {
         if (this.stored[label][start] != undefined) {
             return this.stored[label][start];
         } else {
-            this.stored[label][start] = func(start);
+            this.stored[label][start] = func(start, this.fdata);
             return this.stored[label][start];
         }
     }
@@ -331,7 +333,13 @@ export default class canvas {
             let objs = this.objects;
             objs.forEach(obj => {
                 if (obj.type == 'point') {
-                    this.point(obj.x, obj.y);
+                    let y = NaN;
+                    if (!isNaN(obj.y)) {
+                        y = obj.y;
+                    } else {
+                        y = obj.y(parseFloat(obj.x), this.fdata);
+                    }
+                    this.point(obj.x, y);
                 }
             });
         });
@@ -351,5 +359,15 @@ export default class canvas {
 
     set object_list(objects: any) {
         this.objects = objects;
+    }
+
+    get object_list() {
+        return {
+            objects: this.objects,
+            push: function(toAdd: any) {
+                this.objects.push(toAdd);
+                return this.objects;
+            }
+        };
     }
 }

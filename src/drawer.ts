@@ -3,6 +3,9 @@ import canvas from './canvas';
 import parser from './parser.v2';
 import modal from './modal';
 import { $ } from './extjs';
+import Menu from './drawer_obj';
+
+let menu = new Menu();
 
 // We get the default canvas
 let html_canvas_element = document.querySelector('canvas');
@@ -24,138 +27,8 @@ let row = 0;
 let letter = 0;
 let letters = 'fghpqrst';
 
-// We add an event listener on the (+) button so that it can add teh function
-document.querySelector('#function_add_button').addEventListener('click', () => {
-    const update = (fdata: any) => {
-        let keys = Object.keys(fdata);
-
-        let funcs: Array<String> = [];
-
-        keys.forEach(key => {
-            funcs.push(fdata[key].initial);
-        });
-
-        window.location.hash = encodeURIComponent(JSON.stringify(funcs));
-    };
-
-    let value: string = document
-        .querySelector('#function_add_input')
-        //@ts-ignore
-        .value.trim();
-
-    //If it's empty, we don't do anything
-    if (value == '') {
-        return;
-    }
-
-    //We keep the initial value in a variable
-    let initial = value;
-
-    //We get the computed value of the expression
-    value = parse.getComputedValue(value);
-
-    //Adds a text to an element
-    const addText = (
-        e: any,
-        color: any,
-        row: any,
-        initial: any,
-        value: any
-    ) => {
-        e.innerHTML = `
-            <i style="background:${color}; width:5px;height:5px;border-radius:5px;display:inline-block;"></i>
-            ${letters[letter]}<sub>${
-            row != 0 ? row : ''
-        }</sub>(x) =  ${initial} 
-            ${initial != value ? '= ' + value : ''}
-        `;
-    };
-
-    //We get an array from the parsed expression
-    let func = parse.Functionize(value, true);
-    console.log(func.toString());
-
-    //We draw the function for the first time and we get its color
-    let color = smath.drawFromFunc(func);
-
-    //We create a new item in the functions list
-    let item = document
-        .querySelector('#functions')
-        .appendChild(document.createElement('div'));
-    item.classList.add('item');
-    addText(
-        item.appendChild(document.createElement('span')),
-        color,
-        row,
-        initial,
-        value
-    );
-
-    let remove: HTMLElement = item.appendChild(
-        document.createElement('button')
-    );
-    remove.innerHTML = '×';
-
-    //We add the edit button
-    let edit: HTMLElement = item.appendChild(document.createElement('button'));
-    edit.innerHTML = '&#128393;';
-
-    let fname = letters[letter] + '' + row;
-
-    //We add the ability to the user to modify the function
-    edit.addEventListener('click', () => {
-        let p = new modal('prompt', {
-            title: 'Modifier la fonction',
-            message: "Modifier l'équation de la fonction : ",
-            default: fdata[fname].initial
-        });
-        p.confirm = (value: string) => {
-            let initial = value;
-
-            value = parse.getComputedValue(value);
-
-            fdata[fname].initial = initial;
-            fdata[fname].exp = value;
-            fdata[fname].array = parse.Functionize(value, true);
-
-            addText(item.querySelector('span'), color, row, initial, value);
-
-            smath.reload(fdata);
-            update(fdata);
-        };
-    });
-
-    remove.addEventListener('click', () => {
-        let p = new modal('ask', {
-            title: 'Supprimer',
-            message: 'Supprimer la fonction ?',
-            default: fdata[fname].initial
-        });
-        p.confirm = (value: string) => {
-            delete fdata[fname];
-            smath.reload(fdata);
-            update(fdata);
-            item.parentElement.removeChild(item);
-        };
-    });
-
-    fdata[fname] = {
-        visible: true,
-        color: color,
-        array: func,
-        exp: value,
-        initial: initial
-    };
-
-    update(fdata);
-
-    if (letter + 1 < letters.length) {
-        letter++;
-    } else {
-        row++;
-        letter = 0;
-    }
-});
+// Points name attribution
+let pprimes = 0;
 
 // We create the menu system
 document.getElementById('menu').addEventListener('click', () => {
@@ -191,20 +64,52 @@ for (let i = 0; i < buttons.length; i++) {
 
 buttons[0].click();
 
-let hash = window.location.hash.replace('#', '');
-try {
-    let a: Array<string> = JSON.parse(decodeURIComponent(hash));
-
-    a.forEach(element => {
-        //@ts-ignore
-        document.querySelector('#function_add_input').value = element;
-        //@ts-ignore
-        document.querySelector('#function_add_button').click();
-    });
-} catch (error) {
-    //console.log(error);
-}
-
-$('#tools button').click(() => {
-    smath.add = true;
+$('#function_add_button').click(() => {
+    //Gets the value
+    let val = $('#function_add_input')
+        .value()
+        .trim();
+    //Checks if teh value is not empty
+    if (val == '') {
+        return false;
+    }
+    //We check if it's an object or a function
+    if (/^\((.+),(.+)\)$/i.test(val) || /^point\((.+),(.+)\)$/i.test(val)) {
+        let r = /\((.+),(.+)\)/g.exec(val);
+        smath.object_list = smath.object_list.push({
+            type: 'point',
+            x: r[1],
+            y: parse.Functionize(r[2], true)
+        });
+        console.log(smath.object_list);
+        smath.reload();
+    } else {
+        //Saves the inital value
+        let initial = val;
+        //Parses the value for the first time
+        val = parse.getComputedValue(val);
+        //Creates a function name
+        let fname = letters[letter] + '' + (row == 0 ? '' : `${row}`);
+        //We create a js function from teh math function
+        let func = parse.Functionize(val, true);
+        //We draw the function for the first time
+        let color = smath.drawFromFunc(func);
+        //Adds the function to the function list so that it can be redrawn later
+        fdata[fname] = {
+            visible: true,
+            color: color,
+            array: func,
+            exp: val,
+            initial: initial
+        };
+        //We update the function name
+        if (letter + 1 < letters.length) {
+            letter++;
+        } else {
+            row++;
+            letter = 0;
+        }
+        console.log(fdata);
+    }
+    menu.update(fdata);
 });
