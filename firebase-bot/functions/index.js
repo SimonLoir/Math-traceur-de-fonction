@@ -12,11 +12,11 @@ exports.app = functions.https.onRequest((request, response) => {
         return;
     }
 
-    let parser = new smath();
+    //let parser = new smath();
 
     let parserv2 = new Parser();
 
-    let func = parser.exec(data.function);
+    //let func = parser.exec(data.function);
 
     let funcv2 = parserv2.parse(data.function);
 
@@ -36,8 +36,9 @@ exports.app = functions.https.onRequest((request, response) => {
 
     response.send(
         JSON.stringify({
+            /*
             processed: parser.stringify(func),
-            raw: func,
+            raw: func,*/
             interval: interval,
             jsMath: funcv2
         })

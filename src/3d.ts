@@ -1,4 +1,4 @@
-import { $ } from './extjs';
+/*import { $ } from './extjs';
 import * as THREE from 'three';
 
 let r = new THREE.WebGLRenderer({
@@ -50,4 +50,4 @@ function render() {
     requestAnimationFrame(render);
 }
 
-requestAnimationFrame(render);
+requestAnimationFrame(render);*/
