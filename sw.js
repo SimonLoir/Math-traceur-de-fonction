@@ -1,4 +1,4 @@
-const name = 'swcache-14'; //--Cache
+const name = 'swcache-15';//--Cache
 // Good starting point for service workers cache management :
 // https://www.safaribooksonline.com/library/view/building-progressive-web/9781491961643/ch04.html
 
