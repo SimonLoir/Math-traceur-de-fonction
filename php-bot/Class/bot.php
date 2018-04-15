@@ -40,6 +40,7 @@ class bot
     {
         $text = $this->userize($text);
         $this->sendToFacebook(json_encode([
+            "messaging_type" => 'RESPONSE',
             "recipient" => [
                 "id" => $this->sender
             ],
@@ -75,6 +76,7 @@ class bot
         $text = $this->userize($text);
         $this->sendToFacebook(json_encode(
             [
+                "messaging_type" => 'RESPONSE',
                 "recipient" => [
                     "id" => $this->sender
                 ],
@@ -95,6 +97,7 @@ class bot
     public function sendImage($url)
     {
         $this->sendToFacebook(json_encode([
+            "messaging_type" => 'RESPONSE',
             "recipient" => [
                 "id" => $this->sender
             ],

@@ -20,27 +20,51 @@ exports.app = functions.https.onRequest((request, response) => {
 
     let funcv2 = parserv2.parse(data.function);
 
-    let interval = {};
-
-    if (data.interval != undefined) {
-        let xfunc = parserv2.Functionize(funcv2);
-        let from = parseFloat(data.interval.split(';')[0]);
-        let to = parseFloat(data.interval.split(';')[1]);
-        let step = parseFloat(data.interval.split(';')[2]);
-
-        while (from < to) {
-            interval[from] = xfunc(from);
-            from += step;
+    if (data.compute != undefined) {
+        try {
+            let e = parserv2
+                .Functionize(funcv2)(0)
+                .toString();
+            response.send(e);
+        } catch (error) {
+            response.send('error : ' + JSON.stringify(error.message));
         }
+
+        return;
     }
 
-    response.send(
-        JSON.stringify({
-            /*
+    try {
+        parserv2.Functionize(funcv2)(5);
+
+        let interval = {};
+
+        if (data.interval != undefined) {
+            let xfunc = parserv2.Functionize(funcv2);
+            let from = parseFloat(data.interval.split(';')[0]);
+            let to = parseFloat(data.interval.split(';')[1]);
+            let step = parseFloat(data.interval.split(';')[2]);
+
+            while (from < to) {
+                interval[from] = xfunc(from);
+                from += step;
+            }
+        }
+
+        response.send(
+            JSON.stringify({
+                /*
             processed: parser.stringify(func),
             raw: func,*/
-            interval: interval,
-            jsMath: funcv2
-        })
-    );
+                interval: interval,
+                jsMath: funcv2
+            })
+        );
+    } catch (error) {
+        response.send(
+            JSON.stringify({
+                error: true,
+                message: error
+            })
+        );
+    }
 });

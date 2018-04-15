@@ -6,6 +6,9 @@ document.querySelector('header').style.backgroundImage =
 //@ts-ignore
 document.querySelector('.graph').style.backgroundImage =
     'url(./images/graph.jpg)';
+//@ts-ignore
+document.querySelector('.stats').style.backgroundImage =
+    'url(./images/stats.jpg)';
 window.addEventListener('scroll', function (evt) {
     if (window.scrollY > 20) {
         document.querySelector('header').classList.add('floating');
@@ -46,6 +49,22 @@ if (typeof process !== 'undefined') {
     xhr.send(null);
 }
 if ('serviceWorker' in navigator)
-    navigator.serviceWorker.register('./sw.js').then(function () {
+    navigator.serviceWorker
+        .register('./sw.js')
+        .then(function (registration) {
         console.log('activated');
     });
+/*Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+        navigator.serviceWorker.ready.then(function(registration) {
+            let notification = registration.showNotification(
+                'Vibration Sample',
+                {
+                    body: 'Buzz! Buzz!',
+                    icon: '../images/scode-2.18-logo192x192.png',
+                    tag: 'vibration-sample'
+                }
+            );
+        });
+    }
+});*/

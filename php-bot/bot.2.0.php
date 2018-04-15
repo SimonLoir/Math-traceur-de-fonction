@@ -42,21 +42,39 @@ if (($text || $is_payload) && !$is_echo) {
 
     $greetings = ["start", "salut", "bonjour", "hello"];
 
+    $bot->typing();
+
     if (in_array($message, $greetings)) {
         $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nVoici quelques fonctions utiles : \n\ntrace x²+6x+3 tracera la fonction x²+6x+3\nracines x²+6x+3 retournera les racines de la fonction x²+6x+3\npour x = 3 dans x²+6x+3 retournera f(3))");
     } else if (strpos($message, "trace ") !== false) {
-        $result = file_get_contents("https://us-central1-simonloir-test.cloudfunctions.net/app?function=" . urlencode(str_replace('trace ', "", $message)));
-        include "Class/image_builder.php";
+        //$bot->sendText('error');
+        //exit();
+        try {
+            $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?function=" . urlencode(str_replace('trace ', "", $message)));
+            include "Class/image_builder.php";
+            $x_result = json_decode($result, true);
 
-        $x_result = json_decode($result, true);
-        $sha1 = sha1($x_result["jsMath"]);
+            if (isset($x_result["error"]) && $x_result["error"] == true) {
+                $bot->sendText("erreur");
+                exit('error');
+            }
 
-        $builder = new image_builder(null, $sha1 . ".png", $x_result);
-        $x_result = $x_result["jsMath"];
-        $builder->build($x_result);
+            $sha1 = sha1($x_result["jsMath"]);
 
-        $bot->sendText('Voici ce que je peux tracer pour toi : ');
-        $bot->sendImage('https://math.simonloir.be/php-bot/' . $sha1 . ".png");
+            $builder = new image_builder(null, $sha1 . ".png", $x_result);
+            $x_result = str_replace('ln(', "log(", $x_result["jsMath"]);
+            $builder->build($x_result);
+
+            $bot->sendText('Voici ce que je peux tracer pour toi : ');
+            $bot->typing();
+            $bot->sendImage('https://math.simonloir.be/php-bot/' . $sha1 . ".png");
+        } catch (Exception $e) {
+            $bot->sendText($e);
+            file_put_contents("error", $e);
+        }
+    } else {
+        $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?compute&function=" . urlencode(str_replace('trace ', "", $message)));
+        $bot->sendText("Voici le résulat que j'obtiens : " . $result);
     }
 }
 

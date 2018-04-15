@@ -131,7 +131,15 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', "\n            let sin = Math.sin;\n            let tan = Math.tan;\n            let cos = Math.cos;\n            let asin = Math.asin;\n            let atan = Math.atan;\n            let acos = Math.acos;\n\n            let sinh = Math.sinh;\n            let tanh = Math.tanh;\n            let cosh = Math.cosh;\n            let asinh = Math.asinh;\n            let atanh = Math.atanh;\n            let acosh = Math.acosh;\n\n            let ceil = Math.ceil;\n            let floor = Math.floor;\n            let abs = Math.abs;\n            let exp = Math.exp;\n            let log = Math.log;\n            \n            let e = Math.E;\n            let pi = Math.PI;\n            \n            return " + exp + ";\n            \n            ");
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+    };
+    Parser.prototype.FunctionizeCalls = function (exp) {
+        var _this = this;
+        console.log(exp);
+        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log(e);
+            return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
+        });
     };
     /**
      * CleanUp
@@ -142,16 +150,170 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        /*pattern = /^\(([0-9x]+)\)$/;
-
-        if (pattern.test(expression))
-            expression = expression.replace(pattern, (e, $1) => $1);*/
         expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
             return "(" + _this.partials[e] + ")";
         });
         return expression;
+    };
+    /**
+     * @see https://medium.freecodecamp.org/how-to-build-a-math-expression-tokenizer-using-javascript-3638d4e5fbe9
+     * But the tokenizer will be a bit different.
+     */
+    Parser.prototype.tokenize = function (expression) {
+        var _this = this;
+        if (typeof expression == 'number') {
+            //@ts-ignore
+            expression = expression.toString();
+        }
+        // 1) We have to check wheter or not the expression is valid
+        if (this.check(expression) == false) {
+            throw new InvalidExpressionError('Invalid expression given');
+        }
+        // 2) We convert ...(....) into ...$1 and $1 = ....
+        expression = this.prepareExpression(expression);
+        // 3) We really parse the expression
+        var math_functions = function (expression, returns) {
+            var mfuncs = [
+                'sin',
+                'tan',
+                'cos',
+                'asin',
+                'atan',
+                'acos',
+                'cos',
+                'sinh',
+                'tanh',
+                'cosh',
+                'asinh',
+                'atanh',
+                'acosh',
+                'cosh',
+                'ceil',
+                'floor',
+                'abs',
+                'exp',
+                'ln',
+                'log',
+                'sqrt'
+            ];
+            for (var i = 0; i < mfuncs.length; i++) {
+                var func = mfuncs[i];
+                if (expression.indexOf(func) == 0) {
+                    if (returns == true) {
+                        return func;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+        var math_numbers = ['e', 'pi'];
+        expression = expression.trim();
+        if (!isNaN(expression)) {
+            return {
+                type: 'number',
+                value: expression
+            };
+        }
+        else if (expression == 'x') {
+            return {
+                type: 'variable',
+                value: 'x'
+            };
+        }
+        else if (expression.indexOf('+') >= 0) {
+            var exp_spl = expression.split('+');
+            var value_1 = [];
+            exp_spl.forEach(function (e) {
+                value_1.push(_this.tokenize(e));
+            });
+            return {
+                type: 'plus',
+                value: value_1
+            };
+        }
+        else if (expression.indexOf('-') >= 0) {
+            var exp_spl = expression.split('-');
+            var value_2 = [];
+            exp_spl.forEach(function (e, i) {
+                e = e.trim();
+                if (i == 0 && e == '') {
+                    value_2.push(_this.tokenize(0));
+                }
+                else {
+                    value_2.push(_this.tokenize(e));
+                }
+            });
+            return {
+                type: 'minus',
+                value: value_2
+            };
+        }
+        else if (expression.indexOf('*') >= 0) {
+            var exp_spl = expression.split('*');
+            var value_3 = [];
+            exp_spl.forEach(function (e) {
+                value_3.push(_this.tokenize(e));
+            });
+            return {
+                type: 'times',
+                value: value_3
+            };
+        }
+        else if (expression.indexOf('/') >= 0) {
+            var exp_spl = expression.split('/');
+            var rm = function (array) {
+                array.shift();
+                return array;
+            };
+            var value = [
+                this.tokenize(exp_spl[0]),
+                this.tokenize('(' + rm(exp_spl).join(')*(') + ')')
+            ];
+            return {
+                type: 'over',
+                value: value
+            };
+        }
+        else if (/^\$([0-9]+)$/.test(expression) == true) {
+            return this.tokenize(this.partials[expression]);
+        }
+        else if (expression.indexOf('^') > 0) {
+            var spl_exp = expression.split('^');
+            if (spl_exp.length == 2) {
+                return {
+                    type: 'power',
+                    value: [
+                        this.tokenize(spl_exp[0]),
+                        this.tokenize(spl_exp[1])
+                    ]
+                };
+            }
+            else {
+                throw new Error('Unexpected expression');
+            }
+        }
+        else if (math_functions(expression) == true) {
+            var start = math_functions(expression, true);
+            return {
+                type: 'function',
+                value: start,
+                args: this.tokenize(expression.replace(start, ''))
+            };
+        }
+        else if (expression.indexOf(',') >= 0) {
+            var spl_exp = expression.split(',');
+            return spl_exp.map(function (element) {
+                return _this.tokenize(element);
+            });
+        }
+        else {
+            throw new Error('Could not parse expression ' + expression);
+        }
     };
     return Parser;
 }());
@@ -170,7 +332,7 @@ var MathObject = /** @class */ (function (_super) {
     __extends(MathObject, _super);
     function MathObject() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.ce = '';
+        _this.ce = [];
         _this.type = 'MathObject';
         return _this;
     }
@@ -285,55 +447,32 @@ var MathObject = /** @class */ (function (_super) {
         });
         return res;
     };
-    MathObject.prototype.getDomF = function (expression, clear) {
+    MathObject.prototype.getDomF = function (tokens, clear) {
         var _this = this;
         if (clear === void 0) { clear = true; }
-        if (clear == true) {
-            this.ce = '';
+        if (clear == true)
+            this.ce = [];
+        if (tokens.type === 'plus' ||
+            tokens.type === 'minus' ||
+            tokens.type === 'times') {
+            var value = tokens.value;
+            value.forEach(function (e) {
+                _this.getDomF(e);
+            });
         }
-        // 1) We have to check wheter or not the expression is valid
-        if (this.check(expression) == false) {
-            throw new InvalidExpressionError('Invalid expression given');
+        else if (tokens.type == 'over') {
+            this.ce.push(JSON.stringify(tokens.value[1]) + ' not null');
         }
-        // 2) We convert ...(....) into ...$1 and $1 = ....
-        expression = this.prepareExpression(expression);
-        if (expression.indexOf('+') >= 0) {
-            var spl = expression.split('+');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
+        else if (tokens.type == 'function' && tokens.value == 'sqrt') {
+            this.ce.push(JSON.stringify(tokens.args) + '>=0');
         }
-        if (expression.indexOf('-') >= 0) {
-            var spl = expression.split('-');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
-        }
-        if (expression.indexOf('*') >= 0) {
-            var spl = expression.split('*');
-            spl.forEach(function (s) { return _this.getDomF(s, false); });
-            return this.realGetDomF();
-        }
-        if (expression.indexOf('/') >= 0) {
-            var spl = expression.split('/');
-            var spl_copy = spl.slice();
-            spl_copy.shift();
-            var bottom = "(" + spl_copy.join(')*(') + ")";
-            this.ce += '\n' + this.clean(bottom) + ' != 0';
-            this.getDomF(bottom, false);
-            return this.realGetDomF();
-        }
-        if (/^\$([0-9]+)$/.test(expression) == true) {
-            var part = this.partials[expression];
-            this.getDomF(part, false);
-            return this.realGetDomF();
-        }
-        return this.realGetDomF();
-    };
-    MathObject.prototype.realGetDomF = function () {
-        if (this.ce.trim() == '') {
-            return 'R';
-        }
-        else {
-            return 'CE: ' + this.ce;
+        if (clear === true) {
+            if (this.ce.length === 0) {
+                return 'R';
+            }
+            else {
+                return 'ce : ' + this.ce.join('\n');
+            }
         }
     };
     return MathObject;
