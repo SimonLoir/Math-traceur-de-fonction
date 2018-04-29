@@ -33,10 +33,10 @@ if (($text || $is_payload) && !$is_echo) {
         $message = $input->message->text;
     }
 
-    if ($sender != "2201055416586831") {
+    /*if ($sender != "2201055416586831") {
         $bot->sendText('Ce bot est en maintenance :-(');
         exit('Ce bot est en maintenance :-(');
-    }
+    }*/
 
     $message = strtolower($message);
 
