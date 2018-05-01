@@ -111,5 +111,5 @@ $('#function_add_button').click(() => {
         }
         console.log(fdata);
     }
-    menu.update(fdata);
+    menu.update(fdata, smath.object_list.objects);
 });

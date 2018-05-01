@@ -5,7 +5,7 @@ export default class Menu {
 
     public fdata: any;
 
-    public update(fdata: any) {
+    public update(fdata: any, object_list: any) {
         let container = $('#functions');
         container.html('');
         let keys = Object.keys(fdata);
@@ -22,6 +22,11 @@ export default class Menu {
         obj_container.html('');
 
         let grid = obj_container.child('div').addClass('item');
+
+        object_list.forEach((object: any) => {
+            let item = grid.child('div').addClass('item');
+            let span = item.child('span').text(`${object.type}`);
+        });
 
         grid.child('span').text('Grille');
         grid.child('button').html('&#128393;');

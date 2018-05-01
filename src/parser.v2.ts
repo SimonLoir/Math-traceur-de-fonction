@@ -174,12 +174,37 @@ export default class Parser {
         );
     }
 
+    private math_func = [
+        'sin',
+        'tan',
+        'cos',
+        'asin',
+        'atan',
+        'acos',
+        'sinh',
+        'tanh',
+        'cosh',
+        'asinh',
+        'atanh',
+        'acosh',
+        'ceil',
+        'floor',
+        'abs',
+        'exp',
+        'ln',
+        'log',
+        'pow'
+    ];
+
     public FunctionizeCalls(exp: string): string {
         console.log(exp);
         return exp.replace(
-            /([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g,
+            /([a-z]+)([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g,
             (e, $1, $2, $3) => {
-                console.log(e);
+                console.log($1);
+                if (this.math_func.indexOf($1) >= 0) {
+                    return `${$1 + $2}(${this.FunctionizeCalls($3)})`;
+                }
                 return `funcs.${$1 + $2}.array(${this.FunctionizeCalls(
                     $3
                 )}, funcs)`;
