@@ -4,7 +4,7 @@ var extjs_1 = require("./extjs");
 var Menu = /** @class */ (function () {
     function Menu() {
     }
-    Menu.prototype.update = function (fdata) {
+    Menu.prototype.update = function (fdata, object_list) {
         var container = extjs_1.$('#functions');
         container.html('');
         var keys = Object.keys(fdata);
@@ -15,6 +15,10 @@ var Menu = /** @class */ (function () {
         var obj_container = extjs_1.$('#objs');
         obj_container.html('');
         var grid = obj_container.child('div').addClass('item');
+        object_list.forEach(function (object) {
+            var item = grid.child('div').addClass('item');
+            var span = item.child('span').text("" + object.type);
+        });
         grid.child('span').text('Grille');
         grid.child('button').html('&#128393;');
     };

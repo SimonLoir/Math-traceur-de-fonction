@@ -14,6 +14,27 @@ var Parser = /** @class */ (function () {
     function Parser() {
         this.partials = {};
         this.type = 'parser';
+        this.math_func = [
+            'sin',
+            'tan',
+            'cos',
+            'asin',
+            'atan',
+            'acos',
+            'sinh',
+            'tanh',
+            'cosh',
+            'asinh',
+            'atanh',
+            'acosh',
+            'ceil',
+            'floor',
+            'abs',
+            'exp',
+            'ln',
+            'log',
+            'pow'
+        ];
     }
     /**
      * Initialise a parsing task
@@ -136,8 +157,11 @@ var Parser = /** @class */ (function () {
     Parser.prototype.FunctionizeCalls = function (exp) {
         var _this = this;
         console.log(exp);
-        return exp.replace(/([fghpqrst])([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
-            console.log(e);
+        return exp.replace(/([a-z]+)([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g, function (e, $1, $2, $3) {
+            console.log($1);
+            if (_this.math_func.indexOf($1) >= 0) {
+                return $1 + $2 + "(" + _this.FunctionizeCalls($3) + ")";
+            }
             return "funcs." + ($1 + $2) + ".array(" + _this.FunctionizeCalls($3) + ", funcs)";
         });
     };

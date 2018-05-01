@@ -106,5 +106,5 @@ extjs_1.$('#function_add_button').click(function () {
         }
         console.log(fdata);
     }
-    menu.update(fdata);
+    menu.update(fdata, smath.object_list.objects);
 });
