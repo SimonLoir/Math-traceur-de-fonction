@@ -45,7 +45,7 @@ if (($text || $is_payload) && !$is_echo) {
     $bot->typing();
 
     if (in_array($message, $greetings)) {
-        $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nVoici quelques fonctions utiles : \n\ntrace x²+6x+3 tracera la fonction x²+6x+3\nracines x²+6x+3 retournera les racines de la fonction x²+6x+3\npour x = 3 dans x²+6x+3 retournera f(3))");
+        $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nVoici quelques fonctions utiles : \n\ntrace x²+6x+3 tracera la fonction x²+6x+3\nVous pouvez aussi utiliser smath comme calculatrice ;-)");
     } else if (strpos($message, "trace ") !== false) {
         //$bot->sendText('error');
         //exit();
