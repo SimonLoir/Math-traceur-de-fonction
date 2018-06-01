@@ -8,7 +8,8 @@ module.exports = {
         parser: './src/parser.ui.ts',
         study: './src/study_tool.ts',
         stats: './src/stats.ts',
-        '3d': './src/3d.ts'
+        '3d': './src/3d.ts',
+        notepad: './src/notepad.ts'
     },
     module: {
         rules: [
