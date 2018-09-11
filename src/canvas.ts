@@ -93,6 +93,7 @@ export default class canvas {
             this.zoom(delta);
         });
         canvas.addEventListener('DOMMouseScroll', (e: any) => {
+            e.preventDefault();
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
         });
@@ -173,7 +174,7 @@ export default class canvas {
             this.ctx.fillText(
                 ypos.toString(),
                 this.getRelativePositionX(0) -
-                    ypos.toString().length * 15 / 2 -
+                    (ypos.toString().length * 15) / 2 -
                     5,
                 this.getRelativePositionY(ypos)
             );
@@ -262,7 +263,7 @@ export default class canvas {
         }
 
         let xs_increment = Math.min(
-            5 * this.canvas.width / (this.x_unit * 1000),
+            (5 * this.canvas.width) / (this.x_unit * 1000),
             0.05
         );
 

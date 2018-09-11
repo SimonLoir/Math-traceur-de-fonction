@@ -34,8 +34,8 @@ export default class Parser {
 
         // We tranform exponants into Math.pow()
         expression = expression.replace(
-            /([\$0-9x]+)\^([\$0-9x]+)/gi,
-            (e, $1, $2) => `Math.pow(${$1}, ${$2})`
+            /([\$0-9xe]+)\^([\$0-9xe]+)/gi,
+            (e, $1, $2) => `pow(${$1}, ${$2})`
         );
 
         // We rebuild the complete expression
@@ -140,6 +140,7 @@ export default class Parser {
         if (parse == true) {
             exp = this.parse(exp);
         }
+        console.log(exp);
         return new Function(
             'x',
             'funcs',
@@ -167,6 +168,14 @@ export default class Parser {
 
             const e = Math.E;
             const pi = Math.PI;
+            const pow = function (base, exponent){
+                if(exponent % 1 != 0){
+                    for(let i = -7; i < 8; i = i + 2){
+                        if(exponent == 1/i && base < 0) return 0 - 1 * Math.pow(0 - base, exponent);     
+                    }
+                }
+                return Math.pow(base, exponent);
+            }
             
             return ${this.FunctionizeCalls(exp)};
             
@@ -552,6 +561,8 @@ export class MathObject extends Parser {
         });
         return res;
     }
+
+    public getRoots() {}
 
     public getDomF(tokens: any, clear = true) {
         if (clear == true) this.ce = [];

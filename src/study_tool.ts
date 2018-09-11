@@ -3,6 +3,23 @@ import { $ } from './extjs';
 import './scss/home.scss';
 import Canvas from './canvas';
 
+const p = new Parser();
+
+document.querySelector('header').style.backgroundImage =
+    'url(../images/site-header.jpg)';
+
+$('header').css('height', '400px');
+
+let page = $('#xcontent');
+
+page.child('h2').text('Informations');
+
+let func_str = decodeURIComponent(window.location.hash.replace('#', ''));
+
+page.child('p').text(`f(x) = ${func_str}`);
+page.child('p').text(`f(x) = ${p.parse(func_str)}`);
+
+/*
 let parser = new Parser();
 let math = new MathObject();
 let canvas = new Canvas(document.querySelector('canvas'));
@@ -58,3 +75,4 @@ if (window.location.hash != '') {
 } else {
     $('body').html("Ceci n'est pas une fonction");
 }
+*/
