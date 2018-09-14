@@ -74,7 +74,7 @@ $('#function_add_button').click(() => {
         return false;
     }
 
-    let letters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+    let letters_x = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
 
     if (/^droite\(([A-Z1-9]+),([A-Z1-9]+)\)$/i.test(val)) {
         let r = /\((.+),(.+)\)/g.exec(val);
@@ -85,15 +85,27 @@ $('#function_add_button').click(() => {
         //@ts-ignore
         let pt_2_i = parseInt(r[2].replace(letter_pt_2, '') || 0);
         console.log(letter_pt_1, pt_1_i);
-        let i1 = pt_1_i * 25 + letters.indexOf(letter_pt_1);
-        let i2 = pt_2_i * 25 + letters.indexOf(letter_pt_2);
-        console.log(
-            smath.object_list.objects[i1],
-            smath.object_list.objects[i2]
-        );
-        console.log(letters.indexOf(letter_pt_1));
-        console.log(r[1], r[2]);
-        val = '';
+        let i1 = pt_1_i * 25 + letters_x.indexOf(letter_pt_1);
+        let i2 = pt_2_i * 25 + letters_x.indexOf(letter_pt_2);
+
+        let pt1 = smath.object_list.objects[i1];
+        let pt2 = smath.object_list.objects[i2];
+
+        let pt1_x = parseFloat(pt1.x);
+        let pt2_x = parseFloat(pt2.x);
+
+        let pt1_y = parseFloat(pt1.y(pt1_x));
+        let pt2_y = parseFloat(pt2.y(pt2_x));
+
+        let m = (pt1_y - pt2_y) / (pt1_x - pt2_x);
+
+        let y = pt1_y;
+        let x = pt1_x;
+
+        let p = y - m * x;
+
+        val = `((${pt1_y} - ${pt2_y}) / (${pt1_x} - ${pt2_x}))*x+${p}`;
+        console.log('New from points : ' + val);
     }
 
     //We check if it's an object or a function
