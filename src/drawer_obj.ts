@@ -23,9 +23,28 @@ export default class Menu {
 
         let grid = obj_container.child('div').addClass('item');
 
+        let letters = 'abcdefghijklmnopqrstuvwxyz';
+        let li = 0;
+        let row = 0;
+
         object_list.forEach((object: any) => {
             let item = grid.child('div').addClass('item');
-            let span = item.child('span').text(`${object.type}`);
+            if (object.type == 'point') {
+                let letter = '';
+                letter += letters[li].toUpperCase();
+                if (row != 0) letter += row;
+                li++;
+                if (li > 25) {
+                    li = 0;
+                    row++;
+                }
+                let span = item
+                    .child('span')
+                    .text(`${letter}(${object.x};${object.yString})`);
+            } else {
+                let span = item.child('span').text(`${object.type}`);
+            }
+            console.log(object);
         });
 
         grid.child('span').text('Grille');

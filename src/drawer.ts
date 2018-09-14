@@ -73,13 +73,37 @@ $('#function_add_button').click(() => {
     if (val == '') {
         return false;
     }
+
+    let letters = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+
+    if (/^droite\(([A-Z1-9]+),([A-Z1-9]+)\)$/i.test(val)) {
+        let r = /\((.+),(.+)\)/g.exec(val);
+        let letter_pt_1 = r[1][0];
+        let letter_pt_2 = r[2][0];
+        //@ts-ignore
+        let pt_1_i = parseInt(r[1].replace(letter_pt_1, '') || 0);
+        //@ts-ignore
+        let pt_2_i = parseInt(r[2].replace(letter_pt_2, '') || 0);
+        console.log(letter_pt_1, pt_1_i);
+        let i1 = pt_1_i * 25 + letters.indexOf(letter_pt_1);
+        let i2 = pt_2_i * 25 + letters.indexOf(letter_pt_2);
+        console.log(
+            smath.object_list.objects[i1],
+            smath.object_list.objects[i2]
+        );
+        console.log(letters.indexOf(letter_pt_1));
+        console.log(r[1], r[2]);
+        val = '';
+    }
+
     //We check if it's an object or a function
     if (/^\((.+),(.+)\)$/i.test(val) || /^point\((.+),(.+)\)$/i.test(val)) {
         let r = /\((.+),(.+)\)/g.exec(val);
         smath.object_list = smath.object_list.push({
             type: 'point',
             x: r[1],
-            y: parse.Functionize(r[2], true)
+            y: parse.Functionize(r[2], true),
+            yString: r[2]
         });
         console.log(smath.object_list);
         smath.reload();
