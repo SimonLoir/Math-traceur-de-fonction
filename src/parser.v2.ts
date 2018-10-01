@@ -1,20 +1,20 @@
 export default class Parser {
     protected partials: any = {};
-    public type = 'parser';
+    public type = "parser";
 
     /**
      * Initialise a parsing task
      * @param {String} expression the expression that has to be parsed
      */
     public parse(expression: string) {
-        if (typeof expression == 'number') {
+        if (typeof expression == "number") {
             //@ts-ignore
             expression = expression.toString();
         }
 
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError('Invalid expression given');
+            throw new InvalidExpressionError("Invalid expression given");
         }
 
         // 2) We convert ...(....) into ...$1 and $1 = ....
@@ -40,7 +40,7 @@ export default class Parser {
 
         // We rebuild the complete expression
         expression = expression.replace(/\$([0-9]+)/gi, (e, $1) =>
-            this.clean('(' + this.parse(this.partials['$' + $1]) + ')')
+            this.clean("(" + this.parse(this.partials["$" + $1]) + ")")
         );
 
         expression = this.clean(expression);
@@ -53,8 +53,8 @@ export default class Parser {
      * @param exp the expression to check
      */
     protected check(exp: string) {
-        let open_brackets_number = exp.split('(').length;
-        let close_brackets_number = exp.split(')').length;
+        let open_brackets_number = exp.split("(").length;
+        let close_brackets_number = exp.split(")").length;
         if (open_brackets_number == close_brackets_number) {
             return true;
         } else {
@@ -66,33 +66,33 @@ export default class Parser {
      * PrepareExpression
      */
     protected prepareExpression(exp: string) {
-        exp = exp.replace(/²/gi, '^2');
-        exp = exp.replace(/³/gi, '^2');
-        exp = exp.replace(/X/g, 'x');
+        exp = exp.replace(/²/gi, "^2");
+        exp = exp.replace(/³/gi, "^2");
+        exp = exp.replace(/X/g, "x");
 
-        let processed_exp = '';
+        let processed_exp = "";
         let parenthesis_level = 0;
-        let buffer = '';
+        let buffer = "";
         for (let i = 0; i < exp.length; i++) {
             const char = exp[i];
-            let e = '$' + (Object.keys(this.partials).length + 1);
+            let e = "$" + (Object.keys(this.partials).length + 1);
             if (parenthesis_level >= 1) {
-                if (char == ')') {
+                if (char == ")") {
                     parenthesis_level -= 1;
                     if (parenthesis_level == 0) {
                         this.partials[e] = buffer;
-                        buffer = '';
+                        buffer = "";
                     } else {
                         buffer += char;
                     }
                 } else {
-                    if (char == '(') {
+                    if (char == "(") {
                         parenthesis_level += 1;
                     }
                     buffer += char;
                 }
             } else {
-                if (char == '(') {
+                if (char == "(") {
                     parenthesis_level += 1;
                     processed_exp += e;
                 } else {
@@ -104,14 +104,14 @@ export default class Parser {
         processed_exp = processed_exp.replace(
             /([0-9\.]+)x\^([\$0-9\.]+)/gi,
             (exp, $1, $2) => {
-                let e = '$' + (Object.keys(this.partials).length + 1);
+                let e = "$" + (Object.keys(this.partials).length + 1);
                 this.partials[e] = `${$1}*x^${$2}`;
                 return e;
             }
         );
 
         processed_exp = processed_exp.replace(/([0-9\.]+)x/gi, (exp, $1) => {
-            let e = '$' + (Object.keys(this.partials).length + 1);
+            let e = "$" + (Object.keys(this.partials).length + 1);
             this.partials[e] = `${$1}*x`;
             return e;
         });
@@ -122,11 +122,11 @@ export default class Parser {
     public getComputedValue(value: string) {
         const math = new MathObject();
 
-        if (value.indexOf('dérivée ') == 0) {
-            value = math.derivative(value.replace('dérivée ', ''));
-        } else if (value.indexOf('dérivée_seconde ') == 0) {
+        if (value.indexOf("dérivée ") == 0) {
+            value = math.derivative(value.replace("dérivée ", ""));
+        } else if (value.indexOf("dérivée_seconde ") == 0) {
             value = math.derivative(
-                math.derivative(value.replace('dérivée_seconde ', ''))
+                math.derivative(value.replace("dérivée_seconde ", ""))
             );
         }
 
@@ -142,8 +142,8 @@ export default class Parser {
         }
         console.log(exp);
         return new Function(
-            'x',
-            'funcs',
+            "x",
+            "funcs",
             `
             const sin = Math.sin;
             const tan = Math.tan;
@@ -151,7 +151,11 @@ export default class Parser {
             const asin = Math.asin;
             const atan = Math.atan;
             const acos = Math.acos;
-
+            
+            const cot = (x) => 1 / Math.tan(x);
+            const csc = (x) => 1 / Math.sin(x);
+            const sec = (x) => 1 / Math.cos(x);
+            
             const sinh = Math.sinh;
             const tanh = Math.tanh;
             const cosh = Math.cosh;
@@ -184,25 +188,28 @@ export default class Parser {
     }
 
     private math_func = [
-        'sin',
-        'tan',
-        'cos',
-        'asin',
-        'atan',
-        'acos',
-        'sinh',
-        'tanh',
-        'cosh',
-        'asinh',
-        'atanh',
-        'acosh',
-        'ceil',
-        'floor',
-        'abs',
-        'exp',
-        'ln',
-        'log',
-        'pow'
+        "sin",
+        "tan",
+        "cos",
+        "asin",
+        "atan",
+        "acos",
+        "sinh",
+        "tanh",
+        "cosh",
+        "asinh",
+        "atanh",
+        "acosh",
+        "ceil",
+        "floor",
+        "abs",
+        "exp",
+        "ln",
+        "log",
+        "pow",
+        "cot",
+        "sec",
+        "csc"
     ];
 
     public FunctionizeCalls(exp: string): string {
@@ -233,12 +240,12 @@ export default class Parser {
 
         expression = expression.replace(
             /\*([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
+            (e, $1) => ($1 == 1 ? "" : e)
         );
 
         expression = expression.replace(
             /\^([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
+            (e, $1) => ($1 == 1 ? "" : e)
         );
 
         expression = expression.replace(/\$([0-9]+)/g, e => {
@@ -253,14 +260,14 @@ export default class Parser {
      * But the tokenizer will be a bit different.
      */
     public tokenize(expression: any): any {
-        if (typeof expression == 'number') {
+        if (typeof expression == "number") {
             //@ts-ignore
             expression = expression.toString();
         }
 
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError('Invalid expression given');
+            throw new InvalidExpressionError("Invalid expression given");
         }
 
         // 2) We convert ...(....) into ...$1 and $1 = ....
@@ -270,29 +277,7 @@ export default class Parser {
         // 3) We really parse the expression
 
         const math_functions = (expression: string, returns?: boolean) => {
-            const mfuncs = [
-                'sin',
-                'tan',
-                'cos',
-                'asin',
-                'atan',
-                'acos',
-                'cos',
-                'sinh',
-                'tanh',
-                'cosh',
-                'asinh',
-                'atanh',
-                'acosh',
-                'cosh',
-                'ceil',
-                'floor',
-                'abs',
-                'exp',
-                'ln',
-                'log',
-                'sqrt'
-            ];
+            const mfuncs = this.math_func;
             for (let i = 0; i < mfuncs.length; i++) {
                 const func = mfuncs[i];
                 if (expression.indexOf(func) == 0) {
@@ -306,22 +291,22 @@ export default class Parser {
             return false;
         };
 
-        const math_numbers = ['e', 'pi'];
+        const math_numbers = ["e", "pi"];
 
         expression = expression.trim();
 
         if (!isNaN(expression)) {
             return {
-                type: 'number',
+                type: "number",
                 value: expression
             };
-        } else if (expression == 'x') {
+        } else if (expression == "x") {
             return {
-                type: 'variable',
-                value: 'x'
+                type: "variable",
+                value: "x"
             };
-        } else if (expression.indexOf('+') >= 0) {
-            let exp_spl: string[] = expression.split('+');
+        } else if (expression.indexOf("+") >= 0) {
+            let exp_spl: string[] = expression.split("+");
             let value: any[] = [];
 
             exp_spl.forEach(e => {
@@ -329,16 +314,16 @@ export default class Parser {
             });
 
             return {
-                type: 'plus',
+                type: "plus",
                 value
             };
-        } else if (expression.indexOf('-') >= 0) {
-            let exp_spl: string[] = expression.split('-');
+        } else if (expression.indexOf("-") >= 0) {
+            let exp_spl: string[] = expression.split("-");
             let value: any[] = [];
 
             exp_spl.forEach((e, i) => {
                 e = e.trim();
-                if (i == 0 && e == '') {
+                if (i == 0 && e == "") {
                     value.push(this.tokenize(0));
                 } else {
                     value.push(this.tokenize(e));
@@ -346,11 +331,11 @@ export default class Parser {
             });
 
             return {
-                type: 'minus',
+                type: "minus",
                 value
             };
-        } else if (expression.indexOf('*') >= 0) {
-            let exp_spl: string[] = expression.split('*');
+        } else if (expression.indexOf("*") >= 0) {
+            let exp_spl: string[] = expression.split("*");
             let value: any[] = [];
 
             exp_spl.forEach(e => {
@@ -358,81 +343,81 @@ export default class Parser {
             });
 
             return {
-                type: 'times',
+                type: "times",
                 value
             };
-        } else if (expression.indexOf('/') >= 0) {
-            let exp_spl: string[] = expression.split('/');
+        } else if (expression.indexOf("/") >= 0) {
+            let exp_spl: string[] = expression.split("/");
             let rm = (array: any[]) => {
                 array.shift();
                 return array;
             };
             let value: any[] = [
                 this.tokenize(exp_spl[0]),
-                this.tokenize('(' + rm(exp_spl).join(')*(') + ')')
+                this.tokenize("(" + rm(exp_spl).join(")*(") + ")")
             ];
 
             return {
-                type: 'over',
+                type: "over",
                 value
             };
         } else if (/^\$([0-9]+)$/.test(expression) == true) {
             return this.tokenize(this.partials[expression]);
-        } else if (expression.indexOf('^') > 0) {
-            let spl_exp = expression.split('^');
+        } else if (expression.indexOf("^") > 0) {
+            let spl_exp = expression.split("^");
 
             if (spl_exp.length == 2) {
                 return {
-                    type: 'power',
+                    type: "power",
                     value: [
                         this.tokenize(spl_exp[0]),
                         this.tokenize(spl_exp[1])
                     ]
                 };
             } else {
-                throw new Error('Unexpected expression');
+                throw new Error("Unexpected expression");
             }
         } else if (math_functions(expression) == true) {
             let start = math_functions(expression, true);
             return {
-                type: 'function',
+                type: "function",
                 value: start,
-                args: this.tokenize(expression.replace(start, ''))
+                args: this.tokenize(expression.replace(start, ""))
             };
-        } else if (expression.indexOf(',') >= 0) {
-            let spl_exp: string[] = expression.split(',');
+        } else if (expression.indexOf(",") >= 0) {
+            let spl_exp: string[] = expression.split(",");
 
             return spl_exp.map(element => {
                 return this.tokenize(element);
             });
         } else {
-            throw new Error('Could not parse expression ' + expression);
+            throw new Error("Could not parse expression " + expression);
         }
     }
 }
 
 export class InvalidExpressionError extends Error {
-    public type = 'IE';
+    public type = "IE";
 }
 
 export class MathObject extends Parser {
     private ce: string[] = [];
-    public type = 'MathObject';
+    public type = "MathObject";
     public derivative(expression: string): any {
         // 1) We have to check wheter or not the expression is valid
         if (this.check(expression) == false) {
-            throw new InvalidExpressionError('Invalid expression given');
+            throw new InvalidExpressionError("Invalid expression given");
         }
 
         // 2) We convert ...(....) into ...$1 and $1 = ....
         expression = this.prepareExpression(expression);
         // 3) Wa have to split the expression into small pieces and check step by step
 
-        if (expression.indexOf('+') >= 0) {
-            let spl = expression.split('+');
-            expression = '';
+        if (expression.indexOf("+") >= 0) {
+            let spl = expression.split("+");
+            expression = "";
             spl.forEach(s => (expression += `${this.derivative(s)}+`));
-            if (expression[expression.length - 1] == '+')
+            if (expression[expression.length - 1] == "+")
                 expression = expression.slice(0, -1);
 
             if (!isNaN(this.Functionize(expression)(NaN)))
@@ -443,11 +428,11 @@ export class MathObject extends Parser {
             return expression;
         }
 
-        if (expression.indexOf('-') >= 0) {
-            let spl = expression.split('-');
-            expression = '';
+        if (expression.indexOf("-") >= 0) {
+            let spl = expression.split("-");
+            expression = "";
             spl.forEach(s => (expression += `${this.derivative(s)}-`));
-            if (expression[expression.length - 1] == '-')
+            if (expression[expression.length - 1] == "-")
                 expression = expression.slice(0, -1);
 
             if (!isNaN(this.Functionize(expression)(NaN)))
@@ -458,20 +443,20 @@ export class MathObject extends Parser {
             return expression;
         }
 
-        if (expression.indexOf('*') >= 0) {
-            let spl = expression.split('*').sort();
-            expression = '';
+        if (expression.indexOf("*") >= 0) {
+            let spl = expression.split("*").sort();
+            expression = "";
             spl.forEach((s, i) => {
                 let others = this.getAllExpect(spl, i);
-                let join = others.join('*');
+                let join = others.join("*");
                 let derivative = this.derivative(s);
 
-                if (others.indexOf('0') >= 0) return;
+                if (others.indexOf("0") >= 0) return;
                 if (this.Functionize(join)(NaN) == 0) return;
                 if (this.Functionize(derivative)(NaN) == 0) return;
-                expression += `${derivative}*${others.join('*')}+`;
+                expression += `${derivative}*${others.join("*")}+`;
             });
-            if (expression[expression.length - 1] == '+')
+            if (expression[expression.length - 1] == "+")
                 expression = expression.slice(0, -1);
 
             if (!isNaN(this.Functionize(expression)(NaN)))
@@ -482,13 +467,13 @@ export class MathObject extends Parser {
             return expression;
         }
 
-        if (expression.indexOf('/') >= 0) {
-            let spl = expression.split('/');
+        if (expression.indexOf("/") >= 0) {
+            let spl = expression.split("/");
             let spl_copy = [...spl];
 
             spl_copy.shift();
 
-            let bottom = `(${spl_copy.join(')*(')})`;
+            let bottom = `(${spl_copy.join(")*(")})`;
 
             let top = `(${this.derivative(spl[0])})*${bottom}-${this.derivative(
                 bottom
@@ -508,20 +493,20 @@ export class MathObject extends Parser {
         if (!isNaN(expression)) {
             // Derivative of a number is always equal to 0
 
-            return '0';
-        } else if (expression == 'x') {
+            return "0";
+        } else if (expression == "x") {
             // Derivative of x is always equal to 1
 
             return 1;
-        } else if (expression.indexOf('^') >= 1) {
+        } else if (expression.indexOf("^") >= 1) {
             // Derivative of x^n is equal to n(x)^(n-1) * (x)'
 
-            let parts: string[] = expression.split('^');
+            let parts: string[] = expression.split("^");
             return this.clean(
                 `${parts[1]}*${parts[0]}^(${
-                    !isNaN(this.Functionize(parts[1] + '-1')(NaN))
-                        ? this.Functionize(parts[1] + '-1')(NaN)
-                        : parts[1] + '-1'
+                    !isNaN(this.Functionize(parts[1] + "-1")(NaN))
+                        ? this.Functionize(parts[1] + "-1")(NaN)
+                        : parts[1] + "-1"
                 })*(${this.derivative(parts[0])})`
             );
         } else if (/^\$([0-9]+)$/.test(expression) == true) {
@@ -533,14 +518,14 @@ export class MathObject extends Parser {
                 return `(${this.derivative(this.partials[part])})`;
             else return `(${this.derivative(part)})`;
         } else if (/^sin\$([0-9]+)$/.test(expression) == true) {
-            let partial = expression.replace('sin', '');
+            let partial = expression.replace("sin", "");
             return this.clean(
                 `cos(${this.partials[partial]})*(${this.derivative(
                     this.partials[partial]
                 )})`
             );
         } else if (/^cos\$([0-9]+)$/.test(expression) == true) {
-            let partial = expression.replace('cos', '');
+            let partial = expression.replace("cos", "");
             return this.clean(
                 `-sin(${this.partials[partial]})*(${this.derivative(
                     this.partials[partial]
@@ -548,7 +533,7 @@ export class MathObject extends Parser {
             );
         } else {
             console.log(expression);
-            throw new Error('Something went wrong width ');
+            throw new Error("Something went wrong width ");
         }
     }
 
@@ -568,25 +553,25 @@ export class MathObject extends Parser {
         if (clear == true) this.ce = [];
 
         if (
-            tokens.type === 'plus' ||
-            tokens.type === 'minus' ||
-            tokens.type === 'times'
+            tokens.type === "plus" ||
+            tokens.type === "minus" ||
+            tokens.type === "times"
         ) {
             let value: any[] = tokens.value;
             value.forEach(e => {
                 this.getDomF(e);
             });
-        } else if (tokens.type == 'over') {
-            this.ce.push(JSON.stringify(tokens.value[1]) + ' not null');
-        } else if (tokens.type == 'function' && tokens.value == 'sqrt') {
-            this.ce.push(JSON.stringify(tokens.args) + '>=0');
+        } else if (tokens.type == "over") {
+            this.ce.push(JSON.stringify(tokens.value[1]) + " not null");
+        } else if (tokens.type == "function" && tokens.value == "sqrt") {
+            this.ce.push(JSON.stringify(tokens.args) + ">=0");
         }
 
         if (clear === true) {
             if (this.ce.length === 0) {
-                return 'R';
+                return "R";
             } else {
-                return 'ce : ' + this.ce.join('\n');
+                return "ce : " + this.ce.join("\n");
             }
         }
     }

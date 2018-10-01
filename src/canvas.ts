@@ -145,7 +145,7 @@ export default class canvas {
                 Math.floor(xpos) == 0 ? 'black' : undefined
             );
             this.ctx.beginPath();
-            this.ctx.font = '15px Sans Serif';
+            this.ctx.font = '18px Sans Serif';
             this.ctx.fillStyle = 'gray';
             this.ctx.fillText(
                 xpos.toString(),
@@ -169,7 +169,7 @@ export default class canvas {
                 Math.floor(ypos) == 0 ? 'black' : undefined
             );
             this.ctx.beginPath();
-            this.ctx.font = '15px Sans Serif';
+            this.ctx.font = '18px Sans Serif';
             this.ctx.fillStyle = 'gray';
             this.ctx.fillText(
                 ypos.toString(),
@@ -208,7 +208,7 @@ export default class canvas {
     ) {
         this.ctx.beginPath();
         if (color == undefined) {
-            this.ctx.strokeStyle = '#eee';
+            this.ctx.strokeStyle = '#D0D0D0';
         } else {
             this.ctx.strokeStyle = color;
         }
@@ -346,12 +346,15 @@ export default class canvas {
         });
     }
 
-    public point(x: number, y: number) {
+    public point(x: number, y: number, text: string = '') {
+        text = `${text}(${x};${y})`;
         x = this.getRelativePositionX(x);
         y = this.getRelativePositionY(y);
         this.ctx.beginPath();
-        this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
+        this.ctx.arc(x, y, 3, 0, 2 * Math.PI, true);
         this.ctx.fill();
+        this.ctx.font = '12px Arial';
+        if (text) this.ctx.fillText(text, x + 10, y + 10);
     }
 
     set funcs(fdata: any) {
