@@ -360,6 +360,9 @@ export default class canvas {
     set funcs(fdata: any) {
         this.fdata = fdata;
     }
+    get funcs() {
+        return this.fdata;
+    }
 
     set object_list(objects: any) {
         this.objects = objects;
