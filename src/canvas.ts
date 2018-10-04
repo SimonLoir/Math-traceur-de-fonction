@@ -23,6 +23,28 @@ export default class canvas {
 
     public add: boolean;
 
+    public onupdate: () => void;
+
+    public getValues() {
+        return {
+            center_x: this.center_x,
+            center_y: this.center_y,
+            x_unit: this.x_unit,
+            y_unit: this.y_unit
+        };
+    }
+
+    public setValues(values: any) {
+        this.center_x = values['center_x'];
+        this.center_y = values['center_y'];
+        this.x_unit = values['x_unit'];
+        this.y_unit = values['y_unit'];
+    }
+
+    private hasUpdated() {
+        if (this.onupdate) this.onupdate();
+    }
+
     constructor(canvas: HTMLCanvasElement) {
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
@@ -79,9 +101,11 @@ export default class canvas {
         canvas.addEventListener('mouseup', (e: MouseEvent) => {
             down = false;
             canvas.style.cursor = 'grab';
+            this.hasUpdated();
         });
         canvas.addEventListener('touchend', (e: MouseEvent) => {
             down = false;
+            this.hasUpdated();
         });
 
         window.addEventListener('resize', (e: Event) => {
@@ -91,11 +115,13 @@ export default class canvas {
         canvas.addEventListener('mousewheel', (e: any) => {
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
+            this.hasUpdated();
         });
         canvas.addEventListener('DOMMouseScroll', (e: any) => {
             e.preventDefault();
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
+            this.hasUpdated();
         });
     }
 
