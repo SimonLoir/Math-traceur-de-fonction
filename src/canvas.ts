@@ -99,25 +99,34 @@ export default class canvas {
 
         //When the user stops clicking on teh surface
         canvas.addEventListener('mouseup', (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
             down = false;
             canvas.style.cursor = 'grab';
             this.hasUpdated();
         });
         canvas.addEventListener('touchend', (e: MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
             down = false;
             this.hasUpdated();
         });
 
         window.addEventListener('resize', (e: Event) => {
+            e.stopPropagation();
+            e.preventDefault();
             this.reload();
         });
 
         canvas.addEventListener('mousewheel', (e: any) => {
+            e.stopPropagation();
+            e.preventDefault();
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
             this.hasUpdated();
         });
         canvas.addEventListener('DOMMouseScroll', (e: any) => {
+            e.preventDefault();
             e.preventDefault();
             let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             this.zoom(delta);
