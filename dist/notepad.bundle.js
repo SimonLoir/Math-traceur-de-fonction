@@ -66,12 +66,8 @@
 /******/ ({
 
 /***/ 20:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-//->https://www.npmjs.com/package/ocrad.js
 
 
 /***/ })

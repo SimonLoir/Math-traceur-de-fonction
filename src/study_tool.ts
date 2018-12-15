@@ -4,6 +4,7 @@ import './scss/home.scss';
 import Canvas from './canvas';
 
 const p = new Parser();
+const math = new MathObject();
 
 document.querySelector('header').style.backgroundImage =
     'url(../images/site-header.jpg)';

@@ -45,10 +45,10 @@ if (($text || $is_payload) && !$is_echo) {
     $bot->typing();
 
     if (in_array($message, $greetings)) {
-        $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nVoici quelques fonctions utiles : \n\ntrace x²+6x+3 tracera la fonction x²+6x+3\nVous pouvez aussi utiliser smath comme calculatrice ;-)");
+        $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nTu peux m'utiliser comme une simple calculatrice. Il te suffit d'écrire un calcul et tu obtiendras une réponse ;-)\n\nSi tu veux utiliser un vrai grapheur, va sur https://math.simonloir.be ;-)");
     } else if (strpos($message, "trace ") !== false) {
-        //$bot->sendText('error');
-        //exit();
+        $bot->sendText('error');
+        exit();
         try {
             $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?function=" . urlencode(str_replace('trace ', "", $message)));
             include "Class/image_builder.php";
@@ -77,6 +77,4 @@ if (($text || $is_payload) && !$is_echo) {
         $bot->sendText("Voici le résulat que j'obtiens : " . $result);
     }
 }
-
-
 ?>

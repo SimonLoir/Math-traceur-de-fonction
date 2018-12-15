@@ -58,24 +58,56 @@ var canvas = /** @class */ (function () {
         });
         //When the user stops clicking on teh surface
         canvas.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             down = false;
             canvas.style.cursor = 'grab';
+            _this.hasUpdated();
         });
         canvas.addEventListener('touchend', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             down = false;
+            _this.hasUpdated();
         });
         window.addEventListener('resize', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             _this.reload();
         });
         canvas.addEventListener('mousewheel', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
+            _this.hasUpdated();
         });
         canvas.addEventListener('DOMMouseScroll', function (e) {
+            e.preventDefault();
+            e.preventDefault();
             var delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
             _this.zoom(delta);
+            _this.hasUpdated();
         });
     }
+    canvas.prototype.getValues = function () {
+        return {
+            center_x: this.center_x,
+            center_y: this.center_y,
+            x_unit: this.x_unit,
+            y_unit: this.y_unit
+        };
+    };
+    canvas.prototype.setValues = function (values) {
+        this.center_x = values['center_x'];
+        this.center_y = values['center_y'];
+        this.x_unit = values['x_unit'];
+        this.y_unit = values['y_unit'];
+    };
+    canvas.prototype.hasUpdated = function () {
+        if (this.onupdate)
+            this.onupdate();
+    };
     canvas.prototype.zoom = function (delta) {
         if (this.x_unit + delta * 10 > 10) {
             this.x_unit += delta * 10;
@@ -108,7 +140,7 @@ var canvas = /** @class */ (function () {
         while (xpos < to) {
             this.drawLine(this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y + max)), this.getRelativePositionX(xpos), this.getRelativePositionY(Math.floor(this.center_y - max)), Math.floor(xpos) == 0 ? 'black' : undefined);
             this.ctx.beginPath();
-            this.ctx.font = '15px Sans Serif';
+            this.ctx.font = '18px Sans Serif';
             this.ctx.fillStyle = 'gray';
             this.ctx.fillText(xpos.toString(), this.getRelativePositionX(xpos), this.getRelativePositionY(0) + 15);
             this.ctx.closePath();
@@ -119,10 +151,10 @@ var canvas = /** @class */ (function () {
         while (ypos < to) {
             this.drawLine(this.getRelativePositionX(Math.floor(this.center_x + max)), this.getRelativePositionY(ypos), this.getRelativePositionX(Math.floor(this.center_x - max)), this.getRelativePositionY(ypos), Math.floor(ypos) == 0 ? 'black' : undefined);
             this.ctx.beginPath();
-            this.ctx.font = '15px Sans Serif';
+            this.ctx.font = '18px Sans Serif';
             this.ctx.fillStyle = 'gray';
             this.ctx.fillText(ypos.toString(), this.getRelativePositionX(0) -
-                ypos.toString().length * 15 / 2 -
+                (ypos.toString().length * 15) / 2 -
                 5, this.getRelativePositionY(ypos));
             this.ctx.closePath();
             ypos++;
@@ -141,11 +173,15 @@ var canvas = /** @class */ (function () {
     canvas.prototype.drawLine = function (x, y, x2, y2, color, width) {
         this.ctx.beginPath();
         if (color == undefined) {
-            this.ctx.strokeStyle = '#eee';
+            this.ctx.strokeStyle = '#D0D0D0';
         }
         else {
             this.ctx.strokeStyle = color;
         }
+        if (y2 == Infinity)
+            console.log((y2 = this.canvas.height), 'Inf' + y2);
+        if (y == Infinity)
+            console.log((y = this.canvas.height), 'Inf' + y);
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x2, y2);
         if (width == undefined) {
@@ -185,7 +221,9 @@ var canvas = /** @class */ (function () {
             this.pathes[label] = {};
             was_defined = false;
         }
-        var xs_increment = Math.min(5 * this.canvas.width / (this.x_unit * 1000), 0.05);
+        var xs_increment = Math.min((5 * this.canvas.width) / (this.x_unit * 1000), 0.05);
+        var xs_save = xs_increment;
+        var restore = undefined;
         while (x < this.center_x + display_size) {
             var pos = void 0;
             var new_y = void 0;
@@ -196,12 +234,30 @@ var canvas = /** @class */ (function () {
             }
             else {
                 pos = this.getFor(x, func, label);
+                //console.log(x, pos);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
             }
             if (last != undefined) {
-                this.drawLine(new_x, new_y, last.x, last.y, color, 2);
+                var y_diff = Math.abs(new_y - last.y);
+                if (y_diff > 75 && xs_increment == xs_save) {
+                    //console.log(x, y_diff);
+                    if (y_diff > 200) {
+                        console.log(y_diff);
+                        last = undefined;
+                    }
+                    else {
+                        x -= xs_increment;
+                        xs_increment = xs_save / 50;
+                        //@ts-ignore
+                        new_y = last.y;
+                        restore = x + 2;
+                    }
+                }
+                else {
+                    this.drawLine(new_x, new_y, last.x, last.y, color, 2);
+                }
             }
             last = {
                 x: new_x,
@@ -211,6 +267,10 @@ var canvas = /** @class */ (function () {
                 x += 0.5;
             }
             else {
+                if (restore && restore <= x) {
+                    restore = undefined;
+                    xs_increment = xs_save;
+                }
                 x += xs_increment;
             }
         }
@@ -256,14 +316,22 @@ var canvas = /** @class */ (function () {
             });
         });
     };
-    canvas.prototype.point = function (x, y) {
+    canvas.prototype.point = function (x, y, text) {
+        if (text === void 0) { text = ''; }
+        text = text + "(" + x + ";" + y + ")";
         x = this.getRelativePositionX(x);
         y = this.getRelativePositionY(y);
         this.ctx.beginPath();
-        this.ctx.arc(x, y, 5, 0, 2 * Math.PI, true);
+        this.ctx.arc(x, y, 3, 0, 2 * Math.PI, true);
         this.ctx.fill();
+        this.ctx.font = '12px Arial';
+        if (text)
+            this.ctx.fillText(text, x + 10, y + 10);
     };
     Object.defineProperty(canvas.prototype, "funcs", {
+        get: function () {
+            return this.fdata;
+        },
         set: function (fdata) {
             this.fdata = fdata;
         },

@@ -247,6 +247,10 @@ export default class canvas {
         } else {
             this.ctx.strokeStyle = color;
         }
+
+        if (y2 == Infinity) console.log((y2 = this.canvas.height), 'Inf' + y2);
+        if (y == Infinity) console.log((y = this.canvas.height), 'Inf' + y);
+
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x2, y2);
         if (width == undefined) {
@@ -301,6 +305,9 @@ export default class canvas {
             (5 * this.canvas.width) / (this.x_unit * 1000),
             0.05
         );
+        let xs_save = xs_increment;
+
+        let restore: number = undefined;
 
         while (x < this.center_x + display_size) {
             let pos;
@@ -312,13 +319,29 @@ export default class canvas {
                 new_x = this.getRelativePositionX(x);
             } else {
                 pos = this.getFor(x, func, label);
+                //console.log(x, pos);
                 this.pathes[label][x] = pos;
                 new_y = this.getRelativePositionY(pos);
                 new_x = this.getRelativePositionX(x);
             }
 
             if (last != undefined) {
-                this.drawLine(new_x, new_y, last.x, last.y, color, 2);
+                let y_diff = Math.abs(new_y - last.y);
+                if (y_diff > 75 && xs_increment == xs_save) {
+                    //console.log(x, y_diff);
+                    if (y_diff > 200) {
+                        console.log(y_diff);
+                        last = undefined;
+                    } else {
+                        x -= xs_increment;
+                        xs_increment = xs_save / 50;
+                        //@ts-ignore
+                        new_y = last.y;
+                        restore = x + 2;
+                    }
+                } else {
+                    this.drawLine(new_x, new_y, last.x, last.y, color, 2);
+                }
             }
             last = {
                 x: new_x,
@@ -328,6 +351,10 @@ export default class canvas {
             if (isPreview == true) {
                 x += 0.5;
             } else {
+                if (restore && restore <= x) {
+                    restore = undefined;
+                    xs_increment = xs_save;
+                }
                 x += xs_increment;
             }
         }

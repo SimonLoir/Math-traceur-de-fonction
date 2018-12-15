@@ -33,7 +33,10 @@ var Parser = /** @class */ (function () {
             'exp',
             'ln',
             'log',
-            'pow'
+            'pow',
+            'cot',
+            'sec',
+            'csc'
         ];
     }
     /**
@@ -58,7 +61,7 @@ var Parser = /** @class */ (function () {
         /*expression = expression.replace(/derivée\$([0-9]+)/i,
             (e, $1) => `()`);*/
         // We tranform exponants into Math.pow()
-        expression = expression.replace(/([\$0-9x]+)\^([\$0-9x]+)/gi, function (e, $1, $2) { return "Math.pow(" + $1 + ", " + $2 + ")"; });
+        expression = expression.replace(/([\$0-9xe]+)\^([\$0-9xe]+)/gi, function (e, $1, $2) { return "pow(" + $1 + ", " + $2 + ")"; });
         // We rebuild the complete expression
         expression = expression.replace(/\$([0-9]+)/gi, function (e, $1) {
             return _this.clean('(' + _this.parse(_this.partials['$' + $1]) + ')');
@@ -152,7 +155,8 @@ var Parser = /** @class */ (function () {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n\n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const exp = Math.exp; \n            const ln = Math.log;\n            const log = function (base, y) { return Math.log(y) / Math.log(base)};\n\n            const e = Math.E;\n            const pi = Math.PI;\n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
+        console.log(exp);
+        return new Function('x', 'funcs', "\n            const sin = Math.sin;\n            const tan = Math.tan;\n            const cos = Math.cos;\n            const asin = Math.asin;\n            const atan = Math.atan;\n            const acos = Math.acos;\n            \n            const cot = (x) => 1 / Math.tan(x);\n            const csc = (x) => 1 / Math.sin(x);\n            const sec = (x) => 1 / Math.cos(x);\n            \n            const sinh = Math.sinh;\n            const tanh = Math.tanh;\n            const cosh = Math.cosh;\n            const asinh = Math.asinh;\n            const atanh = Math.atanh;\n            const acosh = Math.acosh;\n\n            const ceil = Math.ceil;\n            const floor = Math.floor;\n            const abs = Math.abs;\n            const ln = Math.log;\n            const log = function (base, y) { \n                if(y == undefined) {\n                    y = base;\n                    base = 10;\n                }\n                return Math.log(y) / Math.log(base)\n            };\n\n            const e = Math.E;\n            const pi = Math.PI;\n            const pow = function (base, exponent){\n                if(exponent % 1 != 0){\n                    for(let i = -7; i < 8; i = i + 2){\n                        if(exponent == 1/i && base < 0) return 0 - 1 * Math.pow(0 - base, exponent);     \n                    }\n                }\n                return Math.pow(base, exponent);\n            }\n\n            const exp = function (base, y){\n                if(y == undefined){\n                    return Math.exp(base);\n                } else {\n                    return pow(base, y);\n                }\n            }; \n            \n            return " + this.FunctionizeCalls(exp) + ";\n            \n            ");
     };
     Parser.prototype.FunctionizeCalls = function (exp) {
         var _this = this;
@@ -174,8 +178,12 @@ var Parser = /** @class */ (function () {
         while (pattern.test(expression)) {
             expression = expression.replace(pattern, function (e, $1, $2) { return $1 + $2; });
         }
-        expression = expression.replace(/\*([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
-        expression = expression.replace(/\^([0-9])/gi, function (e, $1) { return ($1 == 1 ? '' : e); });
+        expression = expression.replace(/\*([0-9])/gi, function (e, $1) {
+            return $1 == 1 ? '' : e;
+        });
+        expression = expression.replace(/\^([0-9])/gi, function (e, $1) {
+            return $1 == 1 ? '' : e;
+        });
         expression = expression.replace(/\$([0-9]+)/g, function (e) {
             return "(" + _this.partials[e] + ")";
         });
@@ -199,29 +207,7 @@ var Parser = /** @class */ (function () {
         expression = this.prepareExpression(expression);
         // 3) We really parse the expression
         var math_functions = function (expression, returns) {
-            var mfuncs = [
-                'sin',
-                'tan',
-                'cos',
-                'asin',
-                'atan',
-                'acos',
-                'cos',
-                'sinh',
-                'tanh',
-                'cosh',
-                'asinh',
-                'atanh',
-                'acosh',
-                'cosh',
-                'ceil',
-                'floor',
-                'abs',
-                'exp',
-                'ln',
-                'log',
-                'sqrt'
-            ];
+            var mfuncs = _this.math_func;
             for (var i = 0; i < mfuncs.length; i++) {
                 var func = mfuncs[i];
                 if (expression.indexOf(func) == 0) {
@@ -237,10 +223,24 @@ var Parser = /** @class */ (function () {
         };
         var math_numbers = ['e', 'pi'];
         expression = expression.trim();
-        if (!isNaN(expression)) {
+        if (expression.indexOf('=') >= 0) {
+            return {
+                type: 'equal_sign',
+                value: expression
+                    .split('=')
+                    .map(function (e) { return _this.tokenize(e); })
+            };
+        }
+        else if (!isNaN(expression)) {
             return {
                 type: 'number',
                 value: expression
+            };
+        }
+        else if (!isNaN(this.Functionize(expression)(NaN))) {
+            return {
+                type: 'number',
+                value: this.Functionize(expression)(NaN)
             };
         }
         else if (expression == 'x') {
@@ -294,13 +294,15 @@ var Parser = /** @class */ (function () {
                 array.shift();
                 return array;
             };
+            var bottom = '(' + rm(exp_spl).join(')*(') + ')';
             var value = [
                 this.tokenize(exp_spl[0]),
-                this.tokenize('(' + rm(exp_spl).join(')*(') + ')')
+                this.tokenize(bottom)
             ];
             return {
                 type: 'over',
-                value: value
+                value: value,
+                over: this.clean(bottom)
             };
         }
         else if (/^\$([0-9]+)$/.test(expression) == true) {
@@ -471,6 +473,7 @@ var MathObject = /** @class */ (function (_super) {
         });
         return res;
     };
+    MathObject.prototype.getRoots = function () { };
     MathObject.prototype.getDomF = function (tokens, clear) {
         var _this = this;
         if (clear === void 0) { clear = true; }

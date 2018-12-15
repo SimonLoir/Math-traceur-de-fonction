@@ -251,14 +251,12 @@ export default class Parser {
             expression = expression.replace(pattern, (e, $1, $2) => $1 + $2);
         }
 
-        expression = expression.replace(
-            /\*([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
+        expression = expression.replace(/\*([0-9])/gi, (e, $1) =>
+            $1 == 1 ? '' : e
         );
 
-        expression = expression.replace(
-            /\^([0-9])/gi,
-            (e, $1) => ($1 == 1 ? '' : e)
+        expression = expression.replace(/\^([0-9])/gi, (e, $1) =>
+            $1 == 1 ? '' : e
         );
 
         expression = expression.replace(/\$([0-9]+)/g, e => {
@@ -308,10 +306,22 @@ export default class Parser {
 
         expression = expression.trim();
 
-        if (!isNaN(expression)) {
+        if (expression.indexOf('=') >= 0) {
+            return {
+                type: 'equal_sign',
+                value: expression
+                    .split('=')
+                    .map((e: string) => this.tokenize(e))
+            };
+        } else if (!isNaN(expression)) {
             return {
                 type: 'number',
                 value: expression
+            };
+        } else if (!isNaN(this.Functionize(expression)(NaN))) {
+            return {
+                type: 'number',
+                value: this.Functionize(expression)(NaN)
             };
         } else if (expression == 'x') {
             return {
@@ -365,14 +375,16 @@ export default class Parser {
                 array.shift();
                 return array;
             };
+            let bottom = '(' + rm(exp_spl).join(')*(') + ')';
             let value: any[] = [
                 this.tokenize(exp_spl[0]),
-                this.tokenize('(' + rm(exp_spl).join(')*(') + ')')
+                this.tokenize(bottom)
             ];
 
             return {
                 type: 'over',
-                value
+                value,
+                over: this.clean(bottom)
             };
         } else if (/^\$([0-9]+)$/.test(expression) == true) {
             return this.tokenize(this.partials[expression]);

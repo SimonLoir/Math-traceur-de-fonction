@@ -66,13 +66,39 @@ extjs_1.$('#function_add_button').click(function () {
     if (val == '') {
         return false;
     }
+    var letters_x = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase();
+    if (/^droite\(([A-Z1-9]+),([A-Z1-9]+)\)$/i.test(val)) {
+        var r = /\((.+),(.+)\)/g.exec(val);
+        var letter_pt_1 = r[1][0];
+        var letter_pt_2 = r[2][0];
+        //@ts-ignore
+        var pt_1_i = parseInt(r[1].replace(letter_pt_1, '') || 0);
+        //@ts-ignore
+        var pt_2_i = parseInt(r[2].replace(letter_pt_2, '') || 0);
+        console.log(letter_pt_1, pt_1_i);
+        var i1 = pt_1_i * 25 + letters_x.indexOf(letter_pt_1);
+        var i2 = pt_2_i * 25 + letters_x.indexOf(letter_pt_2);
+        var pt1 = smath.object_list.objects[i1];
+        var pt2 = smath.object_list.objects[i2];
+        var pt1_x = parseFloat(pt1.x);
+        var pt2_x = parseFloat(pt2.x);
+        var pt1_y = parseFloat(pt1.y(pt1_x));
+        var pt2_y = parseFloat(pt2.y(pt2_x));
+        var m = (pt1_y - pt2_y) / (pt1_x - pt2_x);
+        var y = pt1_y;
+        var x = pt1_x;
+        var p = y - m * x;
+        val = "((" + pt1_y + " - " + pt2_y + ") / (" + pt1_x + " - " + pt2_x + "))*x+" + p;
+        console.log('New from points : ' + val);
+    }
     //We check if it's an object or a function
     if (/^\((.+),(.+)\)$/i.test(val) || /^point\((.+),(.+)\)$/i.test(val)) {
         var r = /\((.+),(.+)\)/g.exec(val);
         smath.object_list = smath.object_list.push({
             type: 'point',
             x: r[1],
-            y: parse.Functionize(r[2], true)
+            y: parse.Functionize(r[2], true),
+            yString: r[2]
         });
         console.log(smath.object_list);
         smath.reload();
