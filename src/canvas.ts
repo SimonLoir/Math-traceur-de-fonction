@@ -112,11 +112,15 @@ export default class canvas {
             this.hasUpdated();
         });
 
-        window.addEventListener('resize', (e: Event) => {
-            e.stopPropagation();
-            e.preventDefault();
-            this.reload();
-        });
+        try {
+            window.addEventListener('resize', (e: Event) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.reload();
+            });
+        } catch (error) {
+            console.log(error);
+        }
 
         canvas.addEventListener('mousewheel', (e: any) => {
             e.stopPropagation();
@@ -242,6 +246,9 @@ export default class canvas {
         width?: number
     ) {
         this.ctx.beginPath();
+
+        //console.log('new path');
+
         if (color == undefined) {
             this.ctx.strokeStyle = '#D0D0D0';
         } else {
@@ -259,6 +266,7 @@ export default class canvas {
             this.ctx.lineWidth = width;
         }
         this.ctx.stroke();
+        //console.log(this.ctx);
     }
 
     private getRelativePositionX(point: number) {
@@ -328,9 +336,7 @@ export default class canvas {
             if (last != undefined) {
                 let y_diff = Math.abs(new_y - last.y);
                 if (y_diff > 75 && xs_increment == xs_save) {
-                    //console.log(x, y_diff);
                     if (y_diff > 200) {
-                        console.log(y_diff);
                         last = undefined;
                     } else {
                         x -= xs_increment;

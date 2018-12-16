@@ -7,6 +7,8 @@ include "access_token.php"; //$access_token
 
 $input = file_get_contents('php://input');
 
+$base_input = $input;
+
 $bot = new bot($access_token);
 
 if ($input == null) exit('still ok');
@@ -23,7 +25,7 @@ $sender = $input->sender->id;
 
 $bot->sender = $sender;
 
-if (($text || $is_payload) && !$is_echo) {
+if (($text) && !$is_echo) {
 
     file_put_contents('test.txt', $input);
 
@@ -47,31 +49,17 @@ if (($text || $is_payload) && !$is_echo) {
     if (in_array($message, $greetings)) {
         $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nTu peux m'utiliser comme une simple calculatrice. Il te suffit d'écrire un calcul et tu obtiendras une réponse ;-)\n\nSi tu veux utiliser un vrai grapheur, va sur https://math.simonloir.be ;-)");
     } else if (strpos($message, "trace ") !== false) {
-        $bot->sendText('error');
-        exit();
+        $bot->sendText('Voici ce que je peux tracer pour toi : ');
+
+        $bot->typing();
+        ini_set('default_socket_timeout', 5);
         try {
-            $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?function=" . urlencode(str_replace('trace ', "", $message)));
-            include "Class/image_builder.php";
-            $x_result = json_decode($result, true);
-
-            if (isset($x_result["error"]) && $x_result["error"] == true) {
-                $bot->sendText("erreur");
-                exit('error');
-            }
-
-            $sha1 = sha1($x_result["jsMath"]);
-
-            $builder = new image_builder(null, $sha1 . ".png", $x_result);
-            $x_result = str_replace('ln(', "log(", $x_result["jsMath"]);
-            $builder->build($x_result);
-
-            $bot->sendText('Voici ce que je peux tracer pour toi : ');
-            $bot->typing();
-            $bot->sendImage('https://math.simonloir.be/php-bot/' . $sha1 . ".png");
-        } catch (Exception $e) {
-            $bot->sendText($e);
-            file_put_contents("error", $e);
+            $bot->sendImage("https://simonloir-test.firebaseapp.com/app?draw=true&function=" . urlencode(str_replace('trace ', "", $message)));
+        } catch (\Throwable $th) {
+            $bot->sendText(json_encode($th));
         }
+        $bot->sendText("La création de l'image peut prendre quelques secondes.");
+        $bot->stopTyping();
     } else {
         $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?compute&function=" . urlencode(str_replace('trace ', "", $message)));
         $bot->sendText("Voici le résulat que j'obtiens : " . $result);

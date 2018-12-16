@@ -4,6 +4,7 @@ const smath = require('./smath/parser').default;
 const Parser = require('./smath/parser.v2').default;
 const gm = require('gm').subClass({ imageMagick: true });
 const fs = require('fs');
+const SVGGraph = require('./smath/svg').default;
 
 exports.app = functions.https.onRequest(async (request, response) => {
     let data = url.parse(request.url, true).query;
@@ -23,18 +24,19 @@ exports.app = functions.https.onRequest(async (request, response) => {
 
     if (data.draw == 'true') {
         response.setHeader('content-type', 'image/png');
+        console.log('is working');
+        let graph = new SVGGraph(data.function, text => {
+            console.log(text);
+            fs.writeFileSync('/tmp/img.svg', text);
 
-        fs.writeFileSync(
-            '/tmp/img.svg',
-            `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><g fill="lime" stroke="green" stroke-width="5"></g><path fill="none" stroke="rgba(255, 0, 0, 0.5)" stroke-width="1" d="M 0 0 C 0 400 400 0 400 400" /></svg>`
-        );
+            gm('/tmp/img.svg')
+                .setFormat('png')
+                .toBuffer(function(err, buffer) {
+                    if (err) console.log(err);
+                    response.send(buffer);
+                });
+        });
 
-        gm('/tmp/img.svg')
-            .setFormat('png')
-            .toBuffer(function(err, buffer) {
-                if (err) console.log(err);
-                response.send(buffer);
-            });
         return;
     } else response.setHeader('content-type', 'application/json');
 

@@ -1912,6 +1912,7 @@ var canvas = /** @class */ (function () {
     };
     canvas.prototype.drawLine = function (x, y, x2, y2, color, width) {
         this.ctx.beginPath();
+        //console.log('new path');
         if (color == undefined) {
             this.ctx.strokeStyle = '#D0D0D0';
         }
@@ -1931,6 +1932,7 @@ var canvas = /** @class */ (function () {
             this.ctx.lineWidth = width;
         }
         this.ctx.stroke();
+        //console.log(this.ctx);
     };
     canvas.prototype.getRelativePositionX = function (point) {
         return (this.canvas.width / 2 +
@@ -1982,9 +1984,7 @@ var canvas = /** @class */ (function () {
             if (last != undefined) {
                 var y_diff = Math.abs(new_y - last.y);
                 if (y_diff > 75 && xs_increment == xs_save) {
-                    //console.log(x, y_diff);
                     if (y_diff > 200) {
-                        console.log(y_diff);
                         last = undefined;
                     }
                     else {
