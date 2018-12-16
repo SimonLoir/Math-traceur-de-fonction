@@ -5,7 +5,7 @@ var canvas_2 = require("./canvas");
 var parser_v2_1 = require("./parser.v2");
 var SVGGraph = /** @class */ (function () {
     function SVGGraph(fstring, build) {
-        var c = new canvas_1.default(750, 750);
+        var c = new canvas_1.default(500, 500);
         //@ts-ignore
         var xc = new canvas_2.default(c);
         xc.init();

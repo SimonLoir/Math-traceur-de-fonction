@@ -4,7 +4,7 @@ import Parser, { MathObject } from './parser.v2';
 
 export default class SVGGraph {
     constructor(fstring: string, build: (done: string) => void) {
-        let c = new CanvasSubstitute(750, 750);
+        let c = new CanvasSubstitute(500, 500);
         //@ts-ignore
         let xc = new canvas(c);
         xc.init();
