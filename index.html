@@ -1,83 +1,95 @@
 <!DOCTYPE html>
 <html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>SNotes</title>
+        <link
+            href="https://fonts.googleapis.com/css?family=Montserrat:400,700"
+            rel="stylesheet"
+        />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Smath</title>
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#ccc">
-</head>
-
-<body>
-
-    <header>
-        <div class="real_header">
-            <h1>SMath</h1>
-            <nav>
-                <a href="public/drawer.html">Grapheur</a> //
-                <a href="public/stats.html">Statistiques</a> //
-                <a href="public/drawer.html">progressions (suites)</a>
-            </nav>
+    <body>
+        <div id="start_screen" class="">
+            <div class="wrapper-center">
+                <h1>SMath 3.18.12</h1>
+                <img src="images/front.png" alt="" />
+                <p><br /></p>
+                <p>Une calculatrice graphique open source, libre et gratuite</p>
+                <button id="download">Essayer SMath</button
+                ><!--
+                    <br />
+                    <span>ou</span> <br />
+                    <a href="public/drawer.html">Essayer en ligne</a>
+                -->
+            </div>
         </div>
-        <span class="title">
-            SMath 3.18
-        </span>
-        <p class="content-header">
-            SMath est une suite logicielle en ligne basée sur le monde des mathématiques. SMath existe sous la forme d'un site web, d'une
-            app et aussi sous la forme d'un bot messenger. SMath est développé par un étudiant de l'INDSé Bastogne.
-        </p>
-    </header>
-
-    <section>
-
-        <h2>Quoi de neuf ?</h2>
-        <p>
-            SMath 3.18 est désormais en construction. Cette troisième version de SMath est construite pour être la plus scalable possible.
-            SMath, c'est un seul projet mais plusieurs interfaces. Que ce soit le bot messenger ou la version web, les deux
-            déclinaisons ont le même "moteur" : smath.js.
-        </p>
-
-    </section>
-
-    <section class="graph" style="height:15vh;">
-
-    </section>
-
-    <section>
-
-        <h2>Grapheur SMath</h2>
-        <p>
-            Le grapheur SMath est la partie la plus complexe de smath : le grapheur utilise le canvas, un élément HTML5. Le grapheur
-            utilise aussi la fonction requestAnimationFrame pour donner un aspect plus fluide lors du déplacement ou lors
-            du zoom.
-        </p>
-        <a href="public/drawer.html" class="action-button">Utiliser le grapheur</a>
-
-    </section>
-
-    <section class="stats" style="height:15vh;">
-
-    </section>
-
-    <section>
-
-        <h2>SMath Stats</h2>
-        <p>
-            SMath stats est un outil mathématique capable de calculer la pente de la droite de régression ainsi que son ordonnée à l'origine.
-            SMath stats utilise le grapheur smath pour tracer la droite de régression.
-        </p>
-        <a href="public/stats.html" class="action-button">Utiliser SMath Stats</a>
-
-    </section>
-
-
-    <footer>
-        Copyright &copy; 2017-2018 Simon Loir - Sous licence MIT
-    </footer>
-
-    <script src="./dist/home.bundle.js"></script>
-</body>
-
+        <div class="content-section skew">
+            <h2>Gratuit et open source</h2>
+            <p>
+                SNotes est un logiciel de prise de notes open source construit
+                grâce à electron. SNotes est donc disponible sur Windows, Mac et
+                Linux. SNote est disponible gratuitement ici ou sur github. En
+                effet, si vous souhaitez participer au projet ou si vous voulez
+                obtenir les nouvelles version avant tout le monde, vous pouvez
+                obtenir SNotes via
+                <a href="https://github.com/SimonLoir/snotes/releases"
+                    >GitHub</a
+                >
+            </p>
+        </div>
+        <div class="content-section s2" id="others">
+            <h2>SMath pour les développeurs</h2>
+            <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo,
+                cumque earum! Totam ut obcaecati labore quod aperiam saepe ullam
+                corporis quam iusto sequi, hic numquam maiores corrupti deserunt
+                at quasi.
+            </p>
+        </div>
+        <div class="content-section footer">
+            <p>Copyright &copy 2017-2018 Simon Loir</p>
+        </div>
+        <div id="dpage" style="display: none">
+            <div id="download_app">
+                <h2>Télécharger SMath</h2>
+                <p>SMath est disponible sur MacOS, Linux et sur Windows.</p>
+                <div>
+                    <br />
+                    <p>
+                        <img
+                            id="d_windows"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEtSURBVGhD7dg/SgNBGIbxAREUgulsrBQLEaxS2Vp5Da28gp1KUK8RwT83sLZJlcob2HgKQZ9RAmEYdr98uzir+77wg4SQMM+SQJKgadq/2xo2f252e/GgezjGGW7wgCne8Yl7FF960GukB63zKyHzgx5+3wthC8setE4rIekVvcUj0oO+Iu4Ai4dogykkd9AnLHtFi4ZsIPdEj6IhQ+Se6KEQA4V4KMRAIR4KMVCIh0IM+hMywKwl8Rtz3C5yjzcxRj+2glFL9hG3jtzjTWyjcvqwZyjEQCEeCjFQiIdCDBTioRCD/oTEf+IneMEbPpB7IYuiIelWsYMjnOIS1tBOhdStKvQZcX8ixLL4w2oeeoU7NH3rFgmpmvet27mQui2GnuACMfQcmqb1byF8AaSgD4VuZjVqAAAAAElFTkSuQmCC"
+                        />
+                        <img
+                            id="d_macos"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIWSURBVGhD7dm/S1VhHMfxq6DpYJIJSjZF0lRgLSFktri4uLY0BFFDU0NFYBQNDfZjStocLEglQ9C/IWoIIhChiCIiCIKCCCq13p/swPXyjYKez9UDzxtecJV7+d5zzz3H5xwruVxuU3YYtzD666cStg+P8OO3OyhdR/ENxUbIBZSqESyjeiOkH6WpEx9QuxFPUKouoXYjVqEDvlQtoXZDSndsbIM+/WIDvuAkNm1taF57uK52aAN0trqHPahOr2lZe7hxHcBdFAeyzkqvMQmdpbagCYPogNqKY5jDW2hvyRtM4CDq1nYsoPi6/MlHzOAidMDPQl+t6LnV7qML1vqgTz16Aym9h/a4pZ14h2iwg/ZoD5Kmg/IxooEOOu6OIHk6ZUYDHT5Di0tLLxENdTgBS3sRDXR4gUZYOo1oqMMV2LqBaKjDMGxNIxrqsB+2tEaKhjpoOWNL66loqMMZ2LqJaKjDA9g6hWiow1fsgKVDiIa6TMGSriu0bIiGupyDpXlEA53GoA8xaccRDXN7jiEkqxXRval60DGaNO3qaJDTQySvG58QDXTQTYnke6PoLKKhDrdhS2eRRUSDU3oF3ROzphWq/gJHbyCFFViu16Ocy5bzqGtXEb2R/zGOutcALSWir9lT6BJ5N3RciR7rd89Q+/zvuAzb9fq/tAu6Jar/B17DAP6WnnMdeo1e24tcLpfL5TaoSuUn9Xn+3TaKspsAAAAASUVORK5CYII="
+                        />
+                        <img
+                            id="d_linux"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAATvSURBVGhD3Zl3qB1FFIefRgWNMRhBTOwRFcUee7BDIqiI+IdYEBUsQUJs2FEQE9sfVqKogVgTyz+CvReUGJFIYiGJvWHvxhhj+b54Dwyb3ffu3jv3vdUffGR3b97MnJ2ZM+ec7euR9oIr4WF4Ce6Hc2AT+E9oW3gZ/q5gOdwOI6Gx0oifoMyA4DH4C+bDaGikXoCywQc/wqrwWuv+UWictoTiwMv4tnB/GDRKx0I6wHZ5ABqlCyEG93OLdMDBJ/Bdcv8rDIfG6ApwYHfDWfAMOMgY/L6wLhwHCyAMkd2gMdIQ3/TqsBq49mOgR8EqsA6o6yE1xN8bIw3x/JgOeqNRsBQcqDNxA+hyNXAnaKwhF8NceASWwP5wGWjgCHgVHLS/b926Dg6FxmgSOAPugT/hCfAUfxs08HPQwBPgaEgN8W8bI5fHQjCeiiVVZBk4IzqDX1rP5CZojCbAJWD4kQ4+5QeYAe4lvVo8fwsaI13oVHgc0sHL76ATMBrWmLvgY3gXwvCtoBHaBp6FKXAdzARD96vhclgMDtqldRA4+KtgVzDQ1Fk0QvuBg9NDXQu+eTd4zIqu1xxFeaYsgt/gDPgUvoE4Z4ZU98If/16ukJ7JJXQHGId5SKbSe4WRge56SOWZ4bLR5bYrDXNWUkPcS7vAkMjkyCVkeL6RD2rofEgNET3YmjCoGgbPgwM40wc1peEenkVjboRBledGdH6gDzrQk5AaIS7Tg2FQtDMYgkTn78COUFfHQGpE8CGsBT2VefcciE4/ghNhDagrw/73wbNEF5waMw16KuMqO/qqxYbQjU4B29NhvNG6Fr3YFtATORtGtG+CHRsAdiu9VKS/8yDNIM1jeqJDwA4s6XwGuVzlzZAOPq7N/U3Sssug0BzcoO9cH2RSetI/CF8k9zn7WSEzO12jcZMdbA65tB3EwD3x07KriVlWGcna8OvwgQ8yam2Iget6LXzHvYdmtlqxm9zlZMN2Mgtyy6DT9p8Cs80wRCwnZZGJUzT6Cpgk5VacI2729LCVIyGLTGUNDv3eYXJkdSS3LHI76Fta/6Z0GgKtJJMeyza3wgFgRphbLic3tvm8kYMz734xATNhyyKNiOk2+9sDNoButT7cBvfBOLBklM7E2ZBtNjaGryHtwPhqbzgJupExWrQ5Eb5P7p+DI1rXXVcjLW8ajkTjKRYXJoNr2uCvE1mci/ZMCy4Al5e1rsMhDDMJqy0Hfyf41qOTKszHdccvwnpQV1Zd0vZ0JJaV7oHUc1mZqa1i2b8/voTxYBXRnGRTqKOydLcM9477spaMQMsaq0JP5lv02spJHV0ExfaqMELWY7atp6GsoSqMvyy6WYSrW8e9BsrarMLl5l6yNjagZkNZI/1hoDcWDGXakSXS08BviGXtDcQOMKDSAnMdfAEDyXrW6WCecTLU2Y+BuVBbXtLiclkD7XA8FGXZaHs4D8zP4/9aZvXUTv++P9zwuue2XX3EPJ3gEjMKMLTQaZhFFgPAYM+SZ1U8BJtBLfmxJr7IdsLuJc+KaJxF7bLfUixueDB2LINE83M/CXjYFWOgKpxNM0ndsHm44b5expdjteRUuBTc5AaeZW0EhihjIKusWbmmDd/TdZ6in68T4Onhqtrye30ndbJa0ofvA8ZY74EdGx918tVJN+q5ZVJlHcsitvFXW+fE/1B9ff8AS/asejFxYtcAAAAASUVORK5CYII="
+                        />
+                    </p>
+                    <br />
+                    <h2>Utiliser en ligne</h2>
+                    SMath est aussi disponible en ligne.
+                    <p>
+                        <a
+                            href="public/drawer.html"
+                            style="text-decoration: underline"
+                            target="_blank"
+                            >Utiliser SMath online</a
+                        >
+                    </p>
+                    <a href="https://icons8.com" target="_blank"
+                        >Icon pack by Icons8</a
+                    >
+                </div>
+            </div>
+            <div class="mask"></div>
+        </div>
+        <script src="./dist/home.bundle.js"></script>
+    </body>
 </html>

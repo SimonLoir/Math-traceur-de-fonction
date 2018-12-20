@@ -11,6 +11,7 @@ var canvas = /** @class */ (function () {
         this.stored = {};
         this.pathes = {};
         this.objects = [];
+        this.fastDrawing = false;
         canvas.height = canvas.scrollHeight;
         canvas.width = canvas.scrollWidth;
         this.canvas = canvas;
@@ -211,7 +212,7 @@ var canvas = /** @class */ (function () {
     };
     canvas.prototype.drawFromFunc = function (func, color, isPreview) {
         if (color === void 0) { color = undefined; }
-        if (isPreview === void 0) { isPreview = false; }
+        if (isPreview === void 0) { isPreview = this.fastDrawing; }
         if (!color) {
             var letters = '0123456789ABCDEF';
             color = '#';
@@ -269,7 +270,7 @@ var canvas = /** @class */ (function () {
                 y: new_y
             };
             if (isPreview == true) {
-                x += 0.5;
+                x += 0.075;
             }
             else {
                 if (restore && restore <= x) {

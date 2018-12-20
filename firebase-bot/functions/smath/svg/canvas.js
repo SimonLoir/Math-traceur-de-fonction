@@ -24,6 +24,7 @@ var CanvasSubstitute = /** @class */ (function () {
     };
     CanvasSubstitute.prototype.toSVG = function () {
         var inside = "";
+        console.log('Building svg with ' + this.getContext('2d').svg.length + ' lines');
         this.getContext('2d').svg.forEach(function (e) {
             if (e.text != []) {
                 e.text.forEach(function (text) {

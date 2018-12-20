@@ -25,6 +25,9 @@ export default class CanvasSubstitute {
     }
     public toSVG(): string {
         let inside = ``;
+        console.log(
+            'Building svg with ' + this.getContext('2d').svg.length + ' lines'
+        );
         this.getContext('2d').svg.forEach(e => {
             if (e.text != []) {
                 e.text.forEach(text => {

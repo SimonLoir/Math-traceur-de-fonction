@@ -4,9 +4,10 @@ import Parser, { MathObject } from './parser.v2';
 
 export default class SVGGraph {
     constructor(fstring: string, build: (done: string) => void) {
-        let c = new CanvasSubstitute(500, 500);
+        let c = new CanvasSubstitute(550, 550);
         //@ts-ignore
         let xc = new canvas(c);
+        xc.fastDrawing = true;
         xc.init();
 
         let parser = new Parser();

@@ -25,9 +25,9 @@ $sender = $input->sender->id;
 
 $bot->sender = $sender;
 
-if (($text) && !$is_echo) {
+if (($text || $is_payload) && !$is_echo) {
 
-    file_put_contents('test.txt', $input);
+    file_put_contents('test.txt', $base_input);
 
     if (!$text) {
         $message = $input->postback->payload;
@@ -50,16 +50,16 @@ if (($text) && !$is_echo) {
         $bot->sendText("Salut, je suis SMath, un bot capable de t'aider en math ;-) \nTu peux m'utiliser comme une simple calculatrice. Il te suffit d'écrire un calcul et tu obtiendras une réponse ;-)\n\nSi tu veux utiliser un vrai grapheur, va sur https://math.simonloir.be ;-)");
     } else if (strpos($message, "trace ") !== false) {
         $bot->sendText('Voici ce que je peux tracer pour toi : ');
+        ini_set('default_socket_timeout', 4);
+        $bot->sendImage("https://simonloir-test.firebaseapp.com/app?draw=true&function=" . urlencode(str_replace('trace ', "", $message)));
+        $bot->sendText("La création de l'image peut prendre quelques secondes.");
 
-        $bot->typing();
-        ini_set('default_socket_timeout', 5);
+        /*$bot->typing();
         try {
-            $bot->sendImage("https://simonloir-test.firebaseapp.com/app?draw=true&function=" . urlencode(str_replace('trace ', "", $message)));
         } catch (\Throwable $th) {
             $bot->sendText(json_encode($th));
         }
-        $bot->sendText("La création de l'image peut prendre quelques secondes.");
-        $bot->stopTyping();
+        $bot->stopTyping();*/
     } else {
         $result = file_get_contents("https://simonloir-test.firebaseapp.com/app?compute&function=" . urlencode(str_replace('trace ', "", $message)));
         $bot->sendText("Voici le résulat que j'obtiens : " . $result);

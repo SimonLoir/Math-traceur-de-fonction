@@ -1,23 +1,5 @@
 import './scss/home.scss';
 
-document.querySelector('header').style.backgroundImage =
-    'url(./images/site-header.jpg)';
-//@ts-ignore
-document.querySelector('.graph').style.backgroundImage =
-    'url(./images/graph.jpg)';
-
-//@ts-ignore
-document.querySelector('.stats').style.backgroundImage =
-    'url(./images/stats.jpg)';
-
-window.addEventListener('scroll', (evt: Event) => {
-    if (window.scrollY > 20) {
-        document.querySelector('header').classList.add('floating');
-    } else {
-        document.querySelector('header').classList.remove('floating');
-    }
-});
-
 if (typeof process !== 'undefined') {
     let fs = require('fs');
     let fcontent = JSON.parse(
@@ -28,7 +10,7 @@ if (typeof process !== 'undefined') {
     xhr.onload = function(e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                if (JSON.parse(xhr.responseText).version == fcontent.version) {
+                /*if (JSON.parse(xhr.responseText).version == fcontent.version) {
                     document.querySelector('.content-header').innerHTML =
                         'SMath est disponible hors connexion et est à jour en version ' +
                         fcontent.version;
@@ -38,7 +20,7 @@ if (typeof process !== 'undefined') {
                         JSON.parse(xhr.responseText).version +
                         ' est disponible pour remplacer la version locale : ' +
                         fcontent.version;
-                }
+                }*/
             } else {
                 console.error(xhr.statusText);
             }
@@ -71,3 +53,18 @@ if ('serviceWorker' in navigator)
         });
     }
 });*/
+
+let down: HTMLButtonElement = document.querySelector('#download');
+down.addEventListener('click', () => {
+    document.getElementById('dpage').style.display = 'block';
+});
+document.getElementsByClassName('mask')[0].addEventListener('click', () => {
+    document.getElementById('dpage').style.display = 'none';
+});
+document.getElementById('d_windows').onclick = () => {
+    let a = document.createElement('a');
+    a.href = 'downloads/setup.exe';
+    a.setAttribute('download', 'setup.exe');
+    a.setAttribute('target', '_blank');
+    a.click();
+};

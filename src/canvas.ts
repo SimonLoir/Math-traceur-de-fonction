@@ -25,6 +25,8 @@ export default class canvas {
 
     public onupdate: () => void;
 
+    public fastDrawing = false;
+
     public getValues() {
         return {
             center_x: this.center_x,
@@ -288,7 +290,7 @@ export default class canvas {
     public drawFromFunc(
         func: any,
         color: any = undefined,
-        isPreview: boolean = false
+        isPreview: boolean = this.fastDrawing
     ) {
         if (!color) {
             var letters = '0123456789ABCDEF';
@@ -355,7 +357,7 @@ export default class canvas {
             };
 
             if (isPreview == true) {
-                x += 0.5;
+                x += 0.075;
             } else {
                 if (restore && restore <= x) {
                     restore = undefined;
