@@ -1,2 +1,0 @@
-# Smath-php
-This project is a port of smath.js to PHP. The main goal is to convert the js script into a PHP script. The js script uses canvas and getcontext whereas PHP will use gd to build the graphs. Anoher goal is to build a messenger bot for smath which will be created in early 2018. 
