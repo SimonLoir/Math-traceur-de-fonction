@@ -1,0 +1,45 @@
+{
+    "name": "smath",
+    "version": "4.0.0",
+    "description": "A graphical calculator written in js that works browser side and server side. ",
+    "main": "app/main.js",
+    "scripts": {
+        "dev": "webpack -d",
+        "prod": "webpack -p",
+        "start": "electron .",
+        "dist": "build --windows --ia32 --x64",
+        "darwin": "build --mac --ia32 --x64",
+        "linux": "build --linux --ia32 --x64",
+        "sw": "node build.sw.js"
+    },
+    "author": "Simon Loir",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+        "css-loader": "^0.28.11",
+        "electron": "^3.0.4",
+        "electron-builder": "^19.56.2",
+        "node-sass": "^4.9.3",
+        "sass-loader": "^6.0.7",
+        "style-loader": "^0.20.3",
+        "ts-loader": "^4.5.0",
+        "typescript": "^2.9.2",
+        "webpack": "^4.20.2",
+        "webpack-cli": "^3.1.2"
+    },
+    "build": {
+        "appId": "simonloir.smath",
+        "win": {
+            "target": "nsis",
+            "icon": "images/smath-logo.ico"
+        },
+        "directories": {
+            "output": "builds"
+        },
+        "files": [
+            {
+                "filter": "!firebase-bot/**/*"
+            }
+        ]
+    }
+}
