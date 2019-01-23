@@ -2,7 +2,8 @@ const path = require('path');
 const baseConfig = require('./config/webpack').config;
 const app = {
     entry: {
-        graphing: './src/app/graphing/index.ts'
+        graphing: './src/app/graphing/index.ts',
+        probabilities: './src/app/probabilities/index.ts'
     },
     output: {
         filename: '[name].bundle.js',
