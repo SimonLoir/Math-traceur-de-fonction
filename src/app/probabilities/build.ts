@@ -29,6 +29,14 @@ export default class codeBuilder {
                 .replace(/"/g, '')
                 .replace(/[^\<\>]=/g, '==');
             if (__x.trim() == '') return;
+            __x = __x.toLowerCase();
+            __x = __x.replace(/est\spair/g, ' %2 == 0');
+            __x = __x.replace(/est\simpair/g, ' %2 == 1');
+            __x = __x.replace(/é/g, 'e');
+            __x = __x.replace(/è/g, 'e');
+            __x = __x.replace(/premier/g, 'isPrime');
+            __x = __x.replace(/ou/g, '||');
+            __x = __x.replace(/et/g, '&&');
             e += `let ${_x} = base.filter(element => ${__x});\n`;
             console.log(__x, _x);
         });
@@ -39,7 +47,8 @@ export default class codeBuilder {
             str = str.trim();
             if (str == '') return;
             if (str.indexOf('#') == 0) s += `log(${str}, "${str} = $text");`;
-            else s += `log(JSON.stringify(${str}), "${str} = {$text}");`;
+            else
+                s += `log(JSON.stringify(${str}).replace(/^\\[/g, "").replace(/\\]$/g, "").replace(/\\[/g, "(").replace(/\\]/g, ")"), "${str} = {$text}");`;
         });
 
         console.log();
@@ -47,6 +56,16 @@ export default class codeBuilder {
         
         try {
             let base = [${o}];
+            function isPrime(input) {
+                let prime = true;
+                for (let i = 2; i <= Math.sqrt(input); i++) {
+                    if (input % i == 0) {
+                        prime = false;
+                        break;
+                    }
+                }
+                return prime && (input > 1);
+            }
             ${e}
             ${s}
         } catch (error) {
