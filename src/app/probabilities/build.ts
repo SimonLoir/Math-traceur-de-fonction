@@ -51,7 +51,6 @@ export default class codeBuilder {
                 s += `log(JSON.stringify(${str}).replace(/^\\[/g, "").replace(/\\]$/g, "").replace(/\\[/g, "(").replace(/\\]/g, ")"), "${str} = {$text}");`;
         });
 
-        console.log();
         let code = `
         
         try {
