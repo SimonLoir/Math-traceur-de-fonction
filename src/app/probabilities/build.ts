@@ -14,31 +14,30 @@ export default class codeBuilder {
         o = o.replace(/;/g, ',');
         o = o.replace(/\(/g, '[');
         o = o.replace(/\)/g, ']');
-        //e = e.replace(/=/g, '==');
 
         let spl = e.split(/\r\n|\n|\r/);
         e = '';
         spl.forEach(str => {
             if (str.trim() == '' || str.indexOf('=') < 0) return;
             let x = str.split('=');
-            let _x = x[0].trim(); // The first part (aka the variable name)
+            let event_name = x[0].trim(); // The first part (aka the variable name)
             x.shift();
-            let __x = x
+            let event = x
                 .join('=')
                 .trim()
                 .replace(/"/g, '')
                 .replace(/[^\<\>]=/g, '==');
-            if (__x.trim() == '') return;
-            __x = __x.toLowerCase();
-            __x = __x.replace(/est\spair/g, ' %2 == 0');
-            __x = __x.replace(/est\simpair/g, ' %2 == 1');
-            __x = __x.replace(/é/g, 'e');
-            __x = __x.replace(/è/g, 'e');
-            __x = __x.replace(/premier/g, 'isPrime');
-            __x = __x.replace(/ou/g, '||');
-            __x = __x.replace(/et/g, '&&');
-            e += `let ${_x} = base.filter(element => ${__x});\n`;
-            console.log(__x, _x);
+            if (event.trim() == '') return;
+            event = event.toLowerCase();
+            event = event.replace(/est\spair/g, ' %2 == 0');
+            event = event.replace(/est\simpair/g, ' %2 == 1');
+            event = event.replace(/é/g, 'e');
+            event = event.replace(/è/g, 'e');
+            event = event.replace(/premier/g, 'isPrime');
+            event = event.replace(/ou/g, '||');
+            event = event.replace(/et/g, '&&');
+            e += `let ${event_name} = base.filter(element => ${event});\n`;
+            console.log(event, event_name);
         });
 
         spl = s.split(/\r\n|\n|\r/);
