@@ -31,7 +31,7 @@
         "appId": "simonloir.smath",
         "win": {
             "target": "nsis",
-            "icon": "images/smath-logo.ico"
+            "icon": "dist/app/images/smath-logo.ico"
         },
         "directories": {
             "output": "builds"

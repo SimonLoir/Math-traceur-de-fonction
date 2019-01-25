@@ -3,7 +3,8 @@ const baseConfig = require('./config/webpack').config;
 const app = {
     entry: {
         graphing: './src/app/graphing/index.ts',
-        probabilities: './src/app/probabilities/index.ts'
+        probabilities: './src/app/probabilities/index.ts',
+        index: './src/app/index.ts'
     },
     output: {
         filename: '[name].bundle.js',

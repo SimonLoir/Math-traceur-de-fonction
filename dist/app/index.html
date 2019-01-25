@@ -7,6 +7,83 @@
         <title>SMath 4.0.0</title>
     </head>
     <body>
-        SMath 4.0.0
+        <div id="start_screen" class="">
+            <div class="wrapper-center">
+                <h1>SMath 4.0.0</h1>
+                <img src="images/scode-2.18-logo512x512.png" alt="" />
+                <p><br /></p>
+                <p>
+                    SMath est une suite logicielle basée sur le monde des
+                    mathématiques. Elle comporte un grapheur et quelques outils
+                    statistiques.
+                </p>
+                <button id="download">Utiliser le grapheur</button>
+            </div>
+        </div>
+        <div class="content-section skew">
+            <h2>Gratuit et open source</h2>
+            <p>
+                SNotes est un logiciel de prise de notes open source construit
+                grâce à electron. SNotes est donc disponible sur Windows, Mac et
+                Linux. SNote est disponible gratuitement ici ou sur github. En
+                effet, si vous souhaitez participer au projet ou si vous voulez
+                obtenir les nouvelles version avant tout le monde, vous pouvez
+                obtenir SNotes via
+                <a href="https://github.com/SimonLoir/snotes/releases"
+                    >GitHub</a
+                >
+            </p>
+        </div>
+        <div class="content-section s2" id="others">
+            <h2>SCode et SMath</h2>
+            <img src="src/images/snote-example.png" class="img_x_top" />
+            <p>
+                SNotes utilise SMath et SCode pour ajouter du contenu dynamique
+                comme des graphiques et un éditeur de code. Les deux projets
+                sont disponibles gratuitement sur
+                <a href="https://github.com/SimonLoir"
+                    >la page GitHub de Simon Loir</a
+                >
+            </p>
+        </div>
+        <div class="content-section footer">
+            <p>Copyright &copy 2017-2019 Simon Loir</p>
+        </div>
+        <div id="dpage" style="display: none">
+            <div id="download_app">
+                <h2>Utiliser SMath</h2>
+                <p>
+                    SNotes 4.0.0 est disponible sur Windows ou utilisable
+                    directement dans le navigateur
+                </p>
+                <div>
+                    <br />
+                    <p>
+                        <img
+                            id="d_windows"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEtSURBVGhD7dg/SgNBGIbxAREUgulsrBQLEaxS2Vp5Da28gp1KUK8RwT83sLZJlcob2HgKQZ9RAmEYdr98uzir+77wg4SQMM+SQJKgadq/2xo2f252e/GgezjGGW7wgCne8Yl7FF960GukB63zKyHzgx5+3wthC8setE4rIekVvcUj0oO+Iu4Ai4dogykkd9AnLHtFi4ZsIPdEj6IhQ+Se6KEQA4V4KMRAIR4KMVCIh0IM+hMywKwl8Rtz3C5yjzcxRj+2glFL9hG3jtzjTWyjcvqwZyjEQCEeCjFQiIdCDBTioRCD/oTEf+IneMEbPpB7IYuiIelWsYMjnOIS1tBOhdStKvQZcX8ixLL4w2oeeoU7NH3rFgmpmvet27mQui2GnuACMfQcmqb1byF8AaSgD4VuZjVqAAAAAElFTkSuQmCC"
+                        />
+                        <!--<img
+                            id="d_macos"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIWSURBVGhD7dm/S1VhHMfxq6DpYJIJSjZF0lRgLSFktri4uLY0BFFDU0NFYBQNDfZjStocLEglQ9C/IWoIIhChiCIiCIKCCCq13p/swPXyjYKez9UDzxtecJV7+d5zzz3H5xwruVxuU3YYtzD666cStg+P8OO3OyhdR/ENxUbIBZSqESyjeiOkH6WpEx9QuxFPUKouoXYjVqEDvlQtoXZDSndsbIM+/WIDvuAkNm1taF57uK52aAN0trqHPahOr2lZe7hxHcBdFAeyzkqvMQmdpbagCYPogNqKY5jDW2hvyRtM4CDq1nYsoPi6/MlHzOAidMDPQl+t6LnV7qML1vqgTz16Aym9h/a4pZ14h2iwg/ZoD5Kmg/IxooEOOu6OIHk6ZUYDHT5Di0tLLxENdTgBS3sRDXR4gUZYOo1oqMMV2LqBaKjDMGxNIxrqsB+2tEaKhjpoOWNL66loqMMZ2LqJaKjDA9g6hWiow1fsgKVDiIa6TMGSriu0bIiGupyDpXlEA53GoA8xaccRDXN7jiEkqxXRval60DGaNO3qaJDTQySvG58QDXTQTYnke6PoLKKhDrdhS2eRRUSDU3oF3ROzphWq/gJHbyCFFViu16Ocy5bzqGtXEb2R/zGOutcALSWir9lT6BJ5N3RciR7rd89Q+/zvuAzb9fq/tAu6Jar/B17DAP6WnnMdeo1e24tcLpfL5TaoSuUn9Xn+3TaKspsAAAAASUVORK5CYII="
+                        />
+                        <img
+                            id="d_linux"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAATvSURBVGhD3Zl3qB1FFIefRgWNMRhBTOwRFcUee7BDIqiI+IdYEBUsQUJs2FEQE9sfVqKogVgTyz+CvReUGJFIYiGJvWHvxhhj+b54Dwyb3ffu3jv3vdUffGR3b97MnJ2ZM+ec7euR9oIr4WF4Ce6Hc2AT+E9oW3gZ/q5gOdwOI6Gx0oifoMyA4DH4C+bDaGikXoCywQc/wqrwWuv+UWictoTiwMv4tnB/GDRKx0I6wHZ5ABqlCyEG93OLdMDBJ/Bdcv8rDIfG6ApwYHfDWfAMOMgY/L6wLhwHCyAMkd2gMdIQ3/TqsBq49mOgR8EqsA6o6yE1xN8bIw3x/JgOeqNRsBQcqDNxA+hyNXAnaKwhF8NceASWwP5wGWjgCHgVHLS/b926Dg6FxmgSOAPugT/hCfAUfxs08HPQwBPgaEgN8W8bI5fHQjCeiiVVZBk4IzqDX1rP5CZojCbAJWD4kQ4+5QeYAe4lvVo8fwsaI13oVHgc0sHL76ATMBrWmLvgY3gXwvCtoBHaBp6FKXAdzARD96vhclgMDtqldRA4+KtgVzDQ1Fk0QvuBg9NDXQu+eTd4zIqu1xxFeaYsgt/gDPgUvoE4Z4ZU98If/16ukJ7JJXQHGId5SKbSe4WRge56SOWZ4bLR5bYrDXNWUkPcS7vAkMjkyCVkeL6RD2rofEgNET3YmjCoGgbPgwM40wc1peEenkVjboRBledGdH6gDzrQk5AaIS7Tg2FQtDMYgkTn78COUFfHQGpE8CGsBT2VefcciE4/ghNhDagrw/73wbNEF5waMw16KuMqO/qqxYbQjU4B29NhvNG6Fr3YFtATORtGtG+CHRsAdiu9VKS/8yDNIM1jeqJDwA4s6XwGuVzlzZAOPq7N/U3Sssug0BzcoO9cH2RSetI/CF8k9zn7WSEzO12jcZMdbA65tB3EwD3x07KriVlWGcna8OvwgQ8yam2Iget6LXzHvYdmtlqxm9zlZMN2Mgtyy6DT9p8Cs80wRCwnZZGJUzT6Cpgk5VacI2729LCVIyGLTGUNDv3eYXJkdSS3LHI76Fta/6Z0GgKtJJMeyza3wgFgRphbLic3tvm8kYMz734xATNhyyKNiOk2+9sDNoButT7cBvfBOLBklM7E2ZBtNjaGryHtwPhqbzgJupExWrQ5Eb5P7p+DI1rXXVcjLW8ajkTjKRYXJoNr2uCvE1mci/ZMCy4Al5e1rsMhDDMJqy0Hfyf41qOTKszHdccvwnpQV1Zd0vZ0JJaV7oHUc1mZqa1i2b8/voTxYBXRnGRTqKOydLcM9477spaMQMsaq0JP5lv02spJHV0ExfaqMELWY7atp6GsoSqMvyy6WYSrW8e9BsrarMLl5l6yNjagZkNZI/1hoDcWDGXakSXS08BviGXtDcQOMKDSAnMdfAEDyXrW6WCecTLU2Y+BuVBbXtLiclkD7XA8FGXZaHs4D8zP4/9aZvXUTv++P9zwuue2XX3EPJ3gEjMKMLTQaZhFFgPAYM+SZ1U8BJtBLfmxJr7IdsLuJc+KaJxF7bLfUixueDB2LINE83M/CXjYFWOgKpxNM0ndsHm44b5expdjteRUuBTc5AaeZW0EhihjIKusWbmmDd/TdZ6in68T4Onhqtrye30ndbJa0ofvA8ZY74EdGx918tVJN+q5ZVJlHcsitvFXW+fE/1B9ff8AS/asejFxYtcAAAAASUVORK5CYII="
+                        />-->
+                        <img
+                            id="online"
+                            src="data:image/png;base64,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"
+                        />
+                    </p>
+                    <br />
+                    <a href="https://icons8.com" target="_blank"
+                        >Icon pack by Icons8</a
+                    >
+                </div>
+            </div>
+            <div class="mask"></div>
+        </div>
+        <script src="./js/index.bundle.js"></script>
     </body>
 </html>
