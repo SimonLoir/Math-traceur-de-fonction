@@ -1,0 +1,124 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+* {
+    font-family: 'Montserrat', cursive, sans-serif;
+}
+
+body,
+html {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+header {
+    position: fixed;
+    z-index: 95;
+    top: 0;
+    right: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.12);
+    height: 65px;
+    line-height: 65px;
+    h1 {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        font-size: 25px;
+        font-weight: 200;
+        padding-left: 25px;
+    }
+    .header-links {
+        float: right;
+        a.header-links-link {
+            display: inline-block;
+            padding-left: 15px;
+            text-decoration: none;
+            color: gray;
+        }
+        padding-right: 25px;
+        @media screen and (max-width: 450px) {
+            display: none;
+        }
+    }
+}
+
+#canvas {
+    position: fixed;
+    top: 65px;
+    right: 0;
+    left: 0;
+    bottom: 38px;
+    background: #eee;
+    & canvas {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+footer {
+    position: fixed;
+    z-index: 95;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.12);
+    $wobjectButton: 120px;
+    $waddButton: 60px;
+    height: 38px;
+    overflow: hidden;
+    & input {
+        padding: 0;
+        margin: 0;
+        padding: 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border: none;
+        font-size: 18px;
+        width: calc(100vw - #{30px + $waddButton + $wobjectButton});
+    }
+    & #objectButton {
+        width: $wobjectButton;
+    }
+    & #addButton {
+        width: $waddButton;
+    }
+    & button {
+        position: relative;
+        display: inline-block;
+        border: none;
+        padding: 0;
+        margin: 0;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+}
+
+#toolkit {
+    position: fixed;
+    z-index: 95;
+    bottom: #{38px + 1px};
+    left: 0;
+    background: white;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.12);
+    min-height: 40vh;
+    max-height: calc(100vh - #{65px + 38px + 50px + 2px});
+    width: 300px;
+    padding: 25px;
+    max-width: calc(100vw - 50px);
+    overflow: auto;
+    border-top-right-radius: 5px;
+    &.hidden {
+        display: none;
+    }
+}

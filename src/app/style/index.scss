@@ -68,7 +68,8 @@ html {
         margin: auto;
         overflow: auto;
         padding: 25px;
-        & span {}
+        & span {
+        }
     }
     &.skew {
         z-index: 30;
