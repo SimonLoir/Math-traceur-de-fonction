@@ -1,6 +1,7 @@
 import expression from './expression';
 import graph from './graph/graph';
 import canvas from './graph/canvas';
+import { $ } from '../extjs';
 
 export default class smath {
     private exp: expressionManager = undefined;

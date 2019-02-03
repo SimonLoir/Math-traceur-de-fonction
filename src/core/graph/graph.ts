@@ -126,7 +126,10 @@ export default class graph {
             'black'
         );
     }
-
+    /**
+     * Gets the canvas x for the mathematical x
+     * @param point X on the graph
+     */
     private xPos(point: number) {
         return (
             this.canvas.width / 2 +
@@ -134,7 +137,10 @@ export default class graph {
             this.x_center * this.x_scale
         );
     }
-
+    /**
+     * Gets the canvas y for the mathematical y
+     * @param point Y on the graph
+     */
     private yPos(point: number) {
         return (
             this.canvas.height / 2 -
