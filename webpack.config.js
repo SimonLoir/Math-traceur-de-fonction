@@ -12,6 +12,18 @@ const app = {
     },
     ...baseConfig
 };
+
+const benchmark = {
+    entry: {
+        benchmark: './src/benchmark/index.ts'
+    },
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist/tests')
+    },
+    ...baseConfig
+};
+
 const lib = {
     entry: {
         smath: './src/lib.ts'
@@ -26,4 +38,4 @@ const lib = {
     ...baseConfig
 };
 
-module.exports = [app, lib];
+module.exports = [app, lib, benchmark];

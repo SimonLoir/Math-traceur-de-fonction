@@ -9,7 +9,7 @@ export default class canvas {
      * Creates a new rich canvas element
      * @param canvas the base html canvas element
      */
-    constructor(private canvas: HTMLCanvasElement) {
+    constructor(public canvas: HTMLCanvasElement) {
         this.resize();
         this.ctx = canvas.getContext('2d');
     }
@@ -57,10 +57,6 @@ export default class canvas {
         } else {
             this.ctx.strokeStyle = color;
         }
-
-        if (y2 == Infinity) console.log((y2 = this.canvas.height), 'Inf' + y2);
-        if (y == Infinity) console.log((y = this.canvas.height), 'Inf' + y);
-
         this.ctx.moveTo(x, y);
         this.ctx.lineTo(x2, y2);
         if (width == undefined) {

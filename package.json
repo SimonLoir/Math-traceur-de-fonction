@@ -2,7 +2,7 @@
     "name": "smath",
     "version": "4.0.0",
     "description": "A graphical calculator written in js that works browser side and server side. ",
-    "main": "app/main.js",
+    "main": "dist/app/app.js",
     "scripts": {
         "dev": "webpack -d",
         "prod": "webpack -p",
@@ -16,6 +16,7 @@
     "license": "MIT",
     "dependencies": {},
     "devDependencies": {
+        "assemblyscript": "github:AssemblyScript/assemblyscript",
         "css-loader": "^0.28.11",
         "electron": "^3.0.4",
         "electron-builder": "^19.56.2",

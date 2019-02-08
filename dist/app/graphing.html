@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>SMath 4.0.0 Grapheur</title>
+        <!--<script
+            data-main="scripts/main"
+            src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"
+        ></script>-->
     </head>
     <body>
         <header>
@@ -27,5 +31,44 @@
             </button>
         </footer>
         <script src="./js/graphing.bundle.js"></script>
+        <script>
+            try {
+                const supported = (() => {
+                    try {
+                        if (
+                            typeof WebAssembly === 'object' &&
+                            typeof WebAssembly.instantiate === 'function'
+                        ) {
+                            const module = new WebAssembly.Module(
+                                Uint8Array.of(
+                                    0x0,
+                                    0x61,
+                                    0x73,
+                                    0x6d,
+                                    0x01,
+                                    0x00,
+                                    0x00,
+                                    0x00
+                                )
+                            );
+                            if (module instanceof WebAssembly.Module)
+                                return (
+                                    new WebAssembly.Instance(module) instanceof
+                                    WebAssembly.Instance
+                                );
+                        }
+                    } catch (e) {}
+                    return false;
+                })();
+                if (!supported) {
+                    alert(
+                        "Une technologie requise n'est pas présente sur votre navigateur"
+                    );
+                }
+            } catch (error) {
+                alert("Votre navigateur n'est pas supporté");
+            }
+        </script>
+        <script></script>
     </body>
 </html>

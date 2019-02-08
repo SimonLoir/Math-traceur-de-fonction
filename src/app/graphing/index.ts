@@ -6,6 +6,7 @@ import { $ } from '../../extjs';
 let s = new smath();
 
 let g = s.graph.create(new canvas(document.querySelector('canvas')));
+g.register('function', {});
 g.draw();
 
 $('#objectButton').click(() => {

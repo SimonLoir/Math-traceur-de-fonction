@@ -42,6 +42,12 @@ export default class functionizer {
             (e, $1, $2) => `pow(${$1}, ${$2})`
         );
 
+        // We tranform ! into factorial
+        /*expression = expression.replace(
+            /([\$0-9xe]+)\^([\$0-9xe]+)/gi,
+            (e, $1, $2) => `pow(${$1}, ${$2})`
+        );*/
+
         // We rebuild the complete expression
         expression = expression.replace(/\$([0-9]+)/gi, (e, $1) =>
             this.clean('(' + this.parse(this.partials['$' + $1]) + ')')
@@ -130,7 +136,7 @@ export default class functionizer {
         if (parse == true) {
             exp = this.parse(exp);
         }
-        console.log(exp);
+        //console.log(exp);
         return new Function(
             'x',
             'funcs',
@@ -183,6 +189,22 @@ export default class functionizer {
                     return pow(base, y);
                 }
             }; 
+
+            const gamma = function (z) {
+                let g = 7;
+                let C = [0.99999999999980993, 676.5203681218851, -1259.1392167224028,771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7]
+                if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+                else {
+                    z -= 1;
+            
+                    var x = C[0];
+                    for (var i = 1; i < g + 2; i++)
+                    x += C[i] / (z + i);
+            
+                    var t = z + g + 0.5;
+                    return Math.sqrt(2 * Math.PI) * Math.pow(t, (z + 0.5)) * Math.exp(-t) * x;
+                }
+            }
             
             return ${this.FunctionizeCalls(exp)};
             
@@ -212,15 +234,16 @@ export default class functionizer {
         'pow',
         'cot',
         'sec',
-        'csc'
+        'csc',
+        'gamma'
     ];
 
     public static FunctionizeCalls(exp: string): string {
-        console.log(exp);
+        //console.log(exp);
         return exp.replace(
             /([a-z]+)([1-9]*)\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/g,
             (e, $1, $2, $3) => {
-                console.log($1);
+                //console.log($1);
                 if (this.math_func.indexOf($1) >= 0) {
                     return `${$1 + $2}(${this.FunctionizeCalls($3)})`;
                 }

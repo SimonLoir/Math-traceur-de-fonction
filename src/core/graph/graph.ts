@@ -27,17 +27,128 @@ export default class graph {
     /**
      * The x value on the center of the graph
      */
-    public x_center: number = 1;
+    public x_center: number = 0;
     /**
      * The y value on the center of the graph
      */
-    public y_center: number = 1;
+    public y_center: number = 0;
     private objects: graphObject[] = [];
     constructor(public canvas: canvas) {
         this.objects.push(new Point(1, 0));
         console.log(this.objects[0].X);
+
+        try {
+            window.addEventListener('resize', (e: Event) => {
+                e.stopPropagation();
+                e.preventDefault();
+                this.canvas.resize();
+                this.draw();
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        // Checking for server side execution or not
+        if (window != undefined) {
+            let start: any;
+
+            let down: boolean = false;
+
+            //When the user starts an action on the canvas.
+            canvas.canvas.addEventListener('mousedown', (e: MouseEvent) => {
+                down = true;
+                start = { x: e.pageX, y: e.pageY };
+                canvas.canvas.style.cursor = 'grabbing';
+            });
+            canvas.canvas.addEventListener('touchstart', (e: TouchEvent) => {
+                down = true;
+                start = {
+                    x: e.touches.item(0).clientX,
+                    y: e.touches.item(0).clientY
+                };
+            });
+            // When the user moves on the surface of the canvas.
+            canvas.canvas.addEventListener('mousemove', (e: MouseEvent) => {
+                if (down == true) {
+                    let new_start = { x: e.pageX, y: e.pageY };
+                    let old = start;
+                    let drawn = this.move(old, new_start);
+                    if (drawn) {
+                        start = new_start;
+                    }
+                }
+            });
+            canvas.canvas.addEventListener('touchmove', (e: TouchEvent) => {
+                e.preventDefault();
+                if (down == true) {
+                    let new_start = {
+                        x: e.touches.item(0).clientX,
+                        y: e.touches.item(0).clientY
+                    };
+                    let old = start;
+                    let drawn = this.move(old, new_start);
+                    if (drawn) {
+                        start = new_start;
+                    }
+                }
+            });
+            //When the user stops clicking on teh surface
+            canvas.canvas.addEventListener('mouseup', (e: MouseEvent) => {
+                e.preventDefault();
+                e.stopPropagation();
+                down = false;
+                canvas.canvas.style.cursor = 'grab';
+            });
+            canvas.canvas.addEventListener('touchend', (e: MouseEvent) => {
+                e.stopPropagation();
+                e.preventDefault();
+                down = false;
+            });
+            canvas.canvas.addEventListener('mousewheel', (e: any) => {
+                e.stopPropagation();
+                e.preventDefault();
+                let delta = Math.max(
+                    -1,
+                    Math.min(1, e.wheelDelta || -e.detail)
+                );
+                this.zoom(delta);
+            });
+            canvas.canvas.addEventListener('DOMMouseScroll', (e: any) => {
+                e.preventDefault();
+                e.preventDefault();
+                let delta = Math.max(
+                    -1,
+                    Math.min(1, e.wheelDelta || -e.detail)
+                );
+                this.zoom(delta);
+            });
+        }
     }
     public register(type: string, opts: any) {}
+    public zoom(delta: number) {
+        if (this.x_scale + delta * 10 > 5) {
+            this.x_scale += delta * 10;
+        }
+
+        if (this.y_scale + delta * 10 > 5) {
+            this.y_scale += delta * 10;
+        }
+
+        this.draw();
+    }
+    public move(previous: any, now: any): any {
+        let diff_x = previous.x - now.x;
+
+        let diff_y = previous.y - now.y;
+
+        if (Math.sqrt(Math.pow(diff_x, 2) + Math.pow(diff_y, 2)) > 10) {
+            this.x_center += diff_x / this.x_scale;
+
+            this.y_center -= diff_y / this.y_scale;
+
+            this.draw();
+            return true;
+        }
+    }
     public draw() {
         this.canvas.clear();
         this.drawGrid();
@@ -90,7 +201,7 @@ export default class graph {
             this.canvas.drawLine(0, ypos, this.canvas.width, ypos);
             this.canvas.text(
                 (Math.floor(yPlus * 100) / 100).toString(),
-                x0 - phase,
+                x0 + 2,
                 ypos,
                 'gray',
                 font
@@ -104,7 +215,7 @@ export default class graph {
                 );
                 this.canvas.text(
                     (Math.floor(yMinus * 100) / 100).toString(),
-                    x0 - phase,
+                    x0 + 2,
                     yposMinus,
                     'gray',
                     font

@@ -8,7 +8,7 @@ export default class smath {
     private gr: graphManager = undefined;
     /**
      * Gives access to all the tools available
-     * and that works on expressions
+     * and that work on expressions
      */
     public get expression() {
         if (this.exp == undefined) this.exp = new expressionManager();
