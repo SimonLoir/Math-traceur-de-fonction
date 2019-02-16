@@ -4,6 +4,7 @@ export default class TimersManager {
         this.timers[name] = { start: window.performance.now() };
     }
     public end(name: string) {
+        console.log('ended : ' + name + '@' + window.performance.now());
         this.timers[name].end = window.performance.now();
     }
     public export() {
@@ -14,6 +15,7 @@ export default class TimersManager {
             exp[key] = {};
             exp[key].time = end - start;
         });
+        console.table(this.timers);
         console.table(exp);
     }
 }

@@ -1,40 +1,44 @@
 import smath from '../core';
 import TimersManager from './time';
+import { $ } from '../extjs';
 
 let s = new smath();
-let exp = 'x²+6x+3';
+let exp = 'x+6x+3';
 let a = 0;
 let t = new TimersManager();
 let from = 0;
-let to = 200;
+let to = 2 * 1000 * 10000;
 const code = async (a: number) => {
-    /**
-     * Test avec fonction (évaluée à chaque tour)
-     */
-    t.start('time_func' + a);
-    let numbers: number[] = [];
-    for (let i = from; i < to; i++) {
-        numbers.push(s.expression.create(exp).function(i));
-    }
-    t.end('time_func' + a);
     /**
      * Test avec fonction évaluée une fois
      */
-    t.start('time_func_one_eval' + a);
-    numbers = [];
     let f = s.expression.create(exp).function;
-    for (let i = from; i < to; i++) {
-        numbers.push(f(i));
+    t.start('time_func_one_eval' + a);
+    for (let i = from; i < to; i += 0.5) {
+        f(i);
     }
     t.end('time_func_one_eval' + a);
-    numbers = [];
+    /**
+     * Test avec fonction évaluée une fois
+     */
+    let x = await s.expression.create(exp).assembly();
+    t.start('time_func_one_wasm' + a);
+    for (let i = from; i < to; i += 0.5) {
+        x(i);
+    }
+    t.end('time_func_one_wasm' + a);
 };
-while (a < 10) {
+while (a < 1) {
     code(a);
     a++;
 }
 
-t.export();
+$('body')
+    .child('button')
+    .text('result')
+    .click(() => {
+        t.export();
+    });
 
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));

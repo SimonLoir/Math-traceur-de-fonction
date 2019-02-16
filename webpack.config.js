@@ -30,7 +30,10 @@ const lib = {
     },
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'dist/lib'),
+        path: path.resolve(
+            __dirname,
+            'dist/firebase/web-assembly-builder/functions'
+        ),
         library: 'smath',
         libraryTarget: 'umd',
         umdNamedDefine: true

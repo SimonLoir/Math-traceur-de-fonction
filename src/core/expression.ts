@@ -1,4 +1,5 @@
 import functionizer from './functionizer';
+import { getCode } from './web-assembly';
 
 export default class expression {
     private baseExp: string;
@@ -30,6 +31,10 @@ export default class expression {
      */
     public getFor(x: number) {
         return this.code(x);
+    }
+
+    public assembly() {
+        return getCode(this.baseExp);
     }
 
     constructor(fn: string) {

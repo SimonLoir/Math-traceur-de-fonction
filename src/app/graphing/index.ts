@@ -4,7 +4,6 @@ import canvas from '../../core/graph/canvas';
 import { $ } from '../../extjs';
 
 let s = new smath();
-
 let g = s.graph.create(new canvas(document.querySelector('canvas')));
 g.register('function', {});
 g.draw();
@@ -14,3 +13,10 @@ $('#objectButton').click(() => {
     if (tk.hasClass('hidden')) tk.removeClass('hidden');
     else tk.addClass('hidden');
 });
+
+s.expression
+    .create('2x-3')
+    .assembly()
+    .then(nativecode => {
+        console.log(nativecode(3));
+    });
