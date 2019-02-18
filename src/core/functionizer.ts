@@ -263,11 +263,11 @@ export default class functionizer {
             expression = expression.replace(pattern, (e, $1, $2) => $1 + $2);
         }
 
-        expression = expression.replace(/\*([0-9])/gi, (e, $1) =>
+        expression = expression.replace(/\*([0-9]+)/gi, (e, $1) =>
             $1 == 1 ? '' : e
         );
 
-        expression = expression.replace(/\^([0-9])/gi, (e, $1) =>
+        expression = expression.replace(/\^([0-9]+)/gi, (e, $1) =>
             $1 == 1 ? '' : e
         );
 

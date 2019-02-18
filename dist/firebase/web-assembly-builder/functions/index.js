@@ -8,28 +8,19 @@ const cors = require('cors')({ origin: true });
 // https://firebase.google.com/docs/functions/write-firebase-functions
 exports.buildWasm = functions.https.onRequest((request, response) => {
     cors(request, response, () => {});
-    let exp = url.parse(request.url, true).query.exp;
+    let exp = decodeURIComponent(url.parse(request.url, true).query.exp);
     const parsed = s.expression.create(exp).parsedForm;
+    throw parsed + ' => ' + exp;
     const { binary, text, stdout, stderr } = asc.compileString(
         `
-        function sin (x: f64):f64 { return Math.sin(x); };
-        function tan (x: f64):f64 { return Math.tan(x); };
-        function cos (x: f64):f64 { return Math.cos(x); };
-        function asin (x: f64):f64 { return Math.asin(x); };
-        function atan (x: f64):f64 { return Math.atan(x); };
-        function acos (x: f64):f64 { return Math.acos(x); };
-        function pow (base: f64, exponent: f64): f64{
-            if(exponent % 1 != 0){
-                for(let i = -7; i < 8; i = i + 2){
-                    if(exponent == 1/i && base < 0) return 0 - 1 * Math.pow(0 - base, exponent);     
-                }
-            }
-            return Math.pow(base, exponent);
-        }
+        @external("math", "sin")
+        export declare function sin(a: f64): f64;
+        @external("math", "cos")
+        export declare function cos(a: f64): f64;
         export function add(x: f64): f64 {
             return ${parsed};
         }`,
-        { optimizeLevel: 3 }
+        { optimizeLevel: 3, shrinkLevel: 2 }
     );
     if (stderr != '') throw new Error(stderr);
     response.type('application/wasm');
