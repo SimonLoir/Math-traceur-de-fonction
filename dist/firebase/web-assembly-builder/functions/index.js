@@ -1,30 +1,24 @@
-const functions = require('firebase-functions');
-const url = require('url');
-const s = require('./smath.min.js').smath;
-const fs = require('fs');
-const asc = require('assemblyscript/cli/asc');
-const cors = require('cors')({ origin: true });
+const functions = require("firebase-functions");
+const url = require("url");
+const s = require("./smath.min.js").smath;
+const fs = require("fs");
+const asc = require("assemblyscript/cli/asc");
+const cors = require("cors")({ origin: true });
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 exports.buildWasm = functions.https.onRequest((request, response) => {
     cors(request, response, () => {});
     let exp = decodeURIComponent(url.parse(request.url, true).query.exp);
     const parsed = s.expression.create(exp).parsedForm;
-    throw parsed + ' => ' + exp;
     const { binary, text, stdout, stderr } = asc.compileString(
-        `
-        @external("math", "sin")
-        export declare function sin(a: f64): f64;
-        @external("math", "cos")
-        export declare function cos(a: f64): f64;
-        export function add(x: f64): f64 {
+        `export function add(x: f64): f64 {
             return ${parsed};
         }`,
-        { optimizeLevel: 3, shrinkLevel: 2 }
+        { optimizeLevel: 3, shrinkLevel: 2, use: "Math=JSMath" }
     );
-    if (stderr != '') throw new Error(stderr);
-    response.type('application/wasm');
-    response.send(new Buffer(binary, 'binary'));
+    if (stderr != "") throw new Error(stderr);
+    response.type("application/wasm");
+    response.send(new Buffer(binary, "binary"));
 });
 
 /**

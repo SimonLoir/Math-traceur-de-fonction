@@ -8,14 +8,7 @@ export async function getCode(exp: string) {
                 "&parse=true"
         ),
         {
-            math: {
-                sin(x: number) {
-                    return Math.sin(x);
-                },
-                cos(x: number) {
-                    return Math.cos(x);
-                }
-            }
+            env: { Math_cos: Math.cos, Math_sin: Math.sin }
         }
     );
     //@ts-ignore

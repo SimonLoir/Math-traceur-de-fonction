@@ -3,11 +3,11 @@ import TimersManager from './time';
 import { $ } from '../extjs';
 
 let s = new smath();
-let exp = '2x-sin(x)';
+let exp = '2x-sin(x)+2x+cos(x)*cos(2x)-sin(x)';
 let a = 0;
 let t = new TimersManager();
 let from = 0;
-let to = 10000;
+let to = 50000;
 const code = async (a: number) => {
     /**
      * Test avec fonction évaluée une fois
